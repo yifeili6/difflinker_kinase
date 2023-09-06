@@ -125,6 +125,73 @@ def compute_metrics(pred_molecules, true_molecules):
     }
 
 
+# Metrics (https://github.com/dellacortelab/milcdock/blob/main/milcdock/evaluate.py)
+def binary_acc(y_pred, y_test):
+    y_pred_tag = torch.round(y_pred)
+
+    correct_results_sum = (y_pred_tag == y_test).sum().float()
+    acc = correct_results_sum/y_test.shape[0]
+    acc = torch.round(acc * 100)
+    
+    return acc
+
+def calc_ef(y_pred, y_label, percent=.01,return_fraction=False):
+    '''Returns enrichment factor based on predicted probability of being active'''
+    num_active = len(np.where(y_label == 1)[0])
+    tot_molecules = len(y_label)
+    sort_idxs = np.argsort(y_pred)[::-1] #in descending order
+    sorted_label = y_label[sort_idxs]
+    len_top_percent = int(percent*tot_molecules)
+    if num_active == 0 or len_top_percent == 0:
+        if return_fraction:
+            return np.inf, np.inf
+        else:
+            return np.inf
+    num_top_actives = len(np.where(sorted_label[:len_top_percent]==1)[0])
+    ef = (num_top_actives/len_top_percent)/(num_active/tot_molecules)
+
+    if return_fraction:
+        #calc theoretical max
+        if num_active >= len_top_percent:
+            theoretical_max = (1)/(num_active/tot_molecules)
+        else:
+            theoretical_max = (num_active/len_top_percent)/(num_active/tot_molecules)
+        fractional_ef = ef / theoretical_max
+        return ef, fractional_ef
+    else:
+        return ef
+    
+def calc_auc(y_pred, y_label):
+    fpr, tpr, _ = roc_curve(y_label,y_pred)
+    roc_auc = auc(fpr,tpr)
+    return roc_auc
+
+def calc_bedroc(y_pred, y_label, alpha=160.9):
+    '''
+    Calculates and returns BEDROC metric from labels and predicted probabilities.
+    Formula comes from: https://pubs.acs.org/doi/full/10.1021/ci600426e
+    '''
+    assert isinstance(y_pred, np.ndarray)
+    assert isinstance(y_label, np.ndarray)
+    n = len(np.where(y_label == 1)[0]) # # of actives
+    N = len(y_label) # total # of molecules
+    sort_idxs = np.argsort(y_pred)[::-1] #in descending order
+    sorted_label = y_label[sort_idxs]
+    rie_num_sum = []
+    for i in range(N):
+        if sorted_label[i] == 1:
+            rie_num_sum.append(np.exp(-alpha*(i+1)/N))
+    if len(rie_num_sum) != n:
+        print('Error. Wrong sum length.')
+        return
+    rie_num = np.sum(rie_num_sum)
+    rie_denom = n/N*((1-np.exp(-alpha))/(np.exp(alpha/N)-1))
+    rie = rie_num / rie_denom
+    rie_min = (1-np.exp(alpha*n/N))/(n/N*(1-np.exp(alpha)))
+    rie_max = (1-np.exp(-alpha*n/N))/(n/N*(1-np.exp(-alpha)))
+    bedroc = (rie - rie_min) / (rie_max - rie_min)
+    return bedroc
+
 # def check_stability(positions, atom_types):
 #     assert len(positions.shape) == 2
 #     assert positions.shape[1] == 3
