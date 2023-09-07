@@ -9,50 +9,95 @@ from gvp import *
 
 class MQAModel(Model):
     def __init__(self, node_features, edge_features,
-        hidden_dim, num_layers=3, k_neighbors=30, dropout=0.1):
+        hidden_dim, num_layers=3, k_neighbors=30, dropout=0.1,
+        regression=False, multiclass=False,
+        ablate_aa_type=False, ablate_sidechain_vectors=True,
+        ablate_rbf=False, use_lm=False,
+        squeeze_lm=False):
             
         super(MQAModel, self).__init__()
         
+        # Model type
+        self.multiclass = multiclass
+        self.ablate_aa_type = ablate_aa_type
+        self.use_lm = use_lm
+        self.squeeze_lm = squeeze_lm
+
         # Hyperparameters
         self.nv, self.ns = node_features
         self.hv, self.hs = hidden_dim
         self.ev, self.es = edge_features
-        
+
         # Featurization layers
-        self.features = StructuralFeatures(node_features, edge_features, top_k=k_neighbors)
-    
-        # Embedding layers
-        self.W_s = Embedding(20, self.hs)        
+        self.features = StructuralFeatures(node_features, edge_features,
+            top_k=k_neighbors, ablate_sidechain_vectors=ablate_sidechain_vectors,
+            ablate_rbf=ablate_rbf)
+
+        # Sequence embedding layers
+        if not use_lm:
+            self.W_s = Embedding(20, self.hs)
+        if use_lm and squeeze_lm:
+            self.W_s = Sequential([
+                Dense(100, activation='relu'),
+                Dropout(rate=dropout)])
+
         self.W_v = GVP(vi=self.nv, vo=self.hv, so=self.hs,
                         nls=None, nlv=None)
         self.W_e = GVP(vi=self.ev, vo=self.ev, so=self.hs,
                         nls=None, nlv=None)
-        
+
         self.encoder = Encoder(hidden_dim, edge_features, num_layers=num_layers, 
-                                dropout=dropout)
-                                
+                               dropout=dropout)
+
         self.W_V_out = GVP(vi=self.hv, vo=0, so=self.hs,
-                          nls=None, nlv=None)
-        
-        self.dense = Sequential([
-            Dense(2 * self.hs, activation='relu'),
-            Dropout(rate=dropout),
-            Dense(2 * self.hs, activation='relu'),
-            Dropout(rate=dropout),
-            LayerNormalization(),
-            Dense(1, activation=None)])
-        
-    def call(self, X, S, mask, train=False, res_level=False):
+                           nls=None, nlv=None)
+
+        if regression:
+            self.dense = Sequential([
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                LayerNormalization(),
+                Dense(1, activation=None)])
+        elif multiclass:
+            self.multiclass = True
+            self.dense = Sequential([
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                LayerNormalization(),
+                Dense(3, activation='softmax')])
+        else:
+            self.dense = Sequential([
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                Dense(2 * self.hs, activation='relu'),
+                Dropout(rate=dropout),
+                LayerNormalization(),
+                Dense(1, activation='sigmoid')])
+
+    def call(self, X, S, mask, train=False, res_level=False, ablate_aa_type=False):
         # X [B, N, 4, 3], S [B, N], mask [B, N]
 
         V, E, E_idx = self.features(X, mask)
-        h_S = self.W_s(S)
-        V = vs_concat(V, h_S, self.nv, 0)
-        h_V = self.W_v(V)
+        if self.ablate_aa_type:
+            h_V = self.W_v(V)
+        else:
+            if self.use_lm and not self.squeeze_lm:
+                h_S = S
+            elif self.use_lm and self.squeeze_lm:
+                h_S = self.W_s(S)
+            else:
+                h_S = self.W_s(S)
+            V = vs_concat(V, h_S, self.nv, 0)
+            h_V = self.W_v(V)
+
         h_E = self.W_e(E)
         h_V = self.encoder(h_V, h_E, E_idx, mask, train=train)
-        
-        h_V_out = self.W_V_out(h_V) 
+
+        h_V_out = self.W_V_out(h_V)
         mask = tf.expand_dims(mask, -1) # [B, N, 1]
 
         if not res_level:
@@ -63,8 +108,11 @@ class MQAModel(Model):
             h_V_out = tf.math.divide_no_nan(h_V_out, tf.math.reduce_sum(mask, -2)) # [B, D]
         out = h_V_out
         #out = self.dense(out, training=train)
-        out = tf.squeeze(self.dense(out, training=train), -1) + 0.5 # [B]
-        
+        if self.multiclass:
+            out = self.dense(out, training=train) # [B, N, 3]
+        else:
+            out = tf.squeeze(self.dense(out, training=train), -1) # + 0.5 # [B, N]
+
         return out
 
 class CPDModel(Model):
@@ -85,7 +133,7 @@ class CPDModel(Model):
                         nls=None, nlv=None)
         self.W_e = GVP(vi=self.ev, vo=self.ev, so=self.hs,
                         nls=None, nlv=None)
-        self.W_s = Embedding(num_letters, self.hs)        
+        self.W_s = Embedding(num_letters, self.hs)
         self.encoder = Encoder(hidden_dim, edge_features, num_layers=num_layers)
         self.decoder = Decoder(hidden_dim, edge_features, s_features=(0, self.hs), num_layers=num_layers)
         self.W_out = GVP(vi=self.hv, vo=0, so=num_letters,
@@ -314,7 +362,8 @@ class PositionalEncodings(Model):
 
 class StructuralFeatures(Model):
     def __init__(self, node_features, edge_features, num_positional_embeddings=16,
-        num_rbf=16, top_k=30):
+        num_rbf=16, top_k=30,
+        ablate_sidechain_vectors=True, ablate_rbf=False):
         super(StructuralFeatures, self).__init__()
         self.edge_features = edge_features
         self.node_features = node_features
@@ -324,16 +373,28 @@ class StructuralFeatures(Model):
 
         # Positional encoding
         self.embeddings = PositionalEncodings(num_positional_embeddings)
-        
+
         # Normalization and embedding
         vo, so = node_features
         ve, se = edge_features
-        self.node_embedding = GVP(vi=3, vo=vo, so=so,
+        if ablate_sidechain_vectors:
+            vi_v = 3
+        else:
+            vi_v = 4
+        self.node_embedding = GVP(vi=vi_v, vo=vo, so=so,
                                    nlv=None, nls=None)
-        self.edge_embedding = GVP(vi=1, vo=ve, so=se,
-                                   nlv=None, nls=None)
+        if ablate_sidechain_vectors:
+            vi_e = 1
+        else:
+            vi_e = 2
+        self.edge_embedding = GVP(vi=vi_e, vo=ve, so=se,
+                                  nlv=None, nls=None)
         self.norm_nodes = LayerNormalization()
         self.norm_edges = LayerNormalization()
+
+        # ablation settings
+        self.ablate_sidechain_vectors = ablate_sidechain_vectors
+        self.ablate_rbf = ablate_rbf
     
     def _dist(self, X, mask, eps=1E-6): # [B, N, 3]
         """ Pairwise euclidean distances """
@@ -358,7 +419,7 @@ class StructuralFeatures(Model):
         dX = X[:,1:,:] - X[:,:-1,:]
         X_neighbors = gather_nodes(X, E_idx)
         dX = X_neighbors - tf.expand_dims(X, -2)
-        dX = normalize(dX, axis=-1)      
+        dX = normalize(dX, axis=-1)     
         return dX
 
     def _terminal_sidechain_direction(self, X, E_idx):
@@ -447,7 +508,9 @@ class StructuralFeatures(Model):
         E_directions = self._directions(X_ca, E_idx)
         RBF = self._rbf(D_neighbors)
         E_positional = self.embeddings(E_idx)
-        #E_sidechain_directions = self._terminal_sidechain_direction(X, E_idx)
+
+        if not self.ablate_sidechain_vectors:
+            E_sidechain_directions = self._terminal_sidechain_direction(X, E_idx)
 
         # Full backbone angles
         # V_sidechains is a scalar
@@ -455,17 +518,28 @@ class StructuralFeatures(Model):
         V_orientations = self._orientations(X_ca)
         V_sidechains = self._sidechains(X)
 
-        # C-alpha-terminal sidechain atom vector
-        #V_sidechain_terminal_vector = self._sidechain_terminal_vector(X)
-
-        #V_vec = tf.concat([tf.expand_dims(V_sidechains, -1),
-        #                   tf.expand_dims(V_sidechain_terminal_vector, -1),
-        #                   V_orientations], -1)
-        V_vec = tf.concat([tf.expand_dims(V_sidechains, -1), V_orientations], -1)
+        if self.ablate_sidechain_vectors:
+            V_vec = tf.concat([tf.expand_dims(V_sidechains, -1), V_orientations], -1)
+        else:
+            # C-alpha-terminal sidechain atom vector
+            V_sidechain_terminal_vector = self._sidechain_terminal_vector(X)
+            V_vec = tf.concat([tf.expand_dims(V_sidechains, -1),
+                               tf.expand_dims(V_sidechain_terminal_vector, -1),
+                               V_orientations], -1)
 
         V = merge(V_vec, V_dihedrals)
-        #E = tf.concat([E_directions, E_sidechain_directions, RBF, E_positional], -1)
-        E = tf.concat([E_directions, RBF, E_positional], -1)
+
+        # allow ablation of RBF or sidechain vectors
+        if self.ablate_sidechain_vectors:
+            if self.ablate_rbf:
+                E = tf.concat([E_directions, E_positional], -1)
+            else:
+                E = tf.concat([E_directions, RBF, E_positional], -1)
+        else:
+            if self.ablate_rbf:
+                E = tf.concat([E_directions, E_sidechain_directions, E_positional], -1)
+            else:
+                E = tf.concat([E_directions, E_sidechain_directions, RBF, E_positional], -1)
 
         # Embed the nodes
         Vv, Vs = self.node_embedding(V, return_split=True)

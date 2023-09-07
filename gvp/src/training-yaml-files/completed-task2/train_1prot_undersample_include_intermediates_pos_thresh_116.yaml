@@ -1,0 +1,38 @@
+# ------TRAINING PARAMETERS----- #
+NUM_EPOCHS: 30
+# number of proteins
+BATCH_SIZE: 1
+residue_batches: False
+
+LEARNING_RATE: 0.00002
+
+# Training scheme params
+balance_classes: True
+weight_loss: False
+weight_globally: False
+oversample: False
+undersample: True
+constant_size_balanced_sets: False
+continue_previous_training: False
+
+# can be edited to automate
+train_on_intermediates: True
+# ----------------------------- #
+
+# ------- LIGSITE INPUT PARAMETERS ---- #
+featurization_method: 'nearby-pv-procedure'
+min_rank: 7
+window: 40
+stride: 1
+pos_thresh: 116
+# ----END LIGSITE INPUT PARAMETERS ---- #
+
+# ------- GVP INPUT PARAMETERS ---- #
+DROPOUT_RATE: 0.1
+HIDDEN_DIM: 100
+NUM_LAYERS: 4
+# -----END GVP INPUT PARAMETERS ---- #
+
+xtal_validation_path: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/new_pocket_labels_validation_all1.npy'
+xtal_test_path: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/new_pocket_labels_test_all1.npy'
+base_path: '/project/bowmanlab/ameller/gvp/task2'

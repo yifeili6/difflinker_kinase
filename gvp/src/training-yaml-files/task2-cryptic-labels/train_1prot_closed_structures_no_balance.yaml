@@ -1,0 +1,37 @@
+# ------TRAINING PARAMETERS----- #
+NUM_EPOCHS: 20
+# number of proteins
+BATCH_SIZE: 1
+residue_batches: False
+# NUMBER_RESIDUES_PER_BATCH: 4
+
+LEARNING_RATE: 0.00002
+
+# Training scheme params
+balance_classes: False
+weight_loss: False
+weight_globally: False
+oversample: False
+undersample: False
+constant_size_balanced_sets: False
+continue_previous_training: False
+
+# ----------------------------- #
+
+# ------- CRYPTIC LABEL PARAMETERS ---- #
+
+# ----END CRYPTIC LABEL PARAMETERS ---- #
+use_tensors: False
+
+# ------- GVP INPUT PARAMETERS ---- #
+DROPOUT_RATE: 0.1
+HIDDEN_DIM: 100
+NUM_LAYERS: 4
+# -----END GVP INPUT PARAMETERS ---- #
+
+# xtal_validation_path: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/new_pocket_labels_validation_all1.npy'
+
+xtal_val_ids: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/validation_apo_ids_all.npy'
+all_labels: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/all-GVP-project-ligand-resis.npy'
+xtal_test_path: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/new_pocket_labels_test_all1.npy'
+base_path: '/project/bowmanlab/ameller/gvp/task2'

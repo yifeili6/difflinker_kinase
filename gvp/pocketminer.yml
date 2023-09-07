@@ -1,0 +1,15 @@
+name: pocketminer
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - numpy
+  - scipy
+  - pandas
+  - tensorflow
+  - tqdm
+  - mdtraj
+  - yaml
+prefix: /project/bowmore/ameller/miniconda3/envs/tf
+

@@ -4,7 +4,7 @@ import tqdm
 import scipy.stats, pdb
 from collections import defaultdict
 
-models_dir = '../models/{}_{}'
+# models_dir = '../models/{}_{}'
 
 # Here these lookups are only used for labeling the confusion matrix,
 # so feel free to use your own / disregard them
@@ -42,8 +42,13 @@ def loop(dataset, model, train=False, optimizer=None):
   return loss, acc, mat
 
 # Save model and optimizer state
-def save_checkpoint(model, optimizer, model_id, epoch):
-  path = models_dir.format(str(model_id).zfill(3), str(epoch).zfill(3))
+def save_checkpoint(model_path, model, optimizer, model_id, epoch):
+  """
+    Inputs:
+    model_path : str
+      Path to model which contains entries for model id and epoch ({} and {})
+  """
+  path = model_path.format(str(model_id).zfill(3), str(epoch).zfill(3))
   ckpt = tf.train.Checkpoint(optimizer=optimizer, model=model)
   ckpt.write(path) 
   print('CHECKPOINT SAVED TO ' + path)

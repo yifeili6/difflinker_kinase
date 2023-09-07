@@ -1,0 +1,35 @@
+# ------TRAINING PARAMETERS----- #
+NUM_EPOCHS: 20
+# number of proteins
+BATCH_SIZE: 1
+residue_batches: True
+NUMBER_RESIDUES_PER_BATCH: 4
+
+LEARNING_RATE: 0.00001
+
+# Training scheme params
+continue_previous_training: True
+# previous_nn_dir: '/project/bowmanlab/ameller/gvp/task2/train-with-4-residue-batches-constant-size-balanced-640-resi-draws-intermediates-in-training/net_8-50_1-32_16-100_dr_0.1_nl_4_hd_100_lr_2e-05_b4resis_b4proteins_30epoch_feat_method_nearby-pv-procedure_rank_7_stride_1_window_40_pos_87'
+previous_nn_dir: '/project/bowmanlab/ameller/gvp/task2/train-with-4-residue-batches-no-balancing-intermediates-in-training/net_8-50_1-32_16-100_dr_0.1_nl_4_hd_100_lr_2e-05_b4resis_b1proteins_20epoch_feat_method_gp-to-nearest-resi-procedure_rank_7_stride_1_window_40_pos_20'
+
+# can be edited to automate
+use_tensors: True
+# ----------------------------- #
+
+# ------- LIGSITE INPUT PARAMETERS ---- #
+feat_type: max
+stride: 5
+window: 40
+cutoff: 0.3
+# ----END LIGSITE INPUT PARAMETERS ---- #
+
+# ------- GVP INPUT PARAMETERS ---- #
+DROPOUT_RATE: 0.1
+HIDDEN_DIM: 100
+NUM_LAYERS: 4
+# -----END GVP INPUT PARAMETERS ---- #
+
+xtal_val_ids: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/validation_apo_ids_all.npy'
+all_labels: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/all-GVP-project-ligand-resis.npy'
+xtal_test_path: '/project/bowmanlab/borowsky.jonathan/FAST-cs/protein-sets/new_pockets/labels/new_pocket_labels_test_all1.npy'
+base_path: '/project/bowmanlab/ameller/gvp/task2'
