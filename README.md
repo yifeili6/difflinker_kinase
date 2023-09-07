@@ -1,4 +1,5 @@
-# DiffLinker: Equivariant 3D-Conditional Diffusion Model for Molecular Linker Design
+# Customized version of [DiffLinker](https://github.com/igashov/DiffLinker/tree/main); Fine-tuned on kinase Database
+
 
 [![Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/igashov/DiffLinker)
 
