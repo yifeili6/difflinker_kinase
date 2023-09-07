@@ -29,7 +29,8 @@ if __name__ == '__main__':
     # TO DO - provide input pdb(s), output name, and output folder
     strucs = [
        # '../data/ACE2.pdb',
-       './1ADE.pdb'
+       # './1ADE.pdb'
+       './1a0q_protein_processed.pdb' # diffdock example
     ]
     output_name = 'ACE2'
     output_folder = '.'
