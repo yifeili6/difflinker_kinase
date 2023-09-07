@@ -38,7 +38,7 @@ if __name__ == '__main__':
     debug = False
 
     # Load MQA Model used for selected NN network
-    nn_path = "./pocketminer"
+    nn_path = "../models/pocketminer"
     DROPOUT_RATE = 0.1
     NUM_LAYERS = 4
     HIDDEN_DIM = 100
