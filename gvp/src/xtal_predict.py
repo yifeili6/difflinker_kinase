@@ -26,7 +26,8 @@ def make_predictions(pdb_paths, model, nn_path, debug=False, output_basename=Non
 if __name__ == '__main__':
     # TO DO - provide input pdb(s), output name, and output folder
     strucs = [
-        '../data/ACE2.pdb',
+       # '../data/ACE2.pdb',
+       './1ADE.pdb'
     ]
     output_name = 'ACE2'
     output_folder = '.'
