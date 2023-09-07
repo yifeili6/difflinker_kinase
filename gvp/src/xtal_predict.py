@@ -1,3 +1,5 @@
+import torch
+import torch_geometric
 import tensorflow as tf
 from models import MQAModel
 import numpy as np
