@@ -124,7 +124,7 @@ def process_paths(apo_IDs, use_tensors=True, use_lm=False):
 #     return prediction
 
 
-def predict_on_xtals(model, nn_path, X, S, mask, opt=tf.keras.optimizers.Adam()):
+def predict_on_xtals(model, nn_path, X, S, mask, opt=tf.keras.optimizers.legacy.Adam()):
     load_checkpoint(model, opt, nn_path)
     prediction = model(X, S, mask, train=False, res_level=True)
     return prediction
