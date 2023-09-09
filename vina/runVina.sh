@@ -48,7 +48,7 @@ done
 
 script_path=$(dirname "$0")
 script_path=$(realpath ${script_path})
-autodock_tools_path="/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
+autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
 
 #convert all lig files to pdbqt if they are not already
 if [ -d "$lig_path" ]; then
@@ -135,7 +135,7 @@ for rec in "${all_recs[@]}"; do
     if ! [ -d ${full_out_path} ]; then
         mkdir $full_out_path
     fi
-    cp ${script_path}/../data/vinaConfig ${full_out_path}/${config_name}
+    cp ${script_path}/vinaConfig ${full_out_path}/${config_name}
 
     if [ "${center_given}" = false ] || [ "${size_given}" = false ]; then
         #get coordinates from python script
