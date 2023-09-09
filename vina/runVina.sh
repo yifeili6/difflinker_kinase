@@ -60,7 +60,7 @@ if [ -d "$lig_path" ]; then
             echo "Converting ${lig} to pdbqt"
             python ${script_path}/fix_atom_names.py ${lig}
             updated_lig_name="${base_name}_renamed.mol2"
-            pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
+            ${autodock_tools_path}/bin/pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
             rm ${updated_lig_name}
         fi
     done
@@ -76,7 +76,7 @@ else
         python ${script_path}/fix_atom_names.py ${lig_path}
         updated_lig_name="${base_name}_renamed.mol2"
         cd $dir
-        pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
+        ${autodock_tools_path}/bin/pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
         rm ${updated_lig_name}
         cd -
     fi
@@ -100,7 +100,7 @@ if [ -d "$rec_path" ]; then
             sed -i 's/HSD/HID/g' $fixed_rec
             sed -i 's/HSE/HIE/g' $fixed_rec
             sed -i 's/HSP/HIP/g' $fixed_rec
-            pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
+            ${autodock_tools_path}/bin/pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
             rm $fixed_rec
         fi
     done
@@ -117,7 +117,7 @@ else
         sed -i 's/HSD/HID/g' $fixed_rec
         sed -i 's/HSE/HIE/g' $fixed_rec
         sed -i 's/HSP/HIP/g' $fixed_rec
-        pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
+        ${autodock_tools_path}/bin/pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
         rm $fixed_rec
     fi
     rec_path=${rec_path%.*}.pdbqt
