@@ -68,7 +68,6 @@ def extractAutodockScores(path_to_out_file):
 
 def appendVinaDataToDataframe(vina_path: "./1v74/vina/"):
     dockingTool = "vina"
-    receptorName = proteinModel
     df_list = []
     for file in sorted(os.listdir(vina_path)):
         if file.endswith(".pdbqt"):
