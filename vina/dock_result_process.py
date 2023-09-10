@@ -75,4 +75,4 @@ def appendVinaDataToDataframe(vina_path: "./1v74/vina/"):
             modifyPDBFiles(os.path.join(vina_path, file[:-6] + ".pdb"))
 
 if __name__ == "__main__":
-    appendVinaDataToDataframe(vina_path="./1v74/vina")
+    appendVinaDataToDataframe(vina_path="vina/1v74/vina")
