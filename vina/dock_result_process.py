@@ -7,6 +7,9 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import sys
 
+def convert_docking_output_files_to_pdb(path):
+    os.system("pushd {} && obabel -ipdbqt *.pdbqt -opdb -m && popd".format(path))
+
 def convertUniToDict(uni,newNames = [],add_idx = True):
     allCoords = dict()
     atom_types = dict()
@@ -71,7 +74,8 @@ def appendVinaDataToDataframe(vina_path: "./1v74/vina/"):
     df_list = []
     for file in sorted(os.listdir(vina_path)):
         if file.endswith(".pdbqt"):
-            scores = extractAutodockScores(os.path.join(vina_path, file))
+            convert_docking_output_files_to_pdb(vina_path)
+            # scores = extractAutodockScores(os.path.join(vina_path, file))
             modifyPDBFiles(os.path.join(vina_path, file[:-6] + ".pdb"))
 
 if __name__ == "__main__":
