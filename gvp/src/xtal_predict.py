@@ -9,6 +9,11 @@ import os
 
 from validate_performance_on_xtals import process_strucs, predict_on_xtals
 
+# esure working directory to be the same as where your Python script is located, regardless of where you run it from
+script_path = os.path.abspath(__file__)
+script_dir = os.path.dirname(script_path)
+os.chdir(script_dir)
+
 def make_predictions(pdb_paths, model, nn_path, debug=False, output_basename=None):
     '''
         pdb_paths : list of pdb paths
@@ -30,10 +35,11 @@ if __name__ == '__main__':
     strucs = [
        # '../data/ACE2.pdb',
        # './1ADE.pdb'
-       './1a0q_protein_processed.pdb' # diffdock example
+       #'./1a0q_protein_processed.pdb' # diffdock example
+       '../../data_docking/protein/1ADE.pdb'
     ]
-    output_name = 'ACE2'
-    output_folder = '.'
+    output_name = '1ADE'
+    output_folder = '../../data_docking/result_gvp'
 
     # debugging mode can be turned on to output protein features and sequence
     debug = False
