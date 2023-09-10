@@ -48,7 +48,8 @@ done
 
 script_path=$(dirname "$0")
 script_path=$(realpath ${script_path})
-autodock_tools_path="/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
+autodock_python="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/bin/pythonsh"
+autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
 
 #convert all lig files to pdbqt if they are not already
 if [ -d "$lig_path" ]; then
@@ -60,7 +61,7 @@ if [ -d "$lig_path" ]; then
             echo "Converting ${lig} to pdbqt"
             python ${script_path}/fix_atom_names.py ${lig}
             updated_lig_name="${base_name}_renamed.mol2"
-            pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
+            ${autodock_python} ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
             rm ${updated_lig_name}
         fi
     done
@@ -76,7 +77,7 @@ else
         python ${script_path}/fix_atom_names.py ${lig_path}
         updated_lig_name="${base_name}_renamed.mol2"
         cd $dir
-        pythonsh ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
+        ${autodock_python} ${autodock_tools_path}/prepare_ligand4.py -l ${updated_lig_name} -o ${pdbqt_name}
         rm ${updated_lig_name}
         cd -
     fi
@@ -100,7 +101,7 @@ if [ -d "$rec_path" ]; then
             sed -i 's/HSD/HID/g' $fixed_rec
             sed -i 's/HSE/HIE/g' $fixed_rec
             sed -i 's/HSP/HIP/g' $fixed_rec
-            pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
+            ${autodock_python} ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
             rm $fixed_rec
         fi
     done
@@ -117,7 +118,7 @@ else
         sed -i 's/HSD/HID/g' $fixed_rec
         sed -i 's/HSE/HIE/g' $fixed_rec
         sed -i 's/HSP/HIP/g' $fixed_rec
-        pythonsh ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
+        ${autodock_python} ${autodock_tools_path}/prepare_receptor4.py -r ${fixed_rec} -o ${pdbqt_name} -A hydrogens
         rm $fixed_rec
     fi
     rec_path=${rec_path%.*}.pdbqt
@@ -135,7 +136,7 @@ for rec in "${all_recs[@]}"; do
     if ! [ -d ${full_out_path} ]; then
         mkdir $full_out_path
     fi
-    cp ${script_path}/../data/vinaConfig ${full_out_path}/${config_name}
+    cp ${script_path}/vinaConfig ${full_out_path}/${config_name}
 
     if [ "${center_given}" = false ] || [ "${size_given}" = false ]; then
         #get coordinates from python script
@@ -160,7 +161,7 @@ for rec in "${all_recs[@]}"; do
 
     for lig in ${all_ligs[@]}; do
         lig_name=$(basename $lig .pdbqt)
-        cmd="vina --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
+        cmd="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
         echo -e "Running command:\n${cmd}"
         ${cmd}
         echo "Done"
