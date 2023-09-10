@@ -66,7 +66,7 @@ def extractAutodockScores(path_to_out_file):
             scores_list.append(line.split()[3])
     return scores_list
 
-def appendVinaDataToDataframe(vina_path, dataFrame, proteinModel):
+def appendVinaDataToDataframe(vina_path: "./1v74/vina/"):
     dockingTool = "vina"
     receptorName = proteinModel
     df_list = []
@@ -74,28 +74,6 @@ def appendVinaDataToDataframe(vina_path, dataFrame, proteinModel):
         if file.endswith(".pdbqt"):
             scores = extractAutodockScores(os.path.join(vina_path, file))
             modifyPDBFiles(os.path.join(vina_path, file[:-6] + ".pdb"))
-            try:
-                ligandUniverse = mda.Universe(os.path.join(vina_path, file[:-6] + ".pdb"))
-            except:
-                print(f"Unable to create MDA universe from: {file}")
-            ligandUniverse = ligandUniverse.select_atoms('not type H')
-            atomNames = []
-            hasLen = False
-            for i,atom in enumerate(ligandUniverse.atoms):
-                name = atom.name
-                if name in atomNames:
-                    ligandLength = i
-                    hasLen = True
-                    break
-                atomNames.append(name)
-            if not hasLen:
-                #when this error pops up it is due to having only 1 pose in the file.
-                ligandLength = len(ligandUniverse.atoms)
-            ligandName = file[:file.rfind(".")]
-            for i in range(len(scores)):
-                #convert to dict to allow pickling
-                uniCoords = convertUniToDict(ligandUniverse.atoms[ligandLength*i:ligandLength*(i+1)],add_idx=False)
-                df_list.append([float(scores[i]),ligandName,receptorName,uniCoords,dockingTool])
-    vina_frame = pd.DataFrame(df_list,columns=[i for i in dataFrame.columns])
-    dataFrame = pd.concat([dataFrame,vina_frame],ignore_index=True)
-    return dataFrame
+
+if __name__ == "__main__":
+    appendVinaDataToDataframe(vina_path="./1v74/vina")
