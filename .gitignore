@@ -3,3 +3,6 @@ models
 trajectories
 logs
 formatted
+datadocking/result_fpocket/*
+datadocking/result_gvp/* 
+datadocking/result_diffdock/*

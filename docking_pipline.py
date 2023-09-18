@@ -1,6 +1,20 @@
+# f-pocket related import
 import subprocess
 import shutil
 import os 
+
+# gvp related import 
+import torch
+import torch_geometric
+import tensorflow as tf
+from gvp.src.models import MQAModel
+import numpy as np
+from glob import glob
+import mdtraj as md
+from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
+
+# diff dock related import
+
 # completed_process = subprocess.run(["ls", "-l"], capture_output=True, text=True)
 # print(f"Return code: {completed_process.returncode}")
 # print(f"Have {len(completed_process.stdout)} bytes in stdout:\n{completed_process.stdout}")
@@ -10,15 +24,22 @@ import os
 '''reference: https://github.com/Discngine/fpocket'''
 
 
-protein_path = 'data_docking/protein'
-output_path = 'data_docking/result_fpocket' 
+protein_path   = 'data_docking/protein'
 
-protein_name = '1ADE.pdb'
-outfile_name = protein_name.split('.')[0] +'_out' 
+outpath_fpocket = 'data_docking/result_fpocket' 
+outpath_gvp     = 'data_docking/result_gvp'
 
-if 0:
+nn_path_gvp     = "./gvp/models/pocketminer"
+
+protein_name   = '1ADE.pdb'
+strucs = [os.path.join(protein_path, protein_name)]
+
+outfile_name   = protein_name.split('.')[0] +'_out' 
+
+
+if 1:
     try:
-        if not os.path.exists(os.path.join(protein_path, outfile_name)):
+        if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
             # Run the command and wait for it to complete
             completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
             
@@ -30,25 +51,14 @@ if 0:
 
             # Move the output file to the desired location
             shutil.move(os.path.join(protein_path, outfile_name), 
-                        os.path.join(output_path))
+                        os.path.join(outpath_fpocket))
 
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
 
 ## Use gvp predict pocket 
-if 1: 
-    import torch
-    import torch_geometric
-    import tensorflow as tf
-    from gvp.src.models import MQAModel
-    import numpy as np
-    from glob import glob
-    import mdtraj as md
-    import os
-
-    from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
-
+if 0: 
     # esure working directory to be the same as where your Python script is located, regardless of where you run it from
     # script_path = os.path.abspath(__file__)
     # script_dir = os.path.dirname(script_path)
@@ -69,20 +79,13 @@ if 1:
         predictions = predict_on_xtals(model, nn_path, X, S, mask)
         return predictions
 
-    # TO DO - provide input pdb(s), output name, and output folder
-    # strucs = [
-    #     '../../data_docking/protein/1ADE.pdb'
-    # ]
-    strucs = [os.path.join(protein_path, protein_name)]
-    #output_name = '1ADE'
-    #output_folder = '../../data_docking/result_gvp'
-    output_folder = 'data_docking/result_gvp'
+
+
+    
     # debugging mode can be turned on to output protein features and sequence
     debug = False
 
     # Load MQA Model used for selected NN network
-
-    nn_path = "./gvp/models/pocketminer"
     DROPOUT_RATE = 0.1
     NUM_LAYERS = 4
     HIDDEN_DIM = 100
@@ -92,12 +95,12 @@ if 1:
 
 
     if debug:
-        output_basename = f'{output_folder}/{outfile_name}'
-        predictions = make_predictions(strucs, model, nn_path, debug=True, output_basename=output_basename)
+        output_basename = f'{outpath_gvp}/{outfile_name}'
+        predictions = make_predictions(strucs, model, nn_path_gvp, debug=True, output_basename=output_basename)
     else:
-        predictions = make_predictions(strucs, model, nn_path)
+        predictions = make_predictions(strucs, model, nn_path_gvp)
 
     # output filename can be modified here
-    np.save(f'{output_folder}/{outfile_name}-preds.npy', predictions)
-    np.savetxt(os.path.join(output_folder,f'{outfile_name}-predictions.txt'), predictions, fmt='%.4g', delimiter='\n')
+    np.save(f'{outpath_gvp}/{outfile_name}-preds.npy', predictions)
+    np.savetxt(os.path.join(outpath_gvp,f'{outfile_name}-predictions.txt'), predictions, fmt='%.4g', delimiter='\n')
 
