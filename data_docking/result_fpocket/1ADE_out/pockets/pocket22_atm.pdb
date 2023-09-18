@@ -1,0 +1,37 @@
+HEADER
+HEADER This is a pdb format file writen by the programm fpocket.                 
+HEADER It represents the atoms contacted by the voronoi vertices of the pocket.  
+HEADER                                                                           
+HEADER Information about the pocket    22:
+HEADER 0  - Pocket Score                      : -0.1136
+HEADER 1  - Drug Score                        : 0.0001
+HEADER 2  - Number of alpha spheres           :    16
+HEADER 3  - Mean alpha-sphere radius          : 3.8112
+HEADER 4  - Mean alpha-sphere Solvent Acc.    : 0.6132
+HEADER 5  - Mean B-factor of pocket residues  : 0.0000
+HEADER 6  - Hydrophobicity Score              : -12.6667
+HEADER 7  - Polarity Score                    :     6
+HEADER 8  - Amino Acid based volume Score     : 5.0000
+HEADER 9  - Pocket volume (Monte Carlo)       : 174.3759
+HEADER 10 - Pocket volume (convex hull)       : 4.2098
+HEADER 11 - Charge Score                      :     1
+HEADER 12 - Local hydrophobic density Score   : 2.0000
+HEADER 13 - Number of apolar alpha sphere     :     3
+HEADER 14 - Proportion of apolar alpha sphere : 0.1875
+ATOM   3943   CA TYR A 258      82.070  75.530  15.380  0.00  0.00           C 0
+ATOM   3949  CD1 TYR A 258      81.770  76.100  12.350  0.00  0.00           C 0
+ATOM   3986  OD1 ASP A 260      86.960  76.010  16.520  0.00  0.00           O 0
+ATOM   3940    O ARG A 257      83.010  72.980  15.120  0.52  7.50           O 0
+ATOM   3961    O TYR A 258      83.350  76.650  17.010  0.00  0.00           O 0
+ATOM   3945   CB TYR A 258      81.370  76.760  14.820  0.00  0.00           C 0
+ATOM     33  ND2 ASN A   3      83.970  79.620  16.450  0.57  2.19           N 0
+ATOM   3299   CG ARG A 212      83.100  80.520  12.560  0.00  0.00           C 0
+ATOM   3308  NH1 ARG A 212      83.040  79.480   9.310  0.47  8.75           N 0
+ATOM   3302   CD ARG A 212      82.040  79.510  12.130  0.00  0.00           C 0
+ATOM     14   CB ASN A   2      88.240  81.250  16.700  0.00  0.00           C 0
+ATOM     17   CG ASN A   2      89.570  81.410  15.980  0.00  0.00           C 0
+ATOM     18  OD1 ASN A   2      90.250  80.470  15.570  0.00  0.00           O 0
+ATOM   3315    O ARG A 212      85.660  82.810  11.920  0.31  6.43           O 0
+ATOM   3987  OD2 ASP A 260      86.930  78.050  17.350  0.62  2.14           O 0
+TER
+END

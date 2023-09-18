@@ -1,0 +1,38 @@
+HEADER
+HEADER This is a pdb format file writen by the programm fpocket.                 
+HEADER It represents the atoms contacted by the voronoi vertices of the pocket.  
+HEADER                                                                           
+HEADER Information about the pocket    28:
+HEADER 0  - Pocket Score                      : -0.1778
+HEADER 1  - Drug Score                        : 0.0037
+HEADER 2  - Number of alpha spheres           :    16
+HEADER 3  - Mean alpha-sphere radius          : 4.0379
+HEADER 4  - Mean alpha-sphere Solvent Acc.    : 0.4804
+HEADER 5  - Mean B-factor of pocket residues  : 0.0000
+HEADER 6  - Hydrophobicity Score              : 29.1667
+HEADER 7  - Polarity Score                    :     2
+HEADER 8  - Amino Acid based volume Score     : 4.1667
+HEADER 9  - Pocket volume (Monte Carlo)       : 289.7727
+HEADER 10 - Pocket volume (convex hull)       : 4.3953
+HEADER 11 - Charge Score                      :     1
+HEADER 12 - Local hydrophobic density Score   : 11.0000
+HEADER 13 - Number of apolar alpha sphere     :    12
+HEADER 14 - Proportion of apolar alpha sphere : 0.7500
+ATOM   1955  CG1 ILE A 126      61.670  70.980  45.620  0.00  0.00           C 0
+ATOM   1951  CG2 ILE A 126      64.030  71.690  44.820  0.00  0.00           C 0
+ATOM   3672    O PRO A 236      66.260  67.850  41.730  0.80  5.36           O 0
+ATOM   1958  CD1 ILE A 126      61.210  70.740  44.190  0.00  0.00           C 0
+ATOM   1933    C LYS A 124      59.830  70.430  50.410  0.00  0.00           C 0
+ATOM   1944    O ALA A 125      62.880  71.220  49.890  0.00  5.36           O 0
+ATOM   1915   CA LYS A 124      59.170  69.450  51.360  0.00  0.00           C 0
+ATOM   1934    O LYS A 124      59.560  70.330  49.210  0.89  6.43           O 0
+ATOM   3666   CB PRO A 236      64.750  65.340  41.740  0.00  0.00           C 0
+ATOM   3663   CG PRO A 236      64.990  64.180  42.690  0.00  0.00           C 0
+ATOM   3683  CE1 TYR A 237      67.260  66.050  46.790  0.00  0.00           C 0
+ATOM   1947   CA ILE A 126      63.300  71.890  47.220  0.00  0.00           C 0
+ATOM   1963    O ILE A 126      65.670  72.190  47.390  0.53  7.50           O 0
+ATOM   4220   CB ALA A 275      69.290  68.520  49.560  0.00  0.00           C 0
+ATOM   3681  CD1 TYR A 237      68.080  66.780  45.930  0.00  0.00           C 0
+ATOM   3686   OH TYR A 237      66.240  63.990  47.540  0.00  0.00           O 0
+TER
+END

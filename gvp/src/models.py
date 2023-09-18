@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import *
 from tensorflow.keras.layers import *
-from gvp import *
+from .gvp import *
 
 class MQAModel(Model):
     def __init__(self, node_features, edge_features,

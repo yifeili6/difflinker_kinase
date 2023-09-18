@@ -1,0 +1,40 @@
+HEADER
+HEADER This is a pdb format file writen by the programm fpocket.                 
+HEADER It represents the atoms contacted by the voronoi vertices of the pocket.  
+HEADER                                                                           
+HEADER Information about the pocket     9:
+HEADER 0  - Pocket Score                      : -0.0329
+HEADER 1  - Drug Score                        : 0.0001
+HEADER 2  - Number of alpha spheres           :    21
+HEADER 3  - Mean alpha-sphere radius          : 3.9552
+HEADER 4  - Mean alpha-sphere Solvent Acc.    : 0.5558
+HEADER 5  - Mean B-factor of pocket residues  : 0.0000
+HEADER 6  - Hydrophobicity Score              : -5.4286
+HEADER 7  - Polarity Score                    :     6
+HEADER 8  - Amino Acid based volume Score     : 4.4286
+HEADER 9  - Pocket volume (Monte Carlo)       : 268.9197
+HEADER 10 - Pocket volume (convex hull)       : 12.4863
+HEADER 11 - Charge Score                      :     0
+HEADER 12 - Local hydrophobic density Score   : 0.0000
+HEADER 13 - Number of apolar alpha sphere     :     1
+HEADER 14 - Proportion of apolar alpha sphere : 0.0476
+ATOM   1460   CB GLU A  95      76.870 101.910  22.980  0.00  0.00           C 0
+ATOM   1463   CG GLU A  95      78.080 102.220  23.860  0.00  0.00           C 0
+ATOM   1470    O GLU A  95      77.520  99.070  22.350  0.55  8.57           O 0
+ATOM   1468  OE2 GLU A  95      79.740 103.900  23.460  0.00  0.00           O 0
+ATOM    975    O ASN A  63      86.400  95.120  22.530  0.91  2.14           O 0
+ATOM    974    C ASN A  63      85.640  96.000  22.930  0.00  0.00           C 0
+ATOM    966   CB ASN A  63      86.910  97.830  21.670  0.00  0.00           C 0
+ATOM    423   NZ LYS A  28      85.870  93.820  16.710  0.59  8.75           N 0
+ATOM    420   CE LYS A  28      85.380  92.810  17.660  0.00  0.00           C 0
+ATOM   1481   CD ARG A  96      81.400  99.000  25.510  0.00  0.00           C 0
+ATOM   1002  OG1 THR A  65      80.560  94.760  20.660  0.00  0.00           O 0
+ATOM    976    N VAL A  64      84.580  95.590  23.630  0.76  1.09           N 0
+ATOM    991    O VAL A  64      82.040  95.120  24.670  0.00  0.00           O 0
+ATOM    961    O GLU A  62      84.510  99.430  24.460  0.00  0.00           O 0
+ATOM    970  OD1 ASN A  63      86.490  99.920  20.500  0.00  0.00           O 0
+ATOM    964   CA ASN A  63      85.900  97.490  22.770  0.00  0.00           C 0
+ATOM    428    O LYS A  28      83.380  91.670  21.340  0.00  0.00           O 0
+ATOM   1478   CG ARG A  96      79.920  99.080  25.120  0.00  0.00           C 0
+TER
+END

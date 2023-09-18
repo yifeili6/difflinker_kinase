@@ -1,0 +1,35 @@
+HEADER
+HEADER This is a pdb format file writen by the programm fpocket.                 
+HEADER It represents the atoms contacted by the voronoi vertices of the pocket.  
+HEADER                                                                           
+HEADER Information about the pocket    15:
+HEADER 0  - Pocket Score                      : -0.0655
+HEADER 1  - Drug Score                        : 0.0005
+HEADER 2  - Number of alpha spheres           :    18
+HEADER 3  - Mean alpha-sphere radius          : 3.8530
+HEADER 4  - Mean alpha-sphere Solvent Acc.    : 0.4671
+HEADER 5  - Mean B-factor of pocket residues  : 0.0000
+HEADER 6  - Hydrophobicity Score              : -6.0000
+HEADER 7  - Polarity Score                    :     5
+HEADER 8  - Amino Acid based volume Score     : 3.7143
+HEADER 9  - Pocket volume (Monte Carlo)       : 169.4410
+HEADER 10 - Pocket volume (convex hull)       : 1.8652
+HEADER 11 - Charge Score                      :     1
+HEADER 12 - Local hydrophobic density Score   : 5.0000
+HEADER 13 - Number of apolar alpha sphere     :     6
+HEADER 14 - Proportion of apolar alpha sphere : 0.3333
+ATOM   4584  OG1 THR A 300      79.540  82.050  46.490  0.47  2.14           O 0
+ATOM   4568   CB ALA A 299      81.610  83.480  51.090  0.00  0.00           C 0
+ATOM   4564    N ALA A 299      79.610  82.200  51.470  0.00  0.00           N 0
+ATOM   4676  NH2 ARG A 305      79.190  78.280  48.240  0.53  1.09           N 0
+ATOM   4534  OE2 GLU A 296      84.620  77.860  47.630  0.30  5.36           O 0
+ATOM   4526   CB GLU A 296      83.590  78.160  50.860  0.00  0.00           C 0
+ATOM   4580  CG2 THR A 300      80.820  84.000  46.780  0.00  0.00           C 0
+ATOM   4507    O GLY A 294      87.460  79.960  50.990  0.33  2.14           O 0
+ATOM   5089   NZ LYS A 331      90.050  81.360  47.710  0.15  9.84           N 0
+ATOM   5086   CE LYS A 331      89.840  80.490  46.540  0.00  0.00           C 0
+ATOM   4521    O ASN A 295      84.620  81.820  52.420  0.00  0.00           O 0
+ATOM   4529   CG GLU A 296      84.820  78.320  49.970  0.00  0.00           C 0
+ATOM   4524   CA GLU A 296      83.380  79.330  51.830  0.00  0.00           C 0
+TER
+END

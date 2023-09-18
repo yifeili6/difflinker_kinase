@@ -1,0 +1,35 @@
+HEADER
+HEADER This is a pdb format file writen by the programm fpocket.                 
+HEADER It represents the atoms contacted by the voronoi vertices of the pocket.  
+HEADER                                                                           
+HEADER Information about the pocket    20:
+HEADER 0  - Pocket Score                      : -0.0969
+HEADER 1  - Drug Score                        : 0.0017
+HEADER 2  - Number of alpha spheres           :    17
+HEADER 3  - Mean alpha-sphere radius          : 3.8549
+HEADER 4  - Mean alpha-sphere Solvent Acc.    : 0.5146
+HEADER 5  - Mean B-factor of pocket residues  : 0.0000
+HEADER 6  - Hydrophobicity Score              : 24.5000
+HEADER 7  - Polarity Score                    :     2
+HEADER 8  - Amino Acid based volume Score     : 4.5000
+HEADER 9  - Pocket volume (Monte Carlo)       : 181.8642
+HEADER 10 - Pocket volume (convex hull)       : 1.7325
+HEADER 11 - Charge Score                      :     1
+HEADER 12 - Local hydrophobic density Score   : 9.0000
+HEADER 13 - Number of apolar alpha sphere     :    10
+HEADER 14 - Proportion of apolar alpha sphere : 0.5882
+ATOM   4469   CG LYS A 292      87.350  77.120  59.720  0.00  0.00           C 0
+ATOM   4516  OD1 ASN A 295      86.650  82.950  55.370  0.00  0.00           O 0
+ATOM   4483    O LYS A 292      88.740  79.080  56.070  0.42  5.36           O 0
+ATOM   4464   CA LYS A 292      87.800  77.300  57.250  0.00  0.00           C 0
+ATOM   4545  CD1 PHE A 297      82.940  82.330  55.330  0.00  0.00           C 0
+ATOM   4461    O CYS A 291      86.460  77.180  54.760  0.65  1.07           O 0
+ATOM   4510   CA ASN A 295      86.480  80.710  53.500  0.00  0.00           C 0
+ATOM   4541   CB PHE A 297      81.400  80.480  55.970  0.00  0.00           C 0
+ATOM   4472   CD LYS A 292      86.230  76.090  59.610  0.00  0.00           C 0
+ATOM   4458   SG CYS A 291      83.450  75.420  55.430  0.00  0.00           S 0
+ATOM   4475   CE LYS A 292      85.260  76.420  60.740  0.00  0.00           C 0
+ATOM   4478   NZ LYS A 292      84.150  75.460  60.860  0.00  0.00           N 0
+ATOM   4462    N LYS A 292      87.110  76.180  56.640  0.00  0.00           N 0
+TER
+END
