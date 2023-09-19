@@ -1,7 +1,10 @@
+import os 
+
+
 # f-pocket related import
 import subprocess
 import shutil
-import os 
+
 
 # gvp related import 
 import torch
@@ -23,39 +26,50 @@ from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xta
 # fpocket -f data_docking/protein/1ADE.pdb -o 
 '''reference: https://github.com/Discngine/fpocket'''
 
+class PocketPrediction:
+    def __init__(self, 
+                 protein_path = 'data_docking/protein', 
+                 outpath_fpocket = 'data_docking/result_fpocket' , 
+                 outpath_gvp = 'data_docking/result_gvp', 
+                 nn_path_gvp = "./gvp/models/pocketminer"):
 
-protein_path   = 'data_docking/protein'
+        # input path, files
+        self.protein_path   = protein_path
+        self.protein_path_pdb_files      = glob(f"{protein_path}/*.pdb")
+        self.pdb_files      = [os.path.basename(f) for f in self.protein_path_pdb_files]
 
-outpath_fpocket = 'data_docking/result_fpocket' 
-outpath_gvp     = 'data_docking/result_gvp'
+        # output path, files
+        self.outpath_fpocket = outpath_fpocket
+        self.outpath_gvp     = outpath_gvp
+        self.outfile_files  = [pdb_file.split('.')[0] +'_out' for pdb_file in self.pdb_files]
 
-nn_path_gvp     = "./gvp/models/pocketminer"
+        # model
+        self.nn_path_gvp     = nn_path_gvp
 
-protein_name   = '1ADE.pdb'
-strucs = [os.path.join(protein_path, protein_name)]
+    def predict_1_with_fpocket(self, protein_path, protein_name, outpath_fpocket, outfile_name):
+        try:
+            if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
+                # Run the command and wait for it to complete
+                completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
+                print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+                print(f"Output: {completed_process.stdout}")
+                # Move the output file to the desired location
+                shutil.move(os.path.join(protein_path, outfile_name), 
+                            os.path.join(outpath_fpocket))
 
-outfile_name   = protein_name.split('.')[0] +'_out' 
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
 
+    def predict_all_with_fpocket(self,): 
+        protein_path    = self.protein_path
+        outpath_fpocket = self.outpath_fpocket
+        pdb_files       = self.pdb_files
+        outfile_files   = self.outfile_files
+        for protein_name, outfile_name in zip(pdb_files, outfile_files):
+            self.predict_1_with_fpocket(protein_path, protein_name, outpath_fpocket, outfile_name)
 
-if 1:
-    try:
-        if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
-            # Run the command and wait for it to complete
-            completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
-            
-            # Print the return code
-            print(f"Return code: {completed_process.returncode}")
-            # Print captured stdout and stderr, if any
-            print(f"Output: {completed_process.stdout}")
-            print(f"Error: {completed_process.stderr}")
-
-            # Move the output file to the desired location
-            shutil.move(os.path.join(protein_path, outfile_name), 
-                        os.path.join(outpath_fpocket))
-
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred: {e}")
-
+pred = PocketPrediction()
+pred.predict_all_with_fpocket()
 
 ## Use gvp predict pocket 
 if 0: 
