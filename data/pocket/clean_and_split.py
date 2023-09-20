@@ -71,7 +71,7 @@ def run(input_dir, proteins_dir, ligands_dir):
             Chem.MolToMolFile(lig, out_ligand_path)
 
     with multiprocessing.Pool(os.cpu_count()-1) as mpool:
-        result = mpool.map_async(process_one_file, fnames).get()
+        result = mpool.map(process_one_file, fnames) #.get()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
