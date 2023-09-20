@@ -11,6 +11,7 @@ from src.utils import disable_rdkit_logging
 
 import functools
 import multiprocessing
+import ray
 
 def get_relevant_ligands(mol):
     frags = Chem.GetMolFrags(mol, asMols=True, sanitizeFrags=False)
@@ -27,7 +28,8 @@ def run(input_dir, proteins_dir, ligands_dir):
 
     fnames = [fname for fname in tqdm(os.listdir(input_dir)) if fname.endswith(".bio1")]
     return fnames
-    
+
+@ray.remote
 def process_one_file(input_dir, proteins_dir, ligands_dir, fname):
     # assert fname.endswith('.bio1')
 
@@ -82,7 +84,10 @@ if __name__ == '__main__':
     disable_rdkit_logging()
     fnames = run(input_dir=args.in_dir, proteins_dir=args.proteins_dir, ligands_dir=args.ligands_dir)
 
-    process_one_file_ = lambda fname: functools.partial(process_one_file, input_dir=args.in_dir, proteins_dir=args.proteins_dir, ligands_dir=args.ligands_dir)(fname=fname)
+    # process_one_file_ = lambda fname: functools.partial(process_one_file, input_dir=args.in_dir, proteins_dir=args.proteins_dir, ligands_dir=args.ligands_dir)(fname=fname)
     
-    with multiprocessing.Pool(os.cpu_count()-1) as mpool:
-        result = mpool.map(process_one_file_, fnames) #.get()
+    # with multiprocessing.Pool(os.cpu_count()-1) as mpool:
+    #     result = mpool.map(process_one_file_, fnames) #.get()
+    input_dir, proteins_dir, ligands_dir = ray.put(input_dir), ray.put(proteins_dir), ray.put(ligands_dir)
+    results = [process_one_file.remote(input_dir, proteins_dir, ligands_dir, fname) for fname in fnames]
+    results = ray.get(results)
