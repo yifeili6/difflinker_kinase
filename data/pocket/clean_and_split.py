@@ -58,13 +58,13 @@ def run(input_dir, proteins_dir, ligands_dir):
         except Exception as e:
             print(f'Problem reading ligands PDB={pdb_code}: {e}')
             os.remove(out_ligands_path)
-            continue
+            # continue
 
         try:
             ligands = get_relevant_ligands(mol)
         except Exception as e:
             print(f'Problem getting relevant ligands PDB={pdb_code}: {e}')
-            continue
+            # continue
 
         for i, lig in enumerate(ligands):
             out_ligand_path = os.path.join(ligands_dir, f'{pdb_code}_{i}.mol')
