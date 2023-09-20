@@ -85,4 +85,4 @@ if __name__ == '__main__':
     process_one_file_ = lambda fname: functools.partial(process_one_file, input_dir=args.in_dir, proteins_dir=args.proteins_dir, ligands_dir=args.ligands_dir)(fname=fname)
     
     with multiprocessing.Pool(os.cpu_count()-1) as mpool:
-        result = mpool.map_async(process_one_file_, fnames).get()
+        result = mpool.map(process_one_file_, fnames) #.get()
