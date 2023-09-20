@@ -70,10 +70,14 @@ def process_one_file(input_dir, proteins_dir, ligands_dir, fname):
         print(f'Problem getting relevant ligands PDB={pdb_code}: {e}')
         # continue
 
-    for i, lig in enumerate(ligands):
-        out_ligand_path = os.path.join(ligands_dir, f'{pdb_code}_{i}.mol')
-        Chem.MolToMolFile(lig, out_ligand_path)
-            
+    try:
+        for i, lig in enumerate(ligands):
+            out_ligand_path = os.path.join(ligands_dir, f'{pdb_code}_{i}.mol')
+            Chem.MolToMolFile(lig, out_ligand_path)
+    except Exception as e:
+        print(f'Problem getting relevant ligands PDB={pdb_code}: {e}')
+        # continue
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--in-dir', action='store', type=str, required=True)
