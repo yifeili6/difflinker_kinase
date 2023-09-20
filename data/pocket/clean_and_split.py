@@ -88,6 +88,6 @@ if __name__ == '__main__':
     
     # with multiprocessing.Pool(os.cpu_count()-1) as mpool:
     #     result = mpool.map(process_one_file_, fnames) #.get()
-    input_dir, proteins_dir, ligands_dir = ray.put(input_dir), ray.put(proteins_dir), ray.put(ligands_dir)
+    input_dir, proteins_dir, ligands_dir = ray.put(args.input_dir), ray.put(args.proteins_dir), ray.put(args.ligands_dir)
     results = [process_one_file.remote(input_dir, proteins_dir, ligands_dir, fname) for fname in fnames]
     results = ray.get(results)
