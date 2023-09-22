@@ -53,8 +53,8 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
             table.loc[i, 'discard'] = True
 
     # Split in train, test, val
-    test_pdbs = np.loadtxt(TEST_PDBS_PATH, fmt='%s')
-    val_pdbs = np.loadtxt(VAL_PDBS_PATH, fmt='%s')
+    test_pdbs = np.loadtxt(TEST_PDBS_PATH) #, fmt='%s')
+    val_pdbs = np.loadtxt(VAL_PDBS_PATH) #, fmt='%s')
     table['dataset'] = table['molecule_name'].apply(lambda x: assign_dataset(x, test_pdbs, val_pdbs))
     print('Train:', len(table[(~table.discard) & (table.dataset == 'train')]))
     print('Test:', len(table[(~table.discard) & (table.dataset == 'test')]))
