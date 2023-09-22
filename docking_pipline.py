@@ -1,10 +1,8 @@
 import os 
 
-
 # f-pocket related import
 import subprocess
 import shutil
-
 
 # gvp related import 
 import torch
@@ -68,53 +66,48 @@ class PocketPrediction:
         for protein_name, outfile_name in zip(pdb_files, outfile_files):
             self.predict_1_with_fpocket(protein_path, protein_name, outpath_fpocket, outfile_name)
 
-pred = PocketPrediction()
-pred.predict_all_with_fpocket()
 
-## Use gvp predict pocket 
-if 0: 
-    # esure working directory to be the same as where your Python script is located, regardless of where you run it from
-    # script_path = os.path.abspath(__file__)
-    # script_dir = os.path.dirname(script_path)
-    # os.chdir(script_dir)
+    def predict_all_with_gvp(self, debug=False, output_basename=None):
+        '''
+            protein_path_pdb_files : list of pdb paths
+            model : MQAModel corresponding to network in nn_path_gvp
+            nn_path_gvp : path to checkpoint files
+        '''
+        protein_path_pdb_files = self.protein_path_pdb_files
+        nn_path_gvp = self.nn_path_gvp
+        outpath_gvp = self.outpath_gvp  
+        outfile_files = 'concat_gvp_results'
 
-    def make_predictions(pdb_paths, model, nn_path, debug=False, output_basename=None):
-        '''
-            pdb_paths : list of pdb paths
-            model : MQAModel corresponding to network in nn_path
-            nn_path : path to checkpoint files
-        '''
-        strucs = [md.load(s) for s in pdb_paths]
+        model = self.mqa_model()
+
+        strucs = [md.load(s) for s in protein_path_pdb_files]
         X, S, mask = process_strucs(strucs)
         if debug:
+            output_basename = f'{outpath_gvp}/{outfile_files}'
             np.save(f'{output_basename}_X.npy', X)
             np.save(f'{output_basename}_S.npy', S)
             np.save(f'{output_basename}_mask.npy', mask)
-        predictions = predict_on_xtals(model, nn_path, X, S, mask)
+        predictions = predict_on_xtals(model, nn_path_gvp, X, S, mask)
+        
+        # save predictions
+        # output filename can be modified here
+        np.save(f'{outpath_gvp}/{outfile_files}-preds.npy', predictions)
+        np.savetxt(os.path.join(outpath_gvp,f'{outfile_files}-predictions.txt'), predictions, fmt='%.4g', delimiter='\n')
+        print('done')
+
         return predictions
 
 
-
-    
-    # debugging mode can be turned on to output protein features and sequence
-    debug = False
-
-    # Load MQA Model used for selected NN network
-    DROPOUT_RATE = 0.1
-    NUM_LAYERS = 4
-    HIDDEN_DIM = 100
-    model = MQAModel(node_features=(8, 50), edge_features=(1, 32),
-                        hidden_dim=(16, HIDDEN_DIM),
-                        num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
+    def mqa_model(self, DROPOUT_RATE = 0.1, NUM_LAYERS = 4, HIDDEN_DIM = 100):
+        # Load MQA Model used for selected NN network
+        model = MQAModel(node_features=(8, 50), edge_features=(1, 32),
+                            hidden_dim=(16, HIDDEN_DIM),
+                            num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
+        return model
 
 
-    if debug:
-        output_basename = f'{outpath_gvp}/{outfile_name}'
-        predictions = make_predictions(strucs, model, nn_path_gvp, debug=True, output_basename=output_basename)
-    else:
-        predictions = make_predictions(strucs, model, nn_path_gvp)
-
-    # output filename can be modified here
-    np.save(f'{outpath_gvp}/{outfile_name}-preds.npy', predictions)
-    np.savetxt(os.path.join(outpath_gvp,f'{outfile_name}-predictions.txt'), predictions, fmt='%.4g', delimiter='\n')
+if __name__ == '__main__':
+    pred = PocketPrediction()
+    pred.predict_all_with_fpocket()
+    pred.predict_all_with_gvp()
 
