@@ -48,7 +48,8 @@ for ((idx=0; idx<$#; idx++)); do
     fi
 done
 
-script_path=$(dirname "$0")
+# script_path=$(dirname "$0")
+script_path="vina"
 script_path=$(realpath ${script_path})
 autodock_python="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/bin/pythonsh"
 autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
