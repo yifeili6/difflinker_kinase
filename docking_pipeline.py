@@ -38,7 +38,8 @@ class PocketPrediction:
         # input path, files
         self.protein_path   = protein_path
         self.ligand_path   = ligand_path
-
+        self.vina_script_path = vina_script_path
+                     
         self.protein_path_pdb_files      = glob(f"{protein_path}/*.pdb")
         self.pdb_files      = [os.path.basename(f) for f in self.protein_path_pdb_files]
 
@@ -59,7 +60,7 @@ class PocketPrediction:
             for pdb in self.protein_path_pdb_files:
                 # center = 
                 # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
-                completed_process = subprocess.run([f"./runVina.sh -l {self.ligand_path} -r {pdb} -o {self.outpath_vina} "], check=True, capture_output=True, text=True)
+                completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb} -o {self.outpath_vina} "], check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
 
