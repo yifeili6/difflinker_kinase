@@ -28,7 +28,7 @@ import ast
 class PocketPrediction:
     def __init__(self, 
                  protein_path = 'data_docking/protein', 
-                 ligand_path = 'data_docking/ligand'
+                 ligand_path = 'data_docking/ligand',
                  outpath_fpocket = 'data_docking/result_fpocket' , 
                  outpath_vina = 'data_docking/result_vina' , 
                  outpath_gvp = 'data_docking/result_gvp', 
