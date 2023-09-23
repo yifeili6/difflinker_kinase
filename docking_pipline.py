@@ -29,9 +29,10 @@ class PocketPrediction:
                  protein_path = 'data_docking/protein', 
                  ligand_path = 'data_docking/ligand'
                  outpath_fpocket = 'data_docking/result_fpocket' , 
+                 outpath_vina = 'data_docking/result_vina' , 
                  outpath_gvp = 'data_docking/result_gvp', 
                  nn_path_gvp = "./gvp/models/pocketminer",
-                 vina_script_path: = "vina/runVina.sh"):
+                 vina_script_path: = "data_docking/runVina.sh"):
 
         # input path, files
         self.protein_path   = protein_path
@@ -42,6 +43,7 @@ class PocketPrediction:
 
         # output path, files
         self.outpath_fpocket = outpath_fpocket
+        self.outpath_vina = outpath_vina
         self.outpath_gvp     = outpath_gvp
         self.outfile_files  = [pdb_file.split('.')[0] +'_out' for pdb_file in self.pdb_files]
 
@@ -50,9 +52,9 @@ class PocketPrediction:
 
     def predict_all_with_vina(self, ):
         try:
-            if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
+            if not os.path.exists(os.path.join(self.outpath_vina, outfile_name)):
                 # Run the command and wait for it to complete
-                completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
+                completed_process = subprocess.run(["./runVina.sh -"], check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
                 # Move the output file to the desired location
