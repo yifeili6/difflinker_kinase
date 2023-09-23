@@ -161,7 +161,8 @@ for rec in "${all_recs[@]}"; do
     sed -i "s/YSIZE/${y_size}/" ${full_out_path}/${config_name}
     sed -i "s/ZSIZE/${z_size}/" ${full_out_path}/${config_name}
     sed -i "s/EXHAUST/${exhaustiveness}/" ${full_out_path}/${config_name}
-
+    echo "${full_out_path} ${x_coord}"
+    
     for lig in ${all_ligs[@]}; do
         lig_name=$(basename $lig .pdbqt)
         cmd="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
