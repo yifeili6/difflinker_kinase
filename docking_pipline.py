@@ -29,7 +29,8 @@ class PocketPrediction:
                  protein_path = 'data_docking/protein', 
                  outpath_fpocket = 'data_docking/result_fpocket' , 
                  outpath_gvp = 'data_docking/result_gvp', 
-                 nn_path_gvp = "./gvp/models/pocketminer"):
+                 nn_path_gvp = "./gvp/models/pocketminer",
+                 vina_script_path: = "vina/runVina.sh"):
 
         # input path, files
         self.protein_path   = protein_path
