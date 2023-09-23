@@ -51,6 +51,7 @@ class PocketPrediction:
         # model
         self.nn_path_gvp     = nn_path_gvp
 
+    @property
     def predict_all_with_vina(self, ):
         try:
             if not os.path.exists(os.path.join(self.outpath_vina, outfile_name)):
@@ -78,7 +79,8 @@ class PocketPrediction:
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
-
+            
+    @property
     def predict_all_with_fpocket(self,): 
         protein_path    = self.protein_path
         outpath_fpocket = self.outpath_fpocket
@@ -87,7 +89,7 @@ class PocketPrediction:
         for protein_name, outfile_name in zip(pdb_files, outfile_files):
             self.predict_1_with_fpocket(protein_path, protein_name, outpath_fpocket, outfile_name)
 
-
+    @property
     def predict_all_with_gvp(self, debug=False, output_basename=None):
         '''
             protein_path_pdb_files : list of pdb paths
@@ -129,6 +131,7 @@ class PocketPrediction:
 
 if __name__ == '__main__':
     pred = PocketPrediction()
-    pred.predict_all_with_fpocket()
-    pred.predict_all_with_gvp()
+    pred.predict_all_with_vina
+    pred.predict_all_with_fpocket
+    pred.predict_all_with_gvp
 
