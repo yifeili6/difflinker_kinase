@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ $# -eq 0 ]; then
     echo "Script to run Vina"
     echo "[-l PATH]: Path to all ligands (mol2 or pdbqt format)"
