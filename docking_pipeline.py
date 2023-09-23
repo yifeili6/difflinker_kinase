@@ -54,14 +54,14 @@ class PocketPrediction:
     @property
     def predict_all_with_vina(self, ):
         try:
-            if not os.path.exists(os.path.join(self.outpath_vina, outfile_name)):
+            # if not os.path.exists(os.path.join(self.outpath_vina, outfile_name)):
                 # Run the command and wait for it to complete
-                for pdb in self.protein_path_pdb_files:
-                    # center = 
-                    # size = 
-                    completed_process = subprocess.run([f"./runVina.sh -l {self.ligand_path} -r {pdb} -o {self.outpath_vina} --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}"], check=True, capture_output=True, text=True)
-                    print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
-                    print(f"Output: {completed_process.stdout}")
+            for pdb in self.protein_path_pdb_files:
+                # center = 
+                # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
+                completed_process = subprocess.run([f"./runVina.sh -l {self.ligand_path} -r {pdb} -o {self.outpath_vina} "], check=True, capture_output=True, text=True)
+                print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+                print(f"Output: {completed_process.stdout}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
