@@ -13,6 +13,7 @@ import numpy as np
 from glob import glob
 import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
+import ast
 
 # diff dock related import
 
@@ -54,9 +55,12 @@ class PocketPrediction:
         try:
             if not os.path.exists(os.path.join(self.outpath_vina, outfile_name)):
                 # Run the command and wait for it to complete
-                completed_process = subprocess.run([f"./runVina.sh -l {self.ligand_path} -r {self.protein_path} -o {self.outpath_vina} --center {} --size {}"], check=True, capture_output=True, text=True)
-                print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
-                print(f"Output: {completed_process.stdout}")
+                for pdb in self.protein_path_pdb_files:
+                    # center = 
+                    # size = 
+                    completed_process = subprocess.run([f"./runVina.sh -l {self.ligand_path} -r {pdb} -o {self.outpath_vina} --center {ast.literal_eval(center)} --size {ast.literal_eval(size}"], check=True, capture_output=True, text=True)
+                    print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+                    print(f"Output: {completed_process.stdout}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
