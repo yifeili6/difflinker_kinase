@@ -129,6 +129,28 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
+    def predict_1_with_diffdock(self, protein_path, protein_name, outpath_fpocket, outfile_name):
+        try:
+            if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
+                # Run the command and wait for it to complete
+                completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
+                print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+                print(f"Output: {completed_process.stdout}")
+                # Move the output file to the desired location
+                shutil.move(os.path.join(protein_path, outfile_name), 
+                            os.path.join(outpath_fpocket))
+
+        except subprocess.CalledProcessError as e:
+            print(f"An error occurred: {e}")
+            
+    @property
+    def predict_all_with_diffdock(self,): 
+        protein_path    = self.protein_path
+        outpath_fpocket = self.outpath_diffdock
+        pdb_files       = self.pdb_files
+        outfile_files   = self.outfile_files
+        for protein_name, outfile_name in zip(pdb_files, outfile_files):
+            self.predict_1_with_fpocket(protein_path, protein_name, outpath_fpocket, outfile_name)
 
 if __name__ == '__main__':
     pred = PocketPrediction()
@@ -136,3 +158,4 @@ if __name__ == '__main__':
     pred.predict_all_with_fpocket
     pred.predict_all_with_gvp
 
+# git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
