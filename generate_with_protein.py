@@ -322,4 +322,4 @@ if __name__ == '__main__':
         max_batch_size=args.max_batch_size,
     )
 
-# git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag_one.sdf --protein ../DiffLinkerMOAD/processed/proteins/1zzu_protein.pdb --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size 6 --output result_difflinker
+# git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf --protein ../DiffLinkerMOAD/processed/proteins/3l9h_protein.pdb --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output result_difflinker --n_samples 15 --n_steps 2000
