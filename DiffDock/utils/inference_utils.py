@@ -3,7 +3,7 @@ import os
 import torch
 from Bio.PDB import PDBParser
 from esm import FastaBatchedDataset, pretrained
-from rdkit.Chem import AddHs, MolFromSmiles
+from rdkit.Chem import AddHs, MolFromSmiles, MolFromMol2File
 from torch_geometric.data import Dataset, HeteroData
 import esm
 
@@ -223,7 +223,7 @@ class InferenceDataset(Dataset):
 
         # parse the ligand, either from file or smile
         try:
-            mol = MolFromSmiles(ligand_description)  # check if it is a smiles or a path
+            mol = MolFromSmiles(ligand_description) if not ligand_description.endswith(".mol2") else MolFromMol2File(ligand_description)  # check if it is a smiles or a path
 
             if mol is not None:
                 mol = AddHs(mol)
