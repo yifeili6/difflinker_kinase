@@ -31,6 +31,7 @@ class PocketPrediction:
                  ligand_path = 'data_docking/ligand',
                  outpath_fpocket = 'data_docking/result_fpocket' , 
                  outpath_vina = 'data_docking/result_vina' , 
+                 outpath_diffdock = 'data_docking/result_diffdock',
                  outpath_gvp = 'data_docking/result_gvp', 
                  nn_path_gvp = "./gvp/models/pocketminer",
                  vina_script_path = "./vina/runVina.sh"):
@@ -49,6 +50,7 @@ class PocketPrediction:
         self.outpath_fpocket = outpath_fpocket
         self.outpath_vina = outpath_vina
         self.outpath_gvp     = outpath_gvp
+        self.outpath_diffdock = outpath_diffdock
         self.outfile_files  = [pdb_file.split('.')[0] +'_out' for pdb_file in self.pdb_files]
 
         # model
@@ -131,12 +133,12 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
-    def predict_1_with_diffdock(self, protein_path, protein_name, ligand_path, ligand_name):
+    def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
-            if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
+            if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
                 # Run the command and wait for it to complete
-                completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir ./data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], capture_output=True, text=True)                
+                completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir {outpath_diffdock} --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], capture_output=True, text=True)                
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
 
@@ -150,11 +152,12 @@ class PocketPrediction:
         ligand_path     = self.ligand_path
         ligand_files    = self.ligand_files
         outfile_files   = self.outfile_files
-        
+        outpath_diffdock = self.outpath_diffdock
+
         # completed_process = subprocess.run(["#!/bin/bash", "pushd", "DiffDock"], text=True, capture_output=True)
         os.chdir("DiffDock")
         for protein_name, ligand_name in zip(pdb_files, ligand_files):
-            self.predict_1_with_diffdock(protein_path, protein_name, ligand_path, ligand_name)
+            self.predict_1_with_diffdock(outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name)
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
         os.chdir("..")
 
