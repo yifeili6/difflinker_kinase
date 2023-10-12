@@ -7,7 +7,7 @@ from rdkit.Chem import AddHs, MolFromSmiles, MolFromMol2File
 from torch_geometric.data import Dataset, HeteroData
 import esm
 
-from datasets.process_mols import parse_pdb_from_path, generate_conformer, read_molecule, get_lig_graph_with_matching, \
+from DiffDock.datasets.process_mols import parse_pdb_from_path, generate_conformer, read_molecule, get_lig_graph_with_matching, \
     extract_receptor_structure, get_rec_graph
 
 
