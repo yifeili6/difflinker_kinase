@@ -18,8 +18,8 @@ from torch_cluster import radius_graph
 
 import torch.nn.functional as F
 
-from datasets.conformer_matching import get_torsion_angles, optimize_rotatable_bonds
-from utils.torsion import get_transformation_mask
+from DiffDock.datasets.conformer_matching import get_torsion_angles, optimize_rotatable_bonds
+from DiffDock.utils.torsion import get_transformation_mask
 
 
 biopython_parser = PDBParser()
