@@ -1,3 +1,4 @@
+#!/bin/bash
 import os 
 
 # f-pocket related import
