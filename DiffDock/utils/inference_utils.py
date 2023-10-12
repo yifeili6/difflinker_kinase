@@ -223,7 +223,7 @@ class InferenceDataset(Dataset):
 
         # parse the ligand, either from file or smile
         try:
-            mol = MolFromSmiles(ligand_description) if not ligand_description.endswith(".mol2") else MolFromMol2File(ligand_description)  # check if it is a smiles or a path
+            mol = MolFromSmiles(ligand_description) #if not ligand_description.endswith(".mol2") else MolFromMol2File(ligand_description)  # check if it is a smiles or a path
 
             if mol is not None:
                 mol = AddHs(mol)
