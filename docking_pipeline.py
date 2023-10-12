@@ -14,7 +14,6 @@ from glob import glob
 import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
 import ast
-from DiffDock import inference
 
 # diff dock related import
 
