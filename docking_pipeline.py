@@ -42,7 +42,9 @@ class PocketPrediction:
         self.vina_script_path = vina_script_path
                      
         self.protein_path_pdb_files      = glob(f"{protein_path}/*.pdb")
+        self.ligand_path_pdb_files      = glob(f"{ligand_path}/*.pdb")
         self.pdb_files      = [os.path.basename(f) for f in self.protein_path_pdb_files]
+        self.ligand_files      = [os.path.basename(f) for f in self.ligand_path_pdb_files]
 
         # output path, files
         self.outpath_fpocket = outpath_fpocket
@@ -130,17 +132,14 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
-    def predict_1_with_diffdock(self, protein_path, protein_name, outpath_fpocket, outfile_name):
+    def predict_1_with_diffdock(self, protein_path, protein_name, ligand_path, ligand_name):
         try:
+            outfile_name = os.splitext(protein_name)[0] + "_" + os.splitext(ligand_name)[0]
             if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
                 # Run the command and wait for it to complete
-                
-                completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
+                completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir ./data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], capture_output=True, text=True)                
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
-                # Move the output file to the desired location
-                shutil.move(os.path.join(protein_path, outfile_name), 
-                            os.path.join(outpath_fpocket))
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
@@ -148,16 +147,18 @@ class PocketPrediction:
     @property
     def predict_all_with_diffdock(self,): 
         protein_path    = self.protein_path
-        outpath_fpocket = self.outpath_diffdock
         pdb_files       = self.pdb_files
+        ligand_path     = self.ligand_path
+        ligand_files    = self.ligand_files
         outfile_files   = self.outfile_files
-        for protein_name, outfile_name in zip(pdb_files, outfile_files):
-            self.predict_1_with_fpocket(protein_path, protein_name, outpath_fpocket, outfile_name)
+        for protein_name, ligand_name in zip(pdb_files, ligand_files):
+            self.predict_1_with_diffdock(protein_path, protein_name, ligand_path, ligand_name)
 
 if __name__ == '__main__':
     pred = PocketPrediction()
     # pred.predict_all_with_vina
     pred.predict_all_with_fpocket
     pred.predict_all_with_gvp
+    pred.predict_all_with_diffdock
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
