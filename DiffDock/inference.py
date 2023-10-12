@@ -9,12 +9,12 @@ import pandas as pd
 from rdkit import RDLogger
 from torch_geometric.loader import DataLoader
 
-from datasets.process_mols import write_mol_with_coords
-from utils.diffusion_utils import t_to_sigma as t_to_sigma_compl, get_t_schedule
-from utils.inference_utils import InferenceDataset, set_nones
-from utils.sampling import randomize_position, sampling
-from utils.utils import get_model
-from utils.visualise import PDBFile
+from DiffDock.datasets.process_mols import write_mol_with_coords
+from DiffDock.utils.diffusion_utils import t_to_sigma as t_to_sigma_compl, get_t_schedule
+from DiffDock.utils.inference_utils import InferenceDataset, set_nones
+from DiffDock.utils.sampling import randomize_position, sampling
+from DiffDock.utils.utils import get_model
+from DiffDock.utils.visualise import PDBFile
 from tqdm import tqdm
 
 RDLogger.DisableLog('rdApp.*')
