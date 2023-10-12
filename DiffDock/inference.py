@@ -191,6 +191,6 @@ print(f'Failed for {failures} complexes')
 print(f'Skipped {skipped} complexes')
 print(f'Results are in {args.out_dir}')
 
-# git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand_description ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
+# git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand_description ../data_docking/ligand/benzene.pdb --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
 
 
