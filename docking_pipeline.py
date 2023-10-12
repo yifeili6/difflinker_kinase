@@ -14,6 +14,7 @@ from glob import glob
 import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
 import ast
+from DiffDock import inference
 
 # diff dock related import
 
@@ -133,6 +134,7 @@ class PocketPrediction:
         try:
             if not os.path.exists(os.path.join(outpath_fpocket, outfile_name)):
                 # Run the command and wait for it to complete
+                
                 completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
