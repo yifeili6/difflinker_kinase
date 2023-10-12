@@ -1,1 +1,1 @@
-Read [Chemibook](https://chemicbook.com)
+Read [Chemicbook](https://chemicbook.com)
