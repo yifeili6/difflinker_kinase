@@ -138,7 +138,7 @@ class PocketPrediction:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
             if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
                 # Run the command and wait for it to complete
-                completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir {outpath_diffdock} --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], shell=True)                
+                completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir {outpath_diffdock} --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], shell=True, capture_output=True, text=True, check=True)                
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
 
@@ -156,6 +156,8 @@ class PocketPrediction:
 
         # completed_process = subprocess.run(["#!/bin/bash", "pushd", "DiffDock"], text=True, capture_output=True)
         os.chdir("DiffDock")
+        outpath_diffdock = os.path.join("..", outpath_diffdock)
+        
         for protein_name, ligand_name in zip(pdb_files, ligand_files):
             self.predict_1_with_diffdock(outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name)
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
