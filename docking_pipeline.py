@@ -157,7 +157,9 @@ class PocketPrediction:
         # completed_process = subprocess.run(["#!/bin/bash", "pushd", "DiffDock"], text=True, capture_output=True)
         os.chdir("DiffDock")
         outpath_diffdock = os.path.join("..", outpath_diffdock)
-        
+        protein_path = os.path.join("..", protein_path)
+        ligand_path = os.path.join("..", ligand_path)
+
         for protein_name, ligand_name in zip(pdb_files, ligand_files):
             self.predict_1_with_diffdock(outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name)
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
