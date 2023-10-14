@@ -1,6 +1,9 @@
 import MDAnalysis as mda
 import sys
 
+#Fixes MDAnalysis MOL2Parser
+# https://github.com/tiwarylab/GrASP/tree/75986d71441a589adbddffbf847ccc613eb89bbd/MDA_fix
+
 if len(sys.argv) == 1:
     print("Script to convert atom names that aren't unique to unique names that make Vina and Autodock output atoms comparable with other program outputs. ")
     print("Arg 1: path to mol2 file to change atom names of.")
