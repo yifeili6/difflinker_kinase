@@ -67,6 +67,7 @@ class PocketPrediction:
                 completed_process = subprocess.run([f"{self.vina_script_path}", "-l", f"{self.ligand_path}", "-r", f"{pdb}", "-o", f"{self.outpath_vina}"], check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
+                print(f"Output: {completed_process.stderr}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
@@ -78,6 +79,7 @@ class PocketPrediction:
                 completed_process = subprocess.run(["fpocket", "-f", os.path.join(protein_path, protein_name)], check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
+                print(f"Output: {completed_process.stderr}")
                 # Move the output file to the desired location
                 shutil.move(os.path.join(protein_path, outfile_name), 
                             os.path.join(outpath_fpocket))
