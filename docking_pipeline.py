@@ -167,7 +167,7 @@ class PocketPrediction:
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
         os.chdir("..")
 
-    def predict_1_with_linker(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
+    def predict_1_with_difflinker(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
