@@ -139,6 +139,7 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
+    @property
     def convert_gvp_output_to_universe(self, ):
         protein_path_pdb_files = self.protein_path_pdb_files
         outpath_gvp = self.outpath_gvp  
@@ -149,6 +150,7 @@ class PocketPrediction:
         for pdb_file, beta in zip(protein_path_pdb_files, scores):
             pdb = mda.Universe(pdb_file)
             natoms_per_residue = np.array([res.atoms.__len__() for res in pdb.residues])
+            beta = beta[beta > 0.]
             betas_for_atoms = np.repeat(beta, natoms_per_residue)
             pdb.add_TopologyAttr('tempfactors', betas_for_atoms)
             _, basename = os.path.dirname(pdb_file), os.path.basename(pdb_file)
@@ -221,6 +223,6 @@ if __name__ == '__main__':
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
-    pred.convert_gvp_output_to_universe()
+    # pred.convert_gvp_output_to_universe
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
