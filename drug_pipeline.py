@@ -179,7 +179,8 @@ class PocketPrediction:
             print(f"Output: {completed_process.stdout}")
             print(f"Output: {completed_process.stderr}")
 
-        except subprocess.CalledProcessError as e:
+        # except subprocess.CalledProcessError as e:
+        except Exception as e:
             print(f"An error occurred: {e}")
             print(f"This may happen because ligand and protein pocket distance is too far!")
 
