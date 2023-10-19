@@ -189,7 +189,7 @@ class PocketPrediction:
         outpath_difflinker = self.outpath_difflinker
 
         for protein_name in pdb_files:
-            self.predict_1_with_diffdock(outpath_difflinker, protein_path, protein_name)
+            self.predict_1_with_difflinker(outpath_difflinker, protein_path, protein_name)
         
 if __name__ == '__main__':
     pred = PocketPrediction()
