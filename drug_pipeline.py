@@ -137,7 +137,7 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
-    def mqa_to_universe():
+    def gvp_output_to_universe():
         ...
     
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
