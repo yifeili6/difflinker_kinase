@@ -137,9 +137,24 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
-    def gvp_output_to_universe():
-        ...
-    
+    def convert_gvp_output_to_universe(self, ):
+        protein_path_pdb_files = self.protein_path_pdb_files
+        outpath_gvp = self.outpath_gvp  
+        outfile_files = 'concat_gvp_results'
+        scores = np.load(f'{outpath_gvp}/{outfile_files}-preds.npy')
+        assert len(protein_path_pdb_files) == scores.shape[0], "Number of PDBs and scores must match!"
+
+        for pdb_file, beta in zip(protein_path_pdb_files, scores):
+            pdb = mda.Universe(pdb_file)
+            natoms_per_residue = np.array([res.atoms.__len__() for res in pdb.residues])
+            betas_for_atoms = np.repeat(beta, natoms_per_residue)
+            pdb.add_TopologyAttr('tempfactors', betas_for_atoms)
+            _, basename = os.path.dirname(pdb_file), os.path.basename(pdb_file)
+            basename, extension = os.path.splitext(basename)
+            basename += "_beta"
+            basename += extension
+            pdb.atoms.write(os.path.join(outpath_gvp, basename))
+            
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
@@ -204,5 +219,6 @@ if __name__ == '__main__':
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
+    pred.convert_gvp_output_to_universe()
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
