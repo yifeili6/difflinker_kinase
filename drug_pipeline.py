@@ -169,9 +169,20 @@ class PocketPrediction:
             hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
             hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
             ag = pdb.select_atoms(f"index {hit_atoms}")
-            com = ag.center_of_mass()
+            center_coords = ag.center_of_mass()
+            xyz_size = np.array([20., 20., 20.])
             
-        
+            str1 = f"Center: {center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
+            str2 = f"Size: {xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
+
+            basename = os.path.basename(pdb_file)
+            pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
+            # out_path
+            # file_lines = [str1 + "\n", str2 + "\n"]
+            # with open(out_path, "w") as f:
+            #     print(f"Writing coordinates to {out_path}")
+            #     f.writelines(file_lines)
+      
 
 
         
