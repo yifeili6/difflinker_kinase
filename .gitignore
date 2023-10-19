@@ -6,3 +6,6 @@ formatted
 data_docking/result_fpocket/*
 data_docking/result_gvp/* 
 data_docking/result_diffdock/*
+data_docking/result_vina/*
+data_docking/result_difflinker/*
+result_difflinker

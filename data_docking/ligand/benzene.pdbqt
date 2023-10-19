@@ -1,0 +1,11 @@
+REMARK  0 active torsions:
+REMARK  status: ('A' for Active; 'I' for Inactive)
+ROOT
+ATOM      1  C1  BEN dZENE       1.207   2.091   0.000  0.00  0.00     0.000 A 
+ATOM      2  C2  BEN dZENE       2.414   1.394   0.000  0.00  0.00     0.000 A 
+ATOM      3  C3  BEN dZENE       2.414   0.000   0.000  0.00  0.00     0.000 A 
+ATOM      4  C4  BEN dZENE       1.207  -0.697   0.000  0.00  0.00     0.000 A 
+ATOM      5  C5  BEN dZENE       0.000   0.000   0.000  0.00  0.00     0.000 A 
+ATOM      6  C6  BEN dZENE       0.000   1.394   0.000  0.00  0.00     0.000 A 
+ENDROOT
+TORSDOF 0
