@@ -158,7 +158,23 @@ class PocketPrediction:
             basename += "_beta"
             basename += extension
             pdb.atoms.write(os.path.join(outpath_gvp, basename))
+
+    @property
+    def extract_universe_betas_for_vinadock(self, ):
+        outpath_gvp = self.outpath_gvp  
+        protein_path_beta_pdb_files = glob(f"{outpath_gvp}/.*pdb")
+        for pdb_file in protein_path_beta_pdb_files:
+            pdb = mda.Universe(pdb_file)
+            threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
+            hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
+            hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
+            ag = pdb.select_atoms(f"index {hit_atoms}")
+            com = ag.center_of_mass()
             
+        
+
+
+        
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
