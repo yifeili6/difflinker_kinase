@@ -15,6 +15,8 @@ import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
 import ast
 
+import MDAnalysis as mda
+
 # diff dock related import
 
 # completed_process = subprocess.run(["ls", "-l"], capture_output=True, text=True)
