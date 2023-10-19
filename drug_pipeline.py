@@ -177,7 +177,7 @@ class PocketPrediction:
             completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 15 --n_steps 2000"], shell=True, capture_output=True, text=True)                
             print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
             print(f"Output: {completed_process.stdout}")
-            print(f"Output: {completed_process.stderr}")
+            # print(f"Output: {completed_process.stderr}")
 
         # except subprocess.CalledProcessError as e:
         except ValueError as e:
