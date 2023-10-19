@@ -130,7 +130,6 @@ class PocketPrediction:
 
         return predictions
 
-
     def mqa_model(self, DROPOUT_RATE = 0.1, NUM_LAYERS = 4, HIDDEN_DIM = 100):
         # Load MQA Model used for selected NN network
         model = MQAModel(node_features=(8, 50), edge_features=(1, 32),
@@ -138,6 +137,9 @@ class PocketPrediction:
                             num_layers=NUM_LAYERS, dropout=DROPOUT_RATE)
         return model
 
+    def mqa_to_universe():
+        ...
+    
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
@@ -192,6 +194,8 @@ class PocketPrediction:
 
         for protein_name in pdb_files:
             self.predict_1_with_difflinker(outpath_difflinker, protein_path, protein_name)
+
+    
         
 if __name__ == '__main__':
     pred = PocketPrediction()
