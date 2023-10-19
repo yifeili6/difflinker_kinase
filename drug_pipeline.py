@@ -32,6 +32,7 @@ class PocketPrediction:
                  outpath_fpocket = 'data_docking/result_fpocket' , 
                  outpath_vina = 'data_docking/result_vina' , 
                  outpath_diffdock = 'data_docking/result_diffdock',
+                 outpath_difflinker = 'data_docking/result_difflinker',
                  outpath_gvp = 'data_docking/result_gvp', 
                  nn_path_gvp = "./gvp/models/pocketminer",
                  vina_script_path = "./vina/runVina.sh"):
@@ -51,6 +52,8 @@ class PocketPrediction:
         self.outpath_vina = outpath_vina
         self.outpath_gvp     = outpath_gvp
         self.outpath_diffdock = outpath_diffdock
+        self.outpath_difflinker = outpath_difflinker
+
         self.outfile_files  = [pdb_file.split('.')[0] +'_out' for pdb_file in self.pdb_files]
 
         # model
@@ -167,23 +170,33 @@ class PocketPrediction:
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
         os.chdir("..")
 
-    def predict_1_with_difflinker(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
+    def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name):
         try:
-            outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
             # Run the command and wait for it to complete
-            completed_process = subprocess.run([f"git pull && python -m inference --protein_path {os.path.join(protein_path, protein_name)} --ligand_description {os.path.join(ligand_path, ligand_name)} --complex_name {outfile_name} --out_dir {outpath_diffdock} --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise"], shell=True, capture_output=True, text=True)                
+            completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 15 --n_steps 2000"], shell=True, capture_output=True, text=True)                
             print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
             print(f"Output: {completed_process.stdout}")
+            print(f"Output: {completed_process.stderr}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
+            
+    @property
+    def predict_all_with_difflinker(self,): 
+        protein_path    = self.protein_path
+        pdb_files       = self.pdb_files
+        outpath_difflinker = self.outpath_difflinker
 
+        for protein_name in pdb_files:
+            self.predict_1_with_diffdock(outpath_difflinker, protein_path, protein_name)
+        
 if __name__ == '__main__':
     pred = PocketPrediction()
-    pred.predict_all_with_vina
+    # pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
+    predict_all_with_difflinker
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
