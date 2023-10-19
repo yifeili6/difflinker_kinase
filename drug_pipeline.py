@@ -181,7 +181,8 @@ class PocketPrediction:
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
-            
+            print(f"This may happen because ligand and protein pocket distance is too far!")
+
     @property
     def predict_all_with_difflinker(self,): 
         protein_path    = self.protein_path
