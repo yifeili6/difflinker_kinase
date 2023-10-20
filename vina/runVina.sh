@@ -177,7 +177,7 @@ for rec in "${all_recs[@]}"; do
     
     for lig in ${all_ligs[@]}; do
         lig_name=$(basename $lig .pdbqt)
-        cmd="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
+        cmd="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina_1.2.5_linux_x86_64 --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
         echo -e "Running command:\n${cmd}"
         ${cmd}
         echo "Done"
