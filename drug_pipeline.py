@@ -172,7 +172,7 @@ class PocketPrediction:
                 hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
                 ag = pdb.select_atoms(f"index {hit_atoms}")
                 center_coords = ag.center_of_mass()
-                xyz_size = np.array([5., 5., 5.])
+                xyz_size = np.array([23.5, 23.5, 23.5])
                 
                 center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
                 size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
@@ -181,7 +181,7 @@ class PocketPrediction:
                 pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
                 print(center, size)
                 # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
-                completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina} --spacing 0.2"], shell=True, check=True, capture_output=True, text=True)
+                completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
                 print(f"Output: {completed_process.stderr}")
