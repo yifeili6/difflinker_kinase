@@ -172,20 +172,18 @@ class PocketPrediction:
             center_coords = ag.center_of_mass()
             xyz_size = np.array([20., 20., 20.])
             
-            str1 = f"Center: {center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
-            str2 = f"Size: {xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
+            center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
+            size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
 
             basename = os.path.basename(pdb_file)
             pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
-            # out_path
-            # file_lines = [str1 + "\n", str2 + "\n"]
-            # with open(out_path, "w") as f:
-            #     print(f"Writing coordinates to {out_path}")
-            #     f.writelines(file_lines)
-      
-
-
-        
+            
+            # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
+            completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center)} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
+            print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+            print(f"Output: {completed_process.stdout}")
+            print(f"Output: {completed_process.stderr}")
+    
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
