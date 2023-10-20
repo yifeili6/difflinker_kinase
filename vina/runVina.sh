@@ -17,7 +17,7 @@ if [ $# -eq 0 ]; then
 fi
 
 #read in command line arguments
-exhaustiveness=8
+exhaustiveness=32
 center_given=false
 size_given=false
 blind=false
