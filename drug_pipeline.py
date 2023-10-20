@@ -249,5 +249,6 @@ if __name__ == '__main__':
     # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
     # pred.convert_gvp_output_to_universe
+    pred.extract_universe_betas_for_vinadock
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
