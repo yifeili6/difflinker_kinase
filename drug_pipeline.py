@@ -173,6 +173,7 @@ class PocketPrediction:
                 ag = pdb.select_atoms(f"index {hit_atoms}")
                 center_coords = ag.center_of_mass()
                 xyz_size = np.array([20., 20., 20.])
+                print(2)
                 
                 center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
                 size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
