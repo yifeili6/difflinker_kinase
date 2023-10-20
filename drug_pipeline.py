@@ -162,7 +162,7 @@ class PocketPrediction:
     @property
     def extract_universe_betas_for_vinadock(self, ):
         outpath_gvp = self.outpath_gvp  
-        protein_path_beta_pdb_files = glob(f"{outpath_gvp}/.*pdb")
+        protein_path_beta_pdb_files = glob(f"{outpath_gvp}/*.pdb")
         print("HERE")
         try:
             print(protein_path_beta_pdb_files)
