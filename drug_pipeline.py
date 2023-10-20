@@ -165,6 +165,7 @@ class PocketPrediction:
         protein_path_beta_pdb_files = glob(f"{outpath_gvp}/.*pdb")
         print("HERE")
         try:
+            print(protein_path_beta_pdb_files)
             for pdb_file in protein_path_beta_pdb_files:
                 print(1)
                 pdb = mda.Universe(pdb_file)
