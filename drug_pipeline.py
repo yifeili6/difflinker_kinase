@@ -163,13 +163,10 @@ class PocketPrediction:
     def extract_universe_betas_for_vinadock(self, ):
         outpath_gvp = self.outpath_gvp  
         protein_path_beta_pdb_files = glob(f"{outpath_gvp}/*.pdb")
-        print("HERE")
         try:
             print(protein_path_beta_pdb_files)
             for pdb_file in protein_path_beta_pdb_files:
-                print(1)
                 pdb = mda.Universe(pdb_file)
-                print(2)
                 threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
                 hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
                 hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
