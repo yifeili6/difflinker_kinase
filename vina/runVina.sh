@@ -22,7 +22,7 @@ center_given=false
 size_given=false
 blind=false
 num_modes=20
-scoring=vina
+scoring=vinardo
 
 IFS=' ' read -r -a all_args <<< "$@"
 
