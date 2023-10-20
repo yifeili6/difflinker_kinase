@@ -21,7 +21,7 @@ exhaustiveness=32
 center_given=false
 size_given=false
 blind=false
-num_modes=9
+num_modes=20
 scoring=vinardo
 
 IFS=' ' read -r -a all_args <<< "$@"
