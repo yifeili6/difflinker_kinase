@@ -167,13 +167,13 @@ class PocketPrediction:
         try:
             for pdb_file in protein_path_beta_pdb_files:
                 pdb = mda.Universe(pdb_file)
+                print(2)
                 threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
                 hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
                 hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
                 ag = pdb.select_atoms(f"index {hit_atoms}")
                 center_coords = ag.center_of_mass()
                 xyz_size = np.array([20., 20., 20.])
-                print(2)
                 
                 center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
                 size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
