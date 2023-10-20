@@ -164,27 +164,30 @@ class PocketPrediction:
         outpath_gvp = self.outpath_gvp  
         protein_path_beta_pdb_files = glob(f"{outpath_gvp}/.*pdb")
         print("HERE")
-        for pdb_file in protein_path_beta_pdb_files:
-            pdb = mda.Universe(pdb_file)
-            threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
-            hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
-            hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
-            ag = pdb.select_atoms(f"index {hit_atoms}")
-            center_coords = ag.center_of_mass()
-            xyz_size = np.array([20., 20., 20.])
-            
-            center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
-            size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
-
-            basename = os.path.basename(pdb_file)
-            pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
-            print(center, size)
-            # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
-            completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
-            print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
-            print(f"Output: {completed_process.stdout}")
-            print(f"Output: {completed_process.stderr}")
+        try:
+            for pdb_file in protein_path_beta_pdb_files:
+                pdb = mda.Universe(pdb_file)
+                threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
+                hit_atoms = np.where(pdb.atoms.tempfactors > threshold)[0]
+                hit_atoms = " ".join(hit_atoms.astype(str).tolist()) #https://gitlab.com/-/ide/project/hyunp2/protTransVAE/edit/main/-/analysis.py
+                ag = pdb.select_atoms(f"index {hit_atoms}")
+                center_coords = ag.center_of_mass()
+                xyz_size = np.array([20., 20., 20.])
+                
+                center = f"{center_coords[0]:3.3f} {center_coords[1]:3.3f} {center_coords[2]:3.3f}"
+                size = f"{xyz_size[0]:3.3f} {xyz_size[1]:3.3f} {xyz_size[2]:3.3f}"
     
+                basename = os.path.basename(pdb_file)
+                pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
+                print(center, size)
+                # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
+                completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
+                print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+                print(f"Output: {completed_process.stdout}")
+                print(f"Output: {completed_process.stderr}")
+        except Exception as e:
+            print(e)
+            
     def predict_1_with_diffdock(self, outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name):
         try:
             outfile_name = os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0]
