@@ -7,4 +7,8 @@ size_y = YSIZE
 size_z = ZSIZE
 
 exhaustiveness = EXHAUST
-num_modes = 20
+num_modes = NUM_MODES
+
+scoring = SCORING
+
+
