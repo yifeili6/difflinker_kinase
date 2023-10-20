@@ -10,6 +10,9 @@ if [ $# -eq 0 ]; then
     echo "[--center X Y Z]: Coordinates of the center of the binding site (only needed if not performing blind docking. Assumes same coordinates for all receptors)"
     echo "[--size X Y Z]: Size of the binding site (only needed if not performing blind docking)" 
     echo "[-e EXHAUSTIVENESS]: set exhaustiveness parameter (default=8)"
+    echo "[-n NUM_MODES]: set number of poses (default=20)"
+    echo "[-s SCORING]: scoring (default=ad4, vina, vinardo)"
+
     exit
 fi
 
@@ -18,6 +21,8 @@ exhaustiveness=8
 center_given=false
 size_given=false
 blind=false
+num_modes=20
+scoring=vina
 
 IFS=' ' read -r -a all_args <<< "$@"
 
@@ -43,6 +48,10 @@ for ((idx=0; idx<$#; idx++)); do
         size_given=true
     elif [ ${all_args[${idx}]} == "-e" ]; then
         exhaustiveness=${all_args[$(($idx+1))]}
+    elif [ ${all_args[${idx}]} == "-n" ]; then
+        num_modes=${all_args[$(($idx+1))]}
+    elif [ ${all_args[${idx}]} == "-s" ]; then
+        scoring=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "--blind" ]; then
         blind=true
     fi
@@ -161,6 +170,9 @@ for rec in "${all_recs[@]}"; do
     sed -i "s/YSIZE/${y_size}/" ${full_out_path}/${config_name}
     sed -i "s/ZSIZE/${z_size}/" ${full_out_path}/${config_name}
     sed -i "s/EXHAUST/${exhaustiveness}/" ${full_out_path}/${config_name}
+    sed -i "s/NUM_MODES/${num_modes}/" ${full_out_path}/${config_name}
+    sed -i "s/SCORING/${scoring}/" ${full_out_path}/${config_name}
+
     echo "${full_out_path} ${x_coord}"
     
     for lig in ${all_ligs[@]}; do
