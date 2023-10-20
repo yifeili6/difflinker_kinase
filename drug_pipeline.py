@@ -166,6 +166,7 @@ class PocketPrediction:
         print("HERE")
         try:
             for pdb_file in protein_path_beta_pdb_files:
+                print(1)
                 pdb = mda.Universe(pdb_file)
                 print(2)
                 threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
