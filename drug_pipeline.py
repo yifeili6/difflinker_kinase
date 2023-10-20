@@ -7,7 +7,7 @@ import shutil
 # gvp related import 
 import torch
 import torch_geometric
-import tensorflow as tf
+# import tensorflow as tf
 from gvp.src.models import MQAModel
 import numpy as np
 from glob import glob
