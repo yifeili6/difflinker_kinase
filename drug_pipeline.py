@@ -45,10 +45,13 @@ class PocketPrediction:
         self.vina_script_path = vina_script_path
                      
         self.protein_path_pdb_files      = glob(f"{protein_path}/*.pdb")
+        self.protein_path_pdb_beta_files      = glob(f"{outpath_gvp}/*.pdb")
+
         self.ligand_path_pdb_files      = glob(f"{ligand_path}/*.pdb")
         self.pdb_files      = [os.path.basename(f) for f in self.protein_path_pdb_files]
         self.ligand_files      = [os.path.basename(f) for f in self.ligand_path_pdb_files]
-
+        self.pdb_beta_files = = [os.path.basename(f) for f in self.protein_path_pdb_beta_files]
+                     
         # output path, files
         self.outpath_fpocket = outpath_fpocket
         self.outpath_vina = outpath_vina
@@ -203,7 +206,8 @@ class PocketPrediction:
     @property
     def predict_all_with_diffdock(self,): 
         protein_path    = self.protein_path
-        pdb_files       = self.pdb_files
+        pdb_beta_files  = self.pdb_beta_files
+        outpath_gvp     = self.outpath_gvp  
         ligand_path     = self.ligand_path
         ligand_files    = self.ligand_files
         outfile_files   = self.outfile_files
@@ -212,11 +216,11 @@ class PocketPrediction:
         # completed_process = subprocess.run(["#!/bin/bash", "pushd", "DiffDock"], text=True, capture_output=True)
         os.chdir("DiffDock")
         outpath_diffdock = os.path.join("..", outpath_diffdock)
-        protein_path = os.path.join("..", protein_path)
+        outpath_gvp = os.path.join("..", outpath_gvp)
         ligand_path = os.path.join("..", ligand_path)
 
-        for protein_name, ligand_name in zip(pdb_files, ligand_files):
-            self.predict_1_with_diffdock(outpath_diffdock, protein_path, protein_name, ligand_path, ligand_name)
+        for protein_name, ligand_name in zip(pdb_beta_files, ligand_files):
+            self.predict_1_with_diffdock(outpath_diffdock, outpath_gvp, protein_name, ligand_path, ligand_name)
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
         os.chdir("..")
 
