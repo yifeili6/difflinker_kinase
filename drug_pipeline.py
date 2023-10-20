@@ -163,6 +163,7 @@ class PocketPrediction:
     def extract_universe_betas_for_vinadock(self, ):
         outpath_gvp = self.outpath_gvp  
         protein_path_beta_pdb_files = glob(f"{outpath_gvp}/.*pdb")
+        print("HERE")
         for pdb_file in protein_path_beta_pdb_files:
             pdb = mda.Universe(pdb_file)
             threshold = np.quantile(pdb.atoms.tempfactors, 0.95)
