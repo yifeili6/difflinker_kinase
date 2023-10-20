@@ -89,7 +89,7 @@ else
 fi
 
 # Use obabel to add atom type for HN hydrogens because prepare_receptor4.py cannot identify atom type of HN hydrogens
-obabel ${rec_path} -O ${rec_path} ---errorlevel 0
+# obabel ${rec_path} -O ${rec_path} ---errorlevel 0
 
 #convert receptors to pdbqt if they are not already
 if [ -d "$rec_path" ]; then
