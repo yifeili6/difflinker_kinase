@@ -226,7 +226,6 @@ class PocketPrediction:
 
     def make_1_prot_ligand_complex_for_difflinker(self, protein_path, protein_name, ligand_path, ligand_name, complex_path):
         #For vina!
-        from data.pocket.clean_and_split import run, process_one_file
         import pathlib
         pathlib.Path(os.path.join(ligand_path, os.path.splitext(ligand_name)[0])).makedirs(exist_ok=True)
         os.system(f"obabel -ipdbqt {os.path.join(ligand_path, ligand_name)} -opdb -O {os.path.join(ligand_path, os.path.splitext(ligand_name)[0], ligand_name.replace('.pdbqt', '.pdb'))} -m") 
@@ -238,8 +237,49 @@ class PocketPrediction:
         pathlib.Path(complex_path).makedirs(exist_ok=True)
         c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
 
-    def make_1_prot_ligand_complex_for_difflinker(self, complex_path):
-        ...
+    def process_prot_ligand_complex_for_difflinker(self, complex_path, processed_path):
+        from data.pocket.clean_and_split import run, process_one_file
+        proteins_dir = os.path.join(complex_path, "proteins")
+        ligands_dir = os.path.join(complex_path, "ligands")
+        fnames = run(input_dir=complex_path, proteins_dir=proteins_dir, ligands_dir=ligands_dir)
+        
+        input_dir, proteins_dir, ligands_dir = ray.put(complex_path), ray.put(proteins_dir), ray.put(ligands_dir)
+        results = [process_one_file.remote(input_dir, proteins_dir, ligands_dir, fname) for fname in fnames]
+        results = ray.get(results)
+        ray.shutdown()
+
+    def generate_fragmentation_for_difflinker(self, processed_path):
+        from data.pocket.generate_fragmentation_and_conformers import run
+        ligands_dir = os.path.join(processed_path, "ligands")
+        out_fragmentations = os.path.join(processed_path, "generated_splits.csv")
+        out_conformers = os.path.join(processed_path, "generated_conformers.sdf")
+
+        run(
+            ligands_dir=ligands_dir,
+            output_table=out_fragmentations,
+            output_conformers=out_conformers)
+
+    def prepare_dataset_for_difflinker(self, processed_path):
+        from data.pocket.prepare_dataset import run
+        proteins_dir = os.path.join(complex_path, "proteins")
+        ligands_dir = os.path.join(processed_path, "ligands")
+        out_fragmentations = os.path.join(processed_path, "generated_splits.csv")
+        out_conformers = os.path.join(processed_path, "generated_conformers.sdf")
+        out_mol_sdf = os.path.join(processed_path, "Custom_mol.sdf")
+        out_frag_sdf = os.path.join(processed_path, "Custom_frag.sdf")
+        out_link_sdf = os.path.join(processed_path, "Custom_linker.sdf")
+        out_pockets_pkl = os.path.join(processed_path, "Custom_pockets.pkl")
+        out_table = os.path.join(processed_path, "Custom_table.csv")
+        
+        run(
+            table_path=out_fragmentations,
+            sdf_path=out_conformers,
+            proteins_path=proteins_dir,
+            out_mol_path=out_mol_sdf,
+            out_frag_path=out_frag_sdf,
+            out_link_path=out_link_sdf,
+            out_pockets_path=out_pockets_pkl,
+            out_table_path=out_table)
     
     def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name):
         try:
