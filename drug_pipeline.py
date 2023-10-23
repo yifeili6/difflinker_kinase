@@ -224,6 +224,23 @@ class PocketPrediction:
         # completed_process = subprocess.run(["popd"], text=True, capture_output=True)
         os.chdir("..")
 
+    def make_1_prot_ligand_complex_for_difflinker(self, protein_path, protein_name, ligand_path, ligand_name, complex_path):
+        #For vina!
+        from data.pocket.clean_and_split import run, process_one_file
+        import pathlib
+        pathlib.Path(os.path.join(ligand_path, os.path.splitext(ligand_name)[0])).makedirs(exist_ok=True)
+        os.system(f"obabel -ipdbqt {os.path.join(ligand_path, ligand_name)} -opdb -O {os.path.join(ligand_path, os.path.splitext(ligand_name)[0], ligand_name.replace('.pdbqt', '.pdb'))} -m") 
+        top1_lig = os.path.join(os.path.join(ligand_path, os.path.splitext(ligand_name)[0]), sorted(os.listdir(f"{os.path.join(ligand_path, os.path.splitext(ligand_name)[0])}"), key=str)[0])
+
+        l = mda.Universe(top1_lig)
+        r = mda.Universe(os.path.join(protein_path, protein_name))
+        c = mda.Merge(l.atoms, r.atoms)
+        pathlib.Path(complex_path).makedirs(exist_ok=True)
+        c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
+
+    def make_1_prot_ligand_complex_for_difflinker(self, complex_path):
+        ...
+    
     def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name):
         try:
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
