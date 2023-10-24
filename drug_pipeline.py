@@ -319,13 +319,13 @@ class PocketPrediction:
         
 if __name__ == '__main__':
     pred = PocketPrediction()
-    pred.predict_all_with_vina
+    # pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
     # pred.convert_gvp_output_to_universe
-    pred.extract_universe_betas_for_vinadock
+    # pred.extract_universe_betas_for_vinadock
     pred.make_1_prot_ligand_complex_for_difflinker(pred.protein_path, "1ADE.pdb", os.path.join(pred.outpath_vina, "1ADE_beta/vina"), "benzene.pdbqt", pred.complex_path)
     pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
 
