@@ -18,6 +18,7 @@ import pathlib
 import ray 
 
 import MDAnalysis as mda
+# https://zenodo.org/records/4740366 ;; Natural ligands
 
 # diff dock related import
 
