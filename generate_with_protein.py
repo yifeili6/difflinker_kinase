@@ -208,7 +208,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     try:
         molecules = read_molecule(input_path)
-        molecules = Chem.RemoveAllHs(molecules)
+        # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
