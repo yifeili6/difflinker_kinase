@@ -231,19 +231,19 @@ class PocketPrediction:
     def make_1_prot_ligand_complex_for_difflinker(self, protein_path, protein_name, ligand_path, ligand_name, complex_path):
         #For vina!
         import pathlib
-        pathlib.Path(os.path.join(ligand_path, os.path.splitext(ligand_name)[0])).makedirs(exist_ok=True)
+        pathlib.Path(os.path.join(ligand_path, os.path.splitext(ligand_name)[0])).makedir(exist_ok=True)
         os.system(f"obabel -ipdbqt {os.path.join(ligand_path, ligand_name)} -opdb -O {os.path.join(ligand_path, os.path.splitext(ligand_name)[0], ligand_name.replace('.pdbqt', '.pdb'))} -m") 
         top1_lig = os.path.join(os.path.join(ligand_path, os.path.splitext(ligand_name)[0]), sorted(os.listdir(f"{os.path.join(ligand_path, os.path.splitext(ligand_name)[0])}"), key=str)[0])
 
         l = mda.Universe(top1_lig)
         r = mda.Universe(os.path.join(protein_path, protein_name))
         c = mda.Merge(l.atoms, r.atoms)
-        pathlib.Path(complex_path).makedirs(exist_ok=True)
+        pathlib.Path(complex_path).makedir(exist_ok=True)
         c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
 
     def process_prot_ligand_complex_for_difflinker(self, complex_path, processed_path):
         from data.pocket.clean_and_split import run, process_one_file
-        pathlib.Path(processed_path).makedirs(exist_ok=True)
+        pathlib.Path(processed_path).makedir(exist_ok=True)
 
         proteins_dir = os.path.join(processed_path, "proteins")
         ligands_dir = os.path.join(processed_path, "ligands")
@@ -256,7 +256,7 @@ class PocketPrediction:
 
     def generate_fragmentation_for_difflinker(self, processed_path):
         from data.pocket.generate_fragmentation_and_conformers import run
-        pathlib.Path(processed_path).makedirs(exist_ok=True)
+        pathlib.Path(processed_path).makedir(exist_ok=True)
         
         ligands_dir = os.path.join(processed_path, "ligands")
         out_fragmentations = os.path.join(processed_path, "generated_splits.csv")
@@ -269,7 +269,7 @@ class PocketPrediction:
 
     def prepare_dataset_for_difflinker(self, processed_path):
         from data.pocket.prepare_dataset import run
-        pathlib.Path(processed_path).makedirs(exist_ok=True)
+        pathlib.Path(processed_path).makedir(exist_ok=True)
         
         proteins_dir = os.path.join(processed_path, "proteins")
         ligands_dir = os.path.join(processed_path, "ligands")
