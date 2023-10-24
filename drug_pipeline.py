@@ -14,6 +14,7 @@ from glob import glob
 import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
 import ast
+import pathlib
 
 import MDAnalysis as mda
 
@@ -230,7 +231,6 @@ class PocketPrediction:
 
     def make_1_prot_ligand_complex_for_difflinker(self, protein_path, protein_name, ligand_path, ligand_name, complex_path):
         #For vina!
-        import pathlib
         pathlib.Path(os.path.join(ligand_path, os.path.splitext(ligand_name)[0])).mkdir(exist_ok=True)
         os.system(f"obabel -ipdbqt {os.path.join(ligand_path, ligand_name)} -opdb -O {os.path.join(ligand_path, os.path.splitext(ligand_name)[0], ligand_name.replace('.pdbqt', '.pdb'))} -m") 
         top1_lig = os.path.join(os.path.join(ligand_path, os.path.splitext(ligand_name)[0]), sorted(os.listdir(f"{os.path.join(ligand_path, os.path.splitext(ligand_name)[0])}"), key=str)[0])
