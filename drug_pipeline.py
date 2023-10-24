@@ -318,7 +318,7 @@ class PocketPrediction:
         
 if __name__ == '__main__':
     pred = PocketPrediction()
-    # pred.predict_all_with_vina
+    pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
