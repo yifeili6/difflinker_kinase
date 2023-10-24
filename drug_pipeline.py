@@ -60,6 +60,8 @@ class PocketPrediction:
         self.outpath_gvp     = outpath_gvp
         self.outpath_diffdock = outpath_diffdock
         self.outpath_difflinker = outpath_difflinker
+        self.complex_path = complex_path
+        self.processed_path = processed_path
 
         self.outfile_files  = [pdb_file.split('.')[0] +'_out' for pdb_file in self.pdb_files]
 
