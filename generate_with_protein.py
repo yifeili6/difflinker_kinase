@@ -94,7 +94,8 @@ def get_pocket(mol, pdb_path, backbone_atoms_only=False):
     mol_atom_coords = mol.GetConformer().GetPositions()
 
     distances = np.linalg.norm(atom_coords[:, None, :] - mol_atom_coords[None, :, :], axis=-1)
-    contact_residues = np.unique(residue_ids[np.where(distances.min(1) <= 6)[0]])
+    # contact_residues = np.unique(residue_ids[np.where(distances.min(1) <= 6)[0]])
+    contact_residues = np.unique(residue_ids[np.where(distances.min(1) <= 12)[0]])
 
     pocket_coords_full = []
     pocket_types_full = []
