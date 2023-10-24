@@ -301,7 +301,7 @@ class PocketPrediction:
         try:
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
             # Run the command and wait for it to complete
-            completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 15 --n_steps 2000"], shell=True, capture_output=True, text=True)                
+            completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments data_docking/processed_complex/Custom_frag.sdf --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 1 --n_steps 2000"], shell=True, capture_output=True, text=True)                
             print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
             print(f"Output: {completed_process.stdout}")
             # print(f"Output: {completed_process.stderr}")
@@ -334,7 +334,7 @@ if __name__ == '__main__':
     # pred.make_1_prot_ligand_complex_for_difflinker(pred.protein_path, "1ADE.pdb", os.path.join(pred.outpath_vina, "1ADE_beta/vina"), "oxo.pdbqt", pred.complex_path)
     # pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
     # pred.generate_fragmentation_for_difflinker(pred.processed_path)
-    pred.prepare_dataset_for_difflinker(pred.processed_path)
-
+    # pred.prepare_dataset_for_difflinker(pred.processed_path)
+    pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
