@@ -240,7 +240,7 @@ class PocketPrediction:
         l = mda.Universe(top1_lig)
         l.add_TopologyAttr("record_type", ["HETATM"] * l.atoms.__len__())
         r = mda.Universe(os.path.join(protein_path, protein_name))
-        l.add_TopologyAttr("record_type", ["ATOM"] * * r.atoms.__len__())
+        l.add_TopologyAttr("record_type", ["ATOM"] * r.atoms.__len__())
         c = mda.Merge(l.atoms, r.atoms)
         pathlib.Path(complex_path).mkdir(exist_ok=True)
         c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
