@@ -37,7 +37,9 @@ class PocketPrediction:
                  outpath_difflinker = 'data_docking/result_difflinker',
                  outpath_gvp = 'data_docking/result_gvp', 
                  nn_path_gvp = "./gvp/models/pocketminer",
-                 vina_script_path = "./vina/runVina.sh"):
+                 vina_script_path = "./vina/runVina.sh",
+                 complex_path = "data_docking/complex",
+                 processed_path = "data_docking/processed_complex"):
 
         # input path, files
         self.protein_path   = protein_path
@@ -239,8 +241,10 @@ class PocketPrediction:
 
     def process_prot_ligand_complex_for_difflinker(self, complex_path, processed_path):
         from data.pocket.clean_and_split import run, process_one_file
-        proteins_dir = os.path.join(complex_path, "proteins")
-        ligands_dir = os.path.join(complex_path, "ligands")
+        pathlib.Path(processed_path).makedirs(exist_ok=True)
+
+        proteins_dir = os.path.join(processed_path, "proteins")
+        ligands_dir = os.path.join(processed_path, "ligands")
         fnames = run(input_dir=complex_path, proteins_dir=proteins_dir, ligands_dir=ligands_dir)
         
         input_dir, proteins_dir, ligands_dir = ray.put(complex_path), ray.put(proteins_dir), ray.put(ligands_dir)
@@ -250,6 +254,8 @@ class PocketPrediction:
 
     def generate_fragmentation_for_difflinker(self, processed_path):
         from data.pocket.generate_fragmentation_and_conformers import run
+        pathlib.Path(processed_path).makedirs(exist_ok=True)
+        
         ligands_dir = os.path.join(processed_path, "ligands")
         out_fragmentations = os.path.join(processed_path, "generated_splits.csv")
         out_conformers = os.path.join(processed_path, "generated_conformers.sdf")
@@ -261,7 +267,9 @@ class PocketPrediction:
 
     def prepare_dataset_for_difflinker(self, processed_path):
         from data.pocket.prepare_dataset import run
-        proteins_dir = os.path.join(complex_path, "proteins")
+        pathlib.Path(processed_path).makedirs(exist_ok=True)
+        
+        proteins_dir = os.path.join(processed_path, "proteins")
         ligands_dir = os.path.join(processed_path, "ligands")
         out_fragmentations = os.path.join(processed_path, "generated_splits.csv")
         out_conformers = os.path.join(processed_path, "generated_conformers.sdf")
@@ -311,9 +319,10 @@ if __name__ == '__main__':
     # pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
     # pred.predict_all_with_gvp
-    pred.predict_all_with_diffdock
+    # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
     # pred.convert_gvp_output_to_universe
     # pred.extract_universe_betas_for_vinadock
+    pred.make_1_prot_ligand_complex_for_difflinker(pred.protein_path, "1ADE.pdb", pred.ligand_path, "benzene.pdbqt", pred.complex_path)
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
