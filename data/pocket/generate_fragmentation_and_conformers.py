@@ -27,8 +27,8 @@ def fragment_by_mmpa(mol, mol_name, mol_smiles, min_cuts, max_cuts, min_frag_siz
 
     filtered_mmpa_results = []
     for linker_smiles, fragments_smiles in mmpa_results:
-        if check_mmpa_linker(linker_smiles, min_link_size) and check_mmpa_fragments(fragments_smiles, min_frag_size):
-            filtered_mmpa_results.append([mol_name, mol_smiles, linker_smiles, fragments_smiles, 'mmpa'])
+        # if check_mmpa_linker(linker_smiles, min_link_size) and check_mmpa_fragments(fragments_smiles, min_frag_size):
+        filtered_mmpa_results.append([mol_name, mol_smiles, linker_smiles, fragments_smiles, 'mmpa'])
     return filtered_mmpa_results
 
 
