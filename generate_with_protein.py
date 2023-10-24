@@ -14,7 +14,7 @@ from src.datasets import (
 from src.lightning import DDPM
 from src.visualizer import save_xyz_file
 from src.utils import FoundNaNException
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from src.linker_size_lightning import SizeClassifier
 
@@ -213,7 +213,9 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
 
-    for nth_molecule, molecule in enumerate(molecules):             
+    pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
+    for nth_molecule, molecule in enumerate(pbar):        
+        pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
         # Parsing fragments data
         frag_pos, frag_one_hot, frag_charges = parse_molecule(molecule, is_geom=ddpm.is_geom)
     
@@ -271,7 +273,9 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     
         # Sampling
         print('Sampling...')
-        for batch_i, data in tqdm(enumerate(dataloader), total=len(dataloader)):
+        pbar2 = tqdm(enumerate(dataloader), total=len(dataloader), unit="batch")
+        for batch_i, data in pbar2:
+            pbar2.set_description(f"Batch {batch_i} is sampled...")
             batch_size = len(data['positions'])
     
             chain = None
