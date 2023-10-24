@@ -15,6 +15,7 @@ import mdtraj as md
 from gvp.src.validate_performance_on_xtals import process_strucs, predict_on_xtals
 import ast
 import pathlib
+import ray 
 
 import MDAnalysis as mda
 
