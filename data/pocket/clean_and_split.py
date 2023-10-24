@@ -26,7 +26,7 @@ def run(input_dir, proteins_dir, ligands_dir):
     os.makedirs(proteins_dir, exist_ok=True)
     os.makedirs(ligands_dir, exist_ok=True)
 
-    fnames = [fname for fname in tqdm(os.listdir(input_dir)) if fname.endswith(".bio1")]
+    fnames = [fname for fname in tqdm(os.listdir(input_dir)) if fname.endswith(".bio1") or fname.endswith(".pdb")]
     return fnames
 
 @ray.remote
