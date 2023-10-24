@@ -238,9 +238,9 @@ class PocketPrediction:
         top1_lig = os.path.join(os.path.join(ligand_path, os.path.splitext(ligand_name)[0]), sorted(os.listdir(f"{os.path.join(ligand_path, os.path.splitext(ligand_name)[0])}"), key=str)[0])
 
         l = mda.Universe(top1_lig)
-        l.add_TopologyAttr("record_type", "HETATM")
+        l.add_TopologyAttr("record_type", ["HETATM"] * l.atoms.__len__())
         r = mda.Universe(os.path.join(protein_path, protein_name))
-        l.add_TopologyAttr("record_type", "ATOM")
+        l.add_TopologyAttr("record_type", ["ATOM"] * * r.atoms.__len__())
         c = mda.Merge(l.atoms, r.atoms)
         pathlib.Path(complex_path).mkdir(exist_ok=True)
         c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
