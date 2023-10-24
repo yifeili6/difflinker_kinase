@@ -13,6 +13,45 @@ import functools
 import multiprocessing
 import ray
 
+def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=True):
+    if molecule_file.endswith('.mol2'):
+        mol = Chem.MolFromMol2File(molecule_file, sanitize=False, removeHs=False)
+    elif molecule_file.endswith('.sdf'):
+        supplier = Chem.SDMolSupplier(molecule_file, sanitize=False, removeHs=False)
+        mol = supplier[0]
+    elif molecule_file.endswith('.pdbqt'):
+        with open(molecule_file) as file:
+            pdbqt_data = file.readlines()
+        pdb_block = ''
+        for line in pdbqt_data:
+            pdb_block += '{}\n'.format(line[:66])
+        mol = Chem.MolFromPDBBlock(pdb_block, sanitize=False, removeHs=False)
+    elif molecule_file.endswith('.pdb'):
+        mol = Chem.MolFromPDBFile(molecule_file, sanitize=False, removeHs=False)
+    else:
+        raise ValueError('Expect the format of the molecule_file to be '
+                         'one of .mol2, .sdf, .pdbqt and .pdb, got {}'.format(molecule_file))
+
+    try:
+        if sanitize or calc_charges:
+            Chem.SanitizeMol(mol)
+
+        if calc_charges:
+            # Compute Gasteiger charges on the molecule.
+            try:
+                AllChem.ComputeGasteigerCharges(mol)
+            except:
+                warnings.warn('Unable to compute charges for the molecule.')
+
+        if remove_hs:
+            mol = Chem.RemoveHs(mol, sanitize=sanitize)
+    except Exception as e:
+        print(e)
+        print("RDKit was unable to read the molecule.")
+        return None
+
+    return mol
+
 def get_relevant_ligands(mol):
     frags = Chem.GetMolFrags(mol, asMols=True, sanitizeFrags=False)
     ligands = []
@@ -105,7 +144,8 @@ def process_one_file_noray(input_dir, proteins_dir, ligands_dir, fname):
     os.remove(temp_path_3)
 
     try:
-        mol = Chem.MolFromPDBFile(out_ligands_path, sanitize=False)
+        # mol = Chem.MolFromPDBFile(out_ligands_path, sanitize=False)
+        mol = read_molecule(out_ligands_path)
         os.remove(out_ligands_path)
     except Exception as e:
         print(f'Problem reading ligands PDB={pdb_code}: {e}')
