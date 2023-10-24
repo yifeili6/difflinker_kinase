@@ -74,7 +74,7 @@ def read_molecule(path):
     elif path.endswith('.mol2'):
         return Chem.MolFromMol2File(path, sanitize=False, removeHs=True)
     elif path.endswith('.sdf'):
-        return Chem.SDMolSupplier(path, sanitize=False, removeHs=True)[0]
+        return Chem.SDMolSupplier(path, sanitize=False, removeHs=True) #Originally indexed at 0!
     raise Exception('Unknown file extension')
 
 
