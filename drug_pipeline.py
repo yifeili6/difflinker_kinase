@@ -249,7 +249,7 @@ class PocketPrediction:
         proteins_dir = os.path.join(processed_path, "proteins")
         ligands_dir = os.path.join(processed_path, "ligands")
         fnames = run(input_dir=complex_path, proteins_dir=proteins_dir, ligands_dir=ligands_dir)
-        
+        print(fnames)
         [process_one_file_noray(complex_path, proteins_dir, ligands_dir, fname) for fname in fnames]
         
         # input_dir, proteins_dir, ligands_dir = ray.put(complex_path), ray.put(proteins_dir), ray.put(ligands_dir)
