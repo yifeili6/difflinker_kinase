@@ -326,5 +326,7 @@ if __name__ == '__main__':
     # pred.convert_gvp_output_to_universe
     # pred.extract_universe_betas_for_vinadock
     pred.make_1_prot_ligand_complex_for_difflinker(pred.protein_path, "1ADE.pdb", os.path.join(pred.outpath_vina, "1ADE_beta/vina"), "benzene.pdbqt", pred.complex_path)
+    pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
+
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
