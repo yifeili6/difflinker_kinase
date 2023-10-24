@@ -243,17 +243,19 @@ class PocketPrediction:
         c.atoms.write(os.path.join(complex_path, os.path.splitext(protein_name)[0] + "_" + os.path.splitext(ligand_name)[0] + ".pdb"))
 
     def process_prot_ligand_complex_for_difflinker(self, complex_path, processed_path):
-        from data.pocket.clean_and_split import run, process_one_file
+        from data.pocket.clean_and_split import run, process_one_file, process_one_file_noray
         pathlib.Path(processed_path).mkdir(exist_ok=True)
 
         proteins_dir = os.path.join(processed_path, "proteins")
         ligands_dir = os.path.join(processed_path, "ligands")
         fnames = run(input_dir=complex_path, proteins_dir=proteins_dir, ligands_dir=ligands_dir)
         
-        input_dir, proteins_dir, ligands_dir = ray.put(complex_path), ray.put(proteins_dir), ray.put(ligands_dir)
-        results = [process_one_file.remote(input_dir, proteins_dir, ligands_dir, fname) for fname in fnames]
-        results = ray.get(results)
-        ray.shutdown()
+        [process_one_file_noray(complex_path, proteins_dir, ligands_dir, fname) for fname in fnames]
+        
+        # input_dir, proteins_dir, ligands_dir = ray.put(complex_path), ray.put(proteins_dir), ray.put(ligands_dir)
+        # results = [process_one_file.remote(input_dir, proteins_dir, ligands_dir, fname) for fname in fnames]
+        # results = ray.get(results)
+        # ray.shutdown()
 
     def generate_fragmentation_for_difflinker(self, processed_path):
         from data.pocket.generate_fragmentation_and_conformers import run
