@@ -11,6 +11,7 @@ def encode_block(obj):
     traj = obj.universe.trajectory
     ts = traj.ts
 
+    molecule = []
     # try:
     #     molecule = ts.data['molecule']
     # except KeyError:
@@ -46,31 +47,39 @@ def encode_block(obj):
                                 a.position[2],
                                 a.type,
                                 a.resid,
-                                a.resname,
-                                a.charge)
+                                # a.resname,
+                                # a.charge)
+                                "lig",
+                                0)
                       for a in obj.atoms)
     atom_lines.append("\n")
     atom_lines = "\n".join(atom_lines)
 
-    try:
-        substructure = ["@<TRIPOS>SUBSTRUCTURE\n"] + ts.data['substructure']
-    except KeyError:
-        substructure = ""
+    # try:
+    #     substructure = ["@<TRIPOS>SUBSTRUCTURE\n"] + ts.data['substructure']
+    # except KeyError:
+    #     substructure = ""
+    substructure = ["@<TRIPOS>SUBSTRUCTURE\n"] + ["1 **** 1 TEMP 0 **** **** 0 ROOT"]
 
-    check_sums = molecule[1].split()
-    check_sums[0], check_sums[1] = str(len(obj.atoms)), str(len(bondgroup))
+    # check_sums = molecule[1].split()
+    # check_sums[0], check_sums[1] = str(len(obj.atoms)), str(len(bondgroup))
 
     # prevent behavior change between repeated calls
     # see gh-2678
-    molecule_0_store = molecule[0]
-    molecule_1_store = molecule[1]
+    # molecule_0_store = molecule[0]
+    # molecule_1_store = molecule[1]
 
-    molecule[1] = "{0}\n".format(" ".join(check_sums))
+    # molecule[1] = "{0}\n".format(" ".join(check_sums))
+
     molecule.insert(0, "@<TRIPOS>MOLECULE\n")
-
+    molecule.insert(1, "LIG\n")
+    molecule.insert(2, f"{len(obj.atoms)} {len(bonds)} {0} {0} {1}\n")
+    molecule.insert(3, "SMALL\n")
+    molecule.insert(4, "USER_CHARGES\n")
+    
     return_val = ("".join(molecule) + atom_lines +
                   bond_lines + "".join(substructure))
 
-    molecule[0] = molecule_0_store
-    molecule[1] = molecule_1_store
+    # molecule[0] = molecule_0_store
+    # molecule[1] = molecule_1_store
     return return_val
