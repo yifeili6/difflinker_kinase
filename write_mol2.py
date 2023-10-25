@@ -80,7 +80,7 @@ def encode_block(filename, obj):
     molecule.insert(1, "LIG\n")
     molecule.insert(2, f"{len(obj.atoms)} {len(bonds)} {0} {0} {1}\n")
     molecule.insert(3, "SMALL\n")
-    molecule.insert(4, "USER_CHARGES\n")
+    molecule.insert(4, "USER_CHARGES\n\n")
     
     return_val = ("".join(molecule) + atom_lines +
                   bond_lines + "".join(substructure))
