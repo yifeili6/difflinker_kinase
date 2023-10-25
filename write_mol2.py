@@ -29,7 +29,7 @@ def encode_block(filename, obj, mol):
     """
     try:
         mol.GetConformer()
-    except Exception as :
+    except Exception as e:
         print(e)
         mol = Chem.AddHs(mol)
         AllChem.EmbedMoecule(mol)
