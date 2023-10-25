@@ -21,7 +21,7 @@ def filter_mol2_atoms(at: "MDAnalysis atom name", atom: "RDKIT mol atom instance
     else:
         return ""
 
-def filter_mol2_bonds(order: "MDAnalysis order"):
+def filter_mol2_bonds(bo: "MDAnalysis order"):
     if bo in [1, 2, 3]:
         return bo
     else:
