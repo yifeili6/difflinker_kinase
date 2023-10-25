@@ -1,6 +1,11 @@
 import MDAnalysis as mda
+# http://chemyang.ccnu.edu.cn/ccb/server/AIMMS/mol2.pdf ##see for more explanations!
 
-def encode_block(obj):
+############
+#####WIP####
+############
+
+def encode_block(filename, obj):
     """
     Parameters
     ----------
@@ -82,4 +87,8 @@ def encode_block(obj):
 
     # molecule[0] = molecule_0_store
     # molecule[1] = molecule_1_store
+
+    f = open(filename, "w")
+    f.write(return_val)
+    
     return return_val
