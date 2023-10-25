@@ -1,16 +1,26 @@
 import MDAnalysis as mda
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
 # http://chemyang.ccnu.edu.cn/ccb/server/AIMMS/mol2.pdf ##see for more explanations!
 
 ############
 #####WIP####
 ############
 
-def encode_block(filename, obj):
+def encode_block(filename, obj, mol):
     """
     Parameters
     ----------
     obj : AtomGroup or Universe
     """
+    try:
+        mol.GetConformer()
+    except Exception as :
+        print(e)
+        mol = Chem.AddHs(mol)
+        AllChem.EmbedMoecule(mol)
+        
     # Issue 2717
     obj = obj.atoms
     traj = obj.universe.trajectory
@@ -50,13 +60,13 @@ def encode_block(filename, obj):
                                 a.position[0],
                                 a.position[1],
                                 a.position[2],
-                                a.type,
+                                a.type + "." + at.GetHybridization().name.lower(), ######WIP!
                                 a.resid,
                                 # a.resname,
                                 # a.charge)
                                 "lig",
                                 0)
-                      for a in obj.atoms)
+                      for a, at in zip(obj.atoms, mol.GetAtoms()))
     atom_lines.append("\n")
     atom_lines = "\n".join(atom_lines)
 
