@@ -59,9 +59,9 @@ for ((idx=0; idx<$#; idx++)); do
     elif [ ${all_args[${idx}]} == "--blind" ]; then
         blind=true
     elif [ ${all_args[${idx}]} == "-py" ]; then
-        autodock_python==${all_args[$(($idx+1))]}
+        autodock_python=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "-t" ]; then
-        autodock_tools_path==${all_args[$(($idx+1))]}
+        autodock_tools_path=${all_args[$(($idx+1))]}
     fi
 done
 
