@@ -12,6 +12,8 @@ if [ $# -eq 0 ]; then
     echo "[-e EXHAUSTIVENESS]: set exhaustiveness parameter (default=8)"
     echo "[-n NUM_MODES_POSE]: set number of poses (default=20)"
     echo "[-s SCORING_METHOD]: scoring (default=ad4, vina, vinardo)"
+    echo "[-py AUTODOCK_PYTHONSH]: Autodock pythonsh location"
+    echo "[-t AUTODOCK_TOOLS]: Autodock tools path"
 
     exit
 fi
@@ -23,6 +25,8 @@ size_given=false
 blind=false
 num_modes=20
 scoring=vinardo
+autodock_python="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/bin/pythonsh"
+autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
 
 IFS=' ' read -r -a all_args <<< "$@"
 
@@ -54,14 +58,16 @@ for ((idx=0; idx<$#; idx++)); do
         scoring=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "--blind" ]; then
         blind=true
+    elif [ ${all_args[${idx}]} == "--py" ]; then
+        autodock_python==${all_args[$(($idx+1))]}
+    elif [ ${all_args[${idx}]} == "--t" ]; then
+        autodock_tools_path==${all_args[$(($idx+1))]}
     fi
 done
 
 # script_path=$(dirname "$0")
 script_path="vina"
 script_path=$(realpath ${script_path})
-autodock_python="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/bin/pythonsh"
-autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
 
 #convert all lig files to pdbqt if they are not already
 if [ -d "$lig_path" ]; then
