@@ -21,6 +21,12 @@ def filter_mol2_atoms(at: "MDAnalysis atom name", atom: "RDKIT mol atom instance
     else:
         return ""
 
+def filter_mol2_bonds(order: "MDAnalysis order"):
+    if bo in [1, 2, 3]:
+        return bo
+    else:
+        return "ar"
+
 def encode_block(filename, obj, mol):
     """
     Parameters
@@ -59,7 +65,7 @@ def encode_block(filename, obj, mol):
                       "".format(bid,
                                 mapping[atom1],
                                 mapping[atom2],
-                                order)
+                                filter_mol2_bonds(order))
                       for bid, (atom1, atom2, order)in enumerate(
                               bonds, start=1))
     bond_lines.append("\n")
