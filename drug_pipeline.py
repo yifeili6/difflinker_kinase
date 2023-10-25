@@ -327,7 +327,7 @@ class PocketPrediction:
         
 if __name__ == '__main__':
     pred = PocketPrediction()
-    # pred.predict_all_with_vina
+    pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
     # pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
@@ -338,7 +338,7 @@ if __name__ == '__main__':
     # pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
     # pred.generate_fragmentation_for_difflinker(pred.processed_path)
     # pred.prepare_dataset_for_difflinker(pred.processed_path)
-    pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
+    # pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb")
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
