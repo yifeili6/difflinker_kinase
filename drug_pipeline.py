@@ -42,12 +42,18 @@ class PocketPrediction:
                  nn_path_gvp = "./gvp/models/pocketminer",
                  vina_script_path = "./vina/runVina.sh",
                  complex_path = "data_docking/complex",
-                 processed_path = "data_docking/processed_complex"):
+                 processed_path = "data_docking/processed_complex",
+                 vina = None,
+                 autodock_python = None,
+                 autodock_tools_path = None):
 
         # input path, files
         self.protein_path   = protein_path
         self.ligand_path   = ligand_path
         self.vina_script_path = vina_script_path
+        self.vina = vina
+        self.autodock_python = autodock_python
+        self.autodock_tools_path = autodock_tools_path
                      
         self.protein_path_pdb_files      = glob(f"{protein_path}/*.pdb")
         self.protein_path_pdb_beta_files      = glob(f"{outpath_gvp}/*.pdb")
@@ -173,6 +179,8 @@ class PocketPrediction:
     def extract_universe_betas_for_vinadock(self, ):
         outpath_gvp = self.outpath_gvp  
         protein_path_beta_pdb_files = glob(f"{outpath_gvp}/*.pdb")
+        vina, autodock_python, autodock_tools_path = self.vina, self.autodock_python, self.autodock_tools_path
+        
         try:
             print(protein_path_beta_pdb_files)
             for pdb_file in protein_path_beta_pdb_files:
@@ -191,7 +199,10 @@ class PocketPrediction:
                 pdb_name = basename.split("_")[0] #Cuz we are reading with _beta.pdb suffix
                 print(center, size)
                 # size =  --center {ast.literal_eval(center)} --size {ast.literal_eval(size)}
-                completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
+                if (autodock_tools_path is None) and (autodock_python is None) and (vina is None):
+                    completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina}"], shell=True, check=True, capture_output=True, text=True)
+                else:
+                    completed_process = subprocess.run([f"{self.vina_script_path} -l {self.ligand_path} -r {pdb_file} --center {center} --size {size} -o {self.outpath_vina} -v {vina} -py {autodock_python} -t {autodock_tools_path}"], shell=True, check=True, capture_output=True, text=True)
                 print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
                 print(f"Output: {completed_process.stdout}")
                 print(f"Output: {completed_process.stderr}")
