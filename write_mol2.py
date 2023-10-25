@@ -2,7 +2,8 @@ import MDAnalysis as mda
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-# http://chemyang.ccnu.edu.cn/ccb/server/AIMMS/mol2.pdf ##see for more explanations!
+# http://chemyang.ccnu.edu.cn/ccb/server/AIMMS/mol2.pdf ##see for more explanations for SYBYL!
+# https://github.com/jensengroup/xyz2mol/blob/master/xyz2mol.py ## see for better conversion!
 
 ############
 #####WIP####
