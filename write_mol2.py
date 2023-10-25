@@ -73,7 +73,7 @@ def encode_block(filename, obj, mol):
                                 a.position[0],
                                 a.position[1],
                                 a.position[2],
-                                a.type[0] + filter_mol2_atoms(a.type, at), ######WIP!
+                                a.type[0] + filter_mol2_atoms(a.type[0], at), ######WIP!
                                 a.resid,
                                 # a.resname,
                                 # a.charge)
