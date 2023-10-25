@@ -23,7 +23,7 @@ def filter_mol2_atoms(at: "MDAnalysis atom name", atom: "RDKIT mol atom instance
 
 def filter_mol2_bonds(bo: "MDAnalysis order"):
     if bo in [1, 2, 3]:
-        return bo
+        return int(bo)
     else:
         return "ar"
 
