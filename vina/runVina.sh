@@ -12,6 +12,7 @@ if [ $# -eq 0 ]; then
     echo "[-e EXHAUSTIVENESS]: set exhaustiveness parameter (default=8)"
     echo "[-n NUM_MODES_POSE]: set number of poses (default=20)"
     echo "[-s SCORING_METHOD]: scoring (default=ad4, vina, vinardo)"
+    echo "[-v VINA_EXECUTABLE]: Autodock Vina executable"
     echo "[-py AUTODOCK_PYTHONSH_EXECUTABLE]: Autodock pythonsh location"
     echo "[-t AUTODOCK_TOOLS_PATH]: Autodock tools path"
 
@@ -25,6 +26,7 @@ size_given=false
 blind=false
 num_modes=20
 scoring=vinardo
+vina="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina_1.2.5_linux_x86_64"
 autodock_python="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/bin/pythonsh"
 autodock_tools_path="/Scr/hyunpark/autodock/mgltools_x86_64Linux2_1.5.6/MGLToolsPckgs/AutoDockTools/Utilities24"
 
@@ -58,6 +60,8 @@ for ((idx=0; idx<$#; idx++)); do
         scoring=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "--blind" ]; then
         blind=true
+    elif [ ${all_args[${idx}]} == "-v" ]; then
+        vina=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "-py" ]; then
         autodock_python=${all_args[$(($idx+1))]}
     elif [ ${all_args[${idx}]} == "-t" ]; then
@@ -183,7 +187,7 @@ for rec in "${all_recs[@]}"; do
     
     for lig in ${all_ligs[@]}; do
         lig_name=$(basename $lig .pdbqt)
-        cmd="/Scr/hyunpark/autodock/autodock_vina_1_1_2_linux_x86/bin/vina_1.2.5_linux_x86_64 --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
+        cmd="${vina} --config ${full_out_path}/${config_name} --receptor ${rec} --ligand ${lig} --out ${full_out_path}/${lig_name}.pdbqt"
         echo -e "Running command:\n${cmd}"
         ${cmd}
         echo "Done"
