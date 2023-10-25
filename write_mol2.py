@@ -8,6 +8,19 @@ from rdkit.Chem import AllChem
 #####WIP####
 ############
 
+def filter_mol2_atoms(at: "MDAnalysis atom name", atom: "RDKIT mol atom instance"):
+    if at in ["C", "N", "O", "S", "P"]:
+        if atom.GetHybridization().name.lower() == "sp3":
+            return ".3"
+        elif atom.GetHybridization().name.lower() == "sp2":
+            return ".2"
+        elif atom.GetHybridization().name.lower() == "sp":
+            return ".1"
+        elif atom.GetIsAromatic():
+            return ".ar"
+    else:
+        return ""
+
 def encode_block(filename, obj, mol):
     """
     Parameters
@@ -60,7 +73,7 @@ def encode_block(filename, obj, mol):
                                 a.position[0],
                                 a.position[1],
                                 a.position[2],
-                                a.type + "." + at.GetHybridization().name.lower(), ######WIP!
+                                a.type + filter_mol2_atoms(a.type, at), ######WIP!
                                 a.resid,
                                 # a.resname,
                                 # a.charge)
