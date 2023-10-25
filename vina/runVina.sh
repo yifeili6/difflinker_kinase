@@ -12,8 +12,8 @@ if [ $# -eq 0 ]; then
     echo "[-e EXHAUSTIVENESS]: set exhaustiveness parameter (default=8)"
     echo "[-n NUM_MODES_POSE]: set number of poses (default=20)"
     echo "[-s SCORING_METHOD]: scoring (default=ad4, vina, vinardo)"
-    echo "[-py AUTODOCK_PYTHONSH]: Autodock pythonsh location"
-    echo "[-t AUTODOCK_TOOLS]: Autodock tools path"
+    echo "[-py AUTODOCK_PYTHONSH_EXECUTABLE]: Autodock pythonsh location"
+    echo "[-t AUTODOCK_TOOLS_PATH]: Autodock tools path"
 
     exit
 fi
