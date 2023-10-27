@@ -30,7 +30,7 @@ def filter_mol2_bonds(bo: "MDAnalysis order"):
     else:
         return "ar"
 
-def encode_block(filename, obj, mol):
+def encode_block(filename, mol):
     """
     Parameters
     ----------
@@ -42,7 +42,8 @@ def encode_block(filename, obj, mol):
         print(e)
         mol = Chem.AddHs(mol)
         AllChem.EmbedMoecule(mol)
-        
+
+    obj = mda.Universe(mol)
     # Issue 2717
     obj = obj.atoms
     traj = obj.universe.trajectory
