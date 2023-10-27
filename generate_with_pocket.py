@@ -2,7 +2,6 @@ import argparse
 import os
 import numpy as np
 
-import torch
 import subprocess
 from rdkit import Chem
 from Bio.PDB import PDBParser
@@ -21,6 +20,7 @@ from src.linker_size_lightning import SizeClassifier
 
 from pdb import set_trace
 
+import torch
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
