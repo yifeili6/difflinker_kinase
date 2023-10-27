@@ -18,6 +18,7 @@ import pathlib
 import ray 
 
 import MDAnalysis as mda
+from generate_with_protein import main
 # https://zenodo.org/records/4740366 ;; Natural ligands
 
 # diff dock related import
@@ -308,17 +309,28 @@ class PocketPrediction:
             out_pockets_path=out_pockets_pkl,
             out_table_path=out_table)
     
-    def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name):
+    def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name, fragments, model, linker_size, n_samples, n_steps):
         try:
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
             # Run the command and wait for it to complete   
             print(protein_path, protein_name, outpath_difflinker)
             # completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf  --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 1 --n_steps 2000"], shell=True, capture_output=True, text=True)                
-            completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments data_docking/processed_complex/Custom_frag.sdf  --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 1 --n_steps 2000"], shell=True, capture_output=True, text=True)                
-
-            print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
-            print(f"Output: {completed_process.stdout}")
-            print(f"Output: {completed_process.stderr}")
+            # completed_process = subprocess.run([f"git pull && python -W ignore generate_with_protein.py --fragments data_docking/processed_complex/Custom_frag.sdf  --protein {os.path.join(protein_path, protein_name)} --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output {outpath_difflinker} --n_samples 1 --n_steps 2000"], shell=True, capture_output=True, text=True)                
+            main(
+                input_path=fragments,
+                protein_path=os.path.join(protein_path, protein_name),
+                backbone_atoms_only=False,
+                model=model,
+                output_dir=outpath_difflinker,
+                n_samples=n_samples,
+                n_steps=n_steps,
+                linker_size=linker_size,
+                anchors=None,
+                max_batch_size=64)
+        
+            # print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
+            # print(f"Output: {completed_process.stdout}")
+            # print(f"Output: {completed_process.stderr}")
 
         # except subprocess.CalledProcessError as e:
         except ValueError as e:
