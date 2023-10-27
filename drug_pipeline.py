@@ -363,6 +363,6 @@ if __name__ == '__main__':
     # pred.prepare_dataset_for_difflinker(pred.processed_path)
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb")
-    pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb", "../DiffLinkerMOAD/processed/MOAD_test_frag.sdf", "models/pocket_difflinker_fullpocket_no_anchors.ckpt", "models/geom_size_gnn.ckpt", 1, 2_000)
+    pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb", "/Scr/yifei6/DiffLinkerMOAD/processed/MOAD_test_frag.sdf", "models/pocket_difflinker_fullpocket_no_anchors.ckpt", "models/geom_size_gnn.ckpt", 1, 2_000)
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
