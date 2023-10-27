@@ -352,15 +352,17 @@ if __name__ == '__main__':
     pred = PocketPrediction()
     # pred.predict_all_with_vina
     # pred.predict_all_with_fpocket
-    # pred.predict_all_with_gvp
+    pred.predict_all_with_gvp
     # pred.predict_all_with_diffdock
     # pred.predict_all_with_difflinker
-    # pred.convert_gvp_output_to_universe
-    # pred.extract_universe_betas_for_vinadock
-    # pred.make_1_prot_ligand_complex_for_difflinker(pred.protein_path, "1ADE.pdb", os.path.join(pred.outpath_vina, "1ADE_beta/vina"), "oxo.pdbqt", pred.complex_path)
-    # pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
-    # pred.generate_fragmentation_for_difflinker(pred.processed_path)
-    # pred.prepare_dataset_for_difflinker(pred.processed_path)
+    pred.convert_gvp_output_to_universe
+    pred.extract_universe_betas_for_vinadock
+    
+    pred.make_1_prot_ligand_complex_for_difflinker(pred.outpath_gvp, "1ADE_beta.pdb", os.path.join(pred.outpath_vina, "1ADE_beta/vina"), "ligand.pdbqt", pred.complex_path)
+    pred.process_prot_ligand_complex_for_difflinker(pred.complex_path, pred.processed_path)
+    pred.generate_fragmentation_for_difflinker(pred.processed_path)
+    pred.prepare_dataset_for_difflinker(pred.processed_path)
+    
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb")
     pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb", "/Scr/yifei6/DiffLinkerMOAD/processed/MOAD_test_frag.sdf", "models/pocket_difflinker_fullpocket_no_anchors.ckpt", "models/geom_size_gnn.ckpt", 1, 2_000)
