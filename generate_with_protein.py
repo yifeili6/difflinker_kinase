@@ -11,7 +11,7 @@ from src.datasets import (
     collate_with_fragment_without_pocket_edges, get_dataloader, get_one_hot, parse_molecule, MOADDataset
 )
 from src.lightning import DDPM
-from src.visualizer import save_xyz_file, visualize_chain, load_xyz_file
+from src.visualizer import save_xyz_file, visualize_chain, load_xyz_files
 from src.utils import FoundNaNException
 from tqdm.auto import tqdm
 
