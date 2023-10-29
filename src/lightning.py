@@ -318,8 +318,8 @@ class DDPM(pl.LightningModule):
             chain_node_mask = torch.cat([node_mask[bi].unsqueeze(0) for _ in range(one_hot.size(0))], dim=0)
             names = [f'{name}_{j}' for j in range(one_hot.size(0))]
 
-            one_hot = [::10]
-            positions = [::10]
+            one_hot = one_hot[::10]
+            positions = positions[::10]
             chain_node_mask = chain_node_mask[::10]
             names = names[slice(0,None,10)]
             
