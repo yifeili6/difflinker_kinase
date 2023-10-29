@@ -305,7 +305,9 @@ class DDPM(pl.LightningModule):
 
         for bi, mi in zip(batch_indices, mol_indices):
             chain = chain_batch[:, bi, :, :]
-            name = f'mol_{mi}'
+            # name = f'mol_{mi}'
+            name = f'config_{mi}'
+
             # chain_output = os.path.join(self.samples_dir, f'epoch_{self.current_epoch}', name)
             chain_output = os.path.join(self.samples_dir, name)
 
