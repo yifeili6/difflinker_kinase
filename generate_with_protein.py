@@ -282,7 +282,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             chain = None
             for i in range(5):
                 try:
-                    chain, node_mask = ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=1)
+                    chain, node_mask = ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=1) if not timeseries else ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=None)
                     break
                 except FoundNaNException:
                     continue
