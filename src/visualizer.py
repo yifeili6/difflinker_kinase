@@ -37,7 +37,7 @@ def load_xyz_files(path, suffix=''):
         if fname.endswith(f'_{suffix}.xyz'):
             files.append(fname)
             
-    if files[0].replace(f'_{suffix}.xyz', '').split('_')[-1] != "frag"
+    if files[0].replace(f'_{suffix}.xyz', '').split('_')[-1] != "frag":
         files = sorted(files, key=lambda f: -int(f.replace(f'_{suffix}.xyz', '').split('_')[-1]))
     else:
         files = files
