@@ -11,7 +11,7 @@ from src.datasets import (
     collate_with_fragment_without_pocket_edges, get_dataloader, get_one_hot, parse_molecule, MOADDataset
 )
 from src.lightning import DDPM
-from src.visualizer import save_xyz_file
+from src.visualizer import save_xyz_file, visualize_chain, load_xyz_file
 from src.utils import FoundNaNException
 from tqdm.auto import tqdm
 
@@ -309,7 +309,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 ddpm.generate_animation(chain, node_mask, 0)
             else:
                 save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
-                
+                visualize_chain(output_dir, wandb=None, mode=name, is_geom=ddpm.is_geom)
             # for i in range(batch_size):
             #     out_xyz = f'{output_dir}/output_{offset_idx+i}_{name}_.xyz'
             #     out_sdf = f'{output_dir}/output_{offset_idx+i}_{name}_.sdf'
