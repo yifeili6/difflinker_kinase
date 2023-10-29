@@ -36,7 +36,10 @@ def load_xyz_files(path, suffix=''):
     for fname in os.listdir(path):
         if fname.endswith(f'_{suffix}.xyz'):
             files.append(fname)
-    files = sorted(files, key=lambda f: -int(f.replace(f'_{suffix}.xyz', '').split('_')[-1]))
+    try:
+        files = sorted(files, key=lambda f: -int(f.replace(f'_{suffix}.xyz', '').split('_')[-1]))
+    except:
+        files = files
     return [os.path.join(path, fname) for fname in files]
 
 
