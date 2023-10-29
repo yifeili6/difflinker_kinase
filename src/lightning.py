@@ -316,7 +316,7 @@ class DDPM(pl.LightningModule):
             one_hot = chain[:, :, 3:-1] if self.include_charges else chain[:, :, 3:]
             positions = chain[:, :, :3]
             chain_node_mask = torch.cat([node_mask[bi].unsqueeze(0) for _ in range(one_hot.size(0))], dim=0)
-            names = [f'{name}_{j}' for j in range(self.FRAMES)]
+            names = [f'{name}_{j}' for j in range(one_hot.size(0))]
 
             save_xyz_file(chain_output, one_hot, positions, chain_node_mask, names=names, is_geom=self.is_geom)
             visualize_chain(chain_output, wandb=None, mode=name, is_geom=self.is_geom)
