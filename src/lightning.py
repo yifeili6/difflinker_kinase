@@ -315,7 +315,7 @@ class DDPM(pl.LightningModule):
             names = [f'{name}_{j}' for j in range(self.FRAMES)]
 
             save_xyz_file(chain_output, one_hot, positions, chain_node_mask, names=names, is_geom=self.is_geom)
-            visualize_chain(chain_output, wandb=wandb, mode=name, is_geom=self.is_geom)
+            visualize_chain(chain_output, wandb=None, mode=name, is_geom=self.is_geom)
 
     def sample_and_analyze(self, dataloader):
         pred_molecules = []
