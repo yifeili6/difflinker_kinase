@@ -36,9 +36,10 @@ def load_xyz_files(path, suffix=''):
     for fname in os.listdir(path):
         if fname.endswith(f'_{suffix}.xyz'):
             files.append(fname)
-    try:
+            
+    if files[0].replace(f'_{suffix}.xyz', '').split('_')[-1] != "frag"
         files = sorted(files, key=lambda f: -int(f.replace(f'_{suffix}.xyz', '').split('_')[-1]))
-    except Exception as e:
+    else:
         files = files
         
     return [os.path.join(path, fname) for fname in files]
