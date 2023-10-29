@@ -309,7 +309,7 @@ class PocketPrediction:
             out_pockets_path=out_pockets_pkl,
             out_table_path=out_table)
     
-    def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name, fragments, model, linker_size, n_samples, n_steps):
+    def predict_1_with_difflinker(self, outpath_difflinker, protein_path, protein_name, fragments, model, linker_size, n_samples, n_steps, timeseries):
         try:
             # if not os.path.exists(os.path.join(outpath_diffdock, outfile_name)):
             # Run the command and wait for it to complete   
@@ -326,7 +326,8 @@ class PocketPrediction:
                 n_steps=n_steps,
                 linker_size=linker_size,
                 anchors=None,
-                max_batch_size=64)
+                max_batch_size=64,
+                timeseries=timeseries)
         
             # print(f"Return code: {completed_process.returncode}") #an exit status of 0 indicates that it ran successfully
             # print(f"Output: {completed_process.stdout}")
@@ -365,6 +366,6 @@ if __name__ == '__main__':
     
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_oxo_protein.pdb")
     # pred.predict_1_with_difflinker(pred.outpath_difflinker, pred.protein_path, "1ADE.pdb")
-    pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_beta_ligand_protein.pdb", "data_docking/processed_complex/Custom_frag.sdf", "models/pocket_difflinker_fullpocket_no_anchors.ckpt", "10", 3, 1_500)
+    pred.predict_1_with_difflinker(pred.outpath_difflinker, os.path.join(pred.processed_path, "proteins"), "1ADE_beta_ligand_protein.pdb", "data_docking/processed_complex/Custom_frag.sdf", "models/pocket_difflinker_fullpocket_no_anchors.ckpt", "10", 3, 1_500, True)
 
 # git pull && python -m inference --protein_path ../data_docking/protein/1ADE.pdb --ligand ../data_docking/ligand/benzene.mol2 --out_dir ../data_docking/result_diffdock --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
