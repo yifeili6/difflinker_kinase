@@ -38,8 +38,9 @@ def load_xyz_files(path, suffix=''):
             files.append(fname)
     try:
         files = sorted(files, key=lambda f: -int(f.replace(f'_{suffix}.xyz', '').split('_')[-1]))
-    except:
+    except Exception as e:
         files = files
+        
     return [os.path.join(path, fname) for fname in files]
 
 
