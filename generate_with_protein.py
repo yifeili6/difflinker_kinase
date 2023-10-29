@@ -306,7 +306,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
 
             if timeseries:
-                setattr(ddpm, "samples_dir", os.path.join("data_docking/samples_dir"))
+                setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{nth_molecule}_ligand"))
                 ddpm.generate_animation(chain, node_mask, 0)
  
             # for i in range(batch_size):
