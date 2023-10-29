@@ -300,7 +300,9 @@ class DDPM(pl.LightningModule):
                 self.metrics.setdefault(f'{metric_name}/test', []).append(metric_value)
 
     def generate_animation(self, chain_batch, node_mask, batch_i):
-        batch_indices, mol_indices = utils.get_batch_idx_for_animation(self.batch_size, batch_i)
+        # batch_indices, mol_indices = utils.get_batch_idx_for_animation(self.batch_size, batch_i)
+        batch_indices, mol_indices = utils.get_batch_idx_for_animation(node_mask.size(0), batch_i)
+
         for bi, mi in zip(batch_indices, mol_indices):
             chain = chain_batch[:, bi, :, :]
             name = f'mol_{mi}'
