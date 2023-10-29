@@ -145,7 +145,7 @@ def get_pocket(mol, pdb_path, backbone_atoms_only=False):
 
 
 def main(input_path, protein_path, backbone_atoms_only, model,
-         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size):
+         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size, timeseries=False):
 
     # Setup
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -304,7 +304,10 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     
             node_mask[torch.where(data['pocket_mask'])] = 0
             save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
-    
+
+            if time_series:
+                ddpm.generate_animation(chain, node_mask, 0)
+ 
             # for i in range(batch_size):
             #     out_xyz = f'{output_dir}/output_{offset_idx+i}_{name}_.xyz'
             #     out_sdf = f'{output_dir}/output_{offset_idx+i}_{name}_.sdf'
