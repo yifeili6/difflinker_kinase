@@ -305,7 +305,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             node_mask[torch.where(data['pocket_mask'])] = 0
             save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
 
-            if time_series:
+            if timeseries:
+                setattr(ddpm, "samples_dir", os.path.join("data_docking/samples_dir"))
                 ddpm.generate_animation(chain, node_mask, 0)
  
             # for i in range(batch_size):
