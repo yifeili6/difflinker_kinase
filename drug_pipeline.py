@@ -32,6 +32,9 @@ from generate_with_protein import main
 '''reference: https://github.com/Discngine/fpocket'''
 
 class PocketPrediction:
+    protein_path = 'data_docking/protein'
+    ligand_path = 'data_docking/ligand'
+    
     def __init__(self, 
                  protein_path = 'data_docking/protein', 
                  ligand_path = 'data_docking/ligand',
