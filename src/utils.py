@@ -280,10 +280,12 @@ class FoundNaNException(Exception):
 def get_batch_idx_for_animation(batch_size, batch_idx):
     batch_indices = []
     mol_indices = []
-    for idx in [0, 110, 360]:
-        if idx // batch_size == batch_idx:
-            batch_indices.append(idx % batch_size)
-            mol_indices.append(idx)
+    # for idx in [0, 110, 360]:
+    for idx in range(batch_size):
+        # if idx // batch_size == batch_idx:
+        # batch_indices.append(idx % batch_size)
+        batch_indices.append(idx)
+        mol_indices.append(idx)
     return batch_indices, mol_indices
 
 
