@@ -304,7 +304,9 @@ class DDPM(pl.LightningModule):
         for bi, mi in zip(batch_indices, mol_indices):
             chain = chain_batch[:, bi, :, :]
             name = f'mol_{mi}'
-            chain_output = os.path.join(self.samples_dir, f'epoch_{self.current_epoch}', name)
+            # chain_output = os.path.join(self.samples_dir, f'epoch_{self.current_epoch}', name)
+            chain_output = os.path.join(self.samples_dir, name)
+
             os.makedirs(chain_output, exist_ok=True)
 
             one_hot = chain[:, :, 3:-1] if self.include_charges else chain[:, :, 3:]
