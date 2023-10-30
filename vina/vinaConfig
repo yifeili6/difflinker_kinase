@@ -11,4 +11,5 @@ num_modes = NUM_MODES_POSE
 
 scoring = SCORING_METHOD
 
+spacing = 1
 
