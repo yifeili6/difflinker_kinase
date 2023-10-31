@@ -1,4 +1,12 @@
-POVME/LIGSITE for pocket detection
+1. POVME/LIGSITE for pocket detection
 
-Functions to take pockets only or known lig-prot crystal structure!
+2. Functions to take pockets only or known lig-prot crystal structure!
+
+3. Use diffdock for global docking
+
+4. Multiple PDB/ligand processing
+
+5. Make GVP output available!
+
+
 
