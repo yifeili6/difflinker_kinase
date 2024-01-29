@@ -6,6 +6,9 @@ import pickle
 from rdkit import Chem
 from tqdm import tqdm
 
+from sklearn.model_selection import train_test_split
+from typing import *
+import random
 
 ALLOWED_TYPES = {'C', 'O', 'N', 'F', 'S', 'Cl', 'Br', 'I', 'P'}
 TEST_PDBS_PATH = '../../resources/moad_test_pdbs.txt'
@@ -20,7 +23,16 @@ def assign_dataset(name, test_pdbs, val_pdbs):
         return 'val'
     return 'train'
 
-
+def assign_dataset_kinase_finetune(names: List[str]):
+    name_len = len(names)
+    name_range = np.arange(name_len)
+    train, val_test = train_test_split(name_range, test_size=0.2, shuffle=True, random_state=42)
+    val, test = train_test_split(val_test, test_size=0.5, shuffle=False, random_state=42)
+    name_list = np.array(["train"] * len(name_range))
+    name_list[val] = "val"
+    name_list[test] = "test"
+    return name_list.tolist() #np.array
+    
 def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
     mols_sdf = Chem.SDMolSupplier(mol_path, sanitize=False)
     frags_sdf = Chem.SDMolSupplier(frag_path, sanitize=False)
@@ -53,9 +65,11 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
             table.loc[i, 'discard'] = True
 
     # Split in train, test, val
-    test_pdbs = np.loadtxt(TEST_PDBS_PATH, dtype=str) #, fmt='%s')
-    val_pdbs = np.loadtxt(VAL_PDBS_PATH, dtype=str) #, fmt='%s')
-    table['dataset'] = table['molecule_name'].apply(lambda x: assign_dataset(x, test_pdbs, val_pdbs))
+    # test_pdbs = np.loadtxt(TEST_PDBS_PATH, dtype=str) #, fmt='%s')
+    # val_pdbs = np.loadtxt(VAL_PDBS_PATH, dtype=str) #, fmt='%s')
+    # table['dataset'] = table['molecule_name'].apply(lambda x: assign_dataset(x, test_pdbs, val_pdbs))
+    
+    table['dataset'] = assign_dataset_kinase_finetune(pdb_names)
     print('Train:', len(table[(~table.discard) & (table.dataset == 'train')]))
     print('Test:', len(table[(~table.discard) & (table.dataset == 'test')]))
     print('Val:', len(table[(~table.discard) & (table.dataset == 'val')]))
