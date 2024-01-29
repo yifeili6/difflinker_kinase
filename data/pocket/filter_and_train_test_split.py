@@ -9,7 +9,7 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from typing import *
 import random
-from Chem import Kekulize
+from rdkit.Chem import Kekulize
 
 ALLOWED_TYPES = {'C', 'O', 'N', 'F', 'S', 'Cl', 'Br', 'I', 'P'}
 TEST_PDBS_PATH = '../../resources/moad_test_pdbs.txt'
