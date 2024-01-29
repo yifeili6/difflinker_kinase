@@ -68,8 +68,9 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
     # test_pdbs = np.loadtxt(TEST_PDBS_PATH, dtype=str) #, fmt='%s')
     # val_pdbs = np.loadtxt(VAL_PDBS_PATH, dtype=str) #, fmt='%s')
     # table['dataset'] = table['molecule_name'].apply(lambda x: assign_dataset(x, test_pdbs, val_pdbs))
-    
-    table['dataset'] = assign_dataset_kinase_finetune(pdb_names)
+
+    molecule_name: List[str] = table['molecule_name'].values.tolist()
+    table['dataset'] = assign_dataset_kinase_finetune(molecule_name)
     print('Train:', len(table[(~table.discard) & (table.dataset == 'train')]))
     print('Test:', len(table[(~table.discard) & (table.dataset == 'test')]))
     print('Val:', len(table[(~table.discard) & (table.dataset == 'val')]))
