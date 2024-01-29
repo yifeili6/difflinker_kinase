@@ -9,6 +9,7 @@ from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from typing import *
 import random
+from Chem import Kekulize
 
 ALLOWED_TYPES = {'C', 'O', 'N', 'F', 'S', 'Cl', 'Br', 'I', 'P'}
 TEST_PDBS_PATH = '../../resources/moad_test_pdbs.txt'
@@ -141,12 +142,12 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
             for mol in tqdm(mols[dataset], desc=dataset):
                 writer.write(mol)
 
-        with Chem.SDWriter(open(frag_sdf_path, 'w')) as writer:
-            for mol in tqdm(frags[dataset], desc=dataset):
-                writer.write(mol)
-
         with Chem.SDWriter(open(link_sdf_path, 'w')) as writer:
             for mol in tqdm(link[dataset], desc=dataset):
+                writer.write(mol)
+
+        with Chem.SDWriter(open(frag_sdf_path, 'w')) as writer:
+            for mol in tqdm(frags[dataset], desc=dataset):
                 writer.write(mol)
 
         with open(pockets_sdf_path, 'wb') as f:
