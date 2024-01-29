@@ -10,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from typing import *
 import random
 from rdkit.Chem import Kekulize
+from rdkit.Chem import rdmolfiles
 
 ALLOWED_TYPES = {'C', 'O', 'N', 'F', 'S', 'Cl', 'Br', 'I', 'P'}
 TEST_PDBS_PATH = '../../resources/moad_test_pdbs.txt'
@@ -143,10 +144,12 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
                 writer.write(mol)
 
         with Chem.SDWriter(open(link_sdf_path, 'w')) as writer:
+            rdmolfiles.SDWriter.SetKekulize(writer, False)
             for mol in tqdm(link[dataset], desc=dataset):
                 writer.write(mol)
 
         with Chem.SDWriter(open(frag_sdf_path, 'w')) as writer:
+            rdmolfiles.SDWriter.SetKekulize(writer, False)
             for mol in tqdm(frags[dataset], desc=dataset):
                 writer.write(mol)
 
