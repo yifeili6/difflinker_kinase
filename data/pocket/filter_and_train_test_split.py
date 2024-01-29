@@ -145,6 +145,7 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
 
         with Chem.SDWriter(open(link_sdf_path, 'w')) as writer:
             rdmolfiles.SDWriter.SetKekulize(writer, False) 
+            ##Current fix (set kekulize as False): https://github.com/rdkit/rdkit/issues/1880
             #Also consider writing own SDWriter: https://sourceforge.net/p/rdkit/mailman/message/39301743/
             for mol in tqdm(link[dataset], desc=dataset):
                 writer.write(mol)
