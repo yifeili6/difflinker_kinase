@@ -31,7 +31,7 @@ def assign_dataset_kinase_finetune(names: List[str]):
     name_list = np.array(["train"] * len(name_range))
     name_list[val] = "val"
     name_list[test] = "test"
-    return name_list.tolist() #np.array
+    return name_list #np.array
     
 def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
     mols_sdf = Chem.SDMolSupplier(mol_path, sanitize=False)
