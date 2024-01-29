@@ -27,5 +27,5 @@ python -W ignore prepare_dataset.py --table $PROCESSED_KLIF/generated_splits.csv
 
 Final filtering and train/val/test split:
 ```
-python -W ignore filter_and_train_test_split.py --mol-sdf $PROCESSED_KLIF/KLIF_mol.sdf --frag-sdf $PROCESSED_KLIF/KLIF_frag.sdf --link-sdf $PROCESSED_KLIF/KLIF_link.sdf --pockets-pkl $PROCESSED_KLIF/KLIF_pockets.pkl --table $PROCESSED_KLIF/MOAD_table.csv
+python -W ignore filter_and_train_test_split.py --mol-sdf $PROCESSED_KLIF/KLIF_mol.sdf --frag-sdf $PROCESSED_KLIF/KLIF_frag.sdf --link-sdf $PROCESSED_KLIF/KLIF_link.sdf --pockets-pkl $PROCESSED_KLIF/KLIF_pockets.pkl --table $PROCESSED_KLIF/KLIF_table.csv
 ```
