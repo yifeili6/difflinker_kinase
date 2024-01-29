@@ -100,7 +100,8 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
         'val': [],
         'test': [],
     }
-
+    
+    print("Assigning data step...")
     for i, (m, f, l, p) in tqdm(enumerate(zip(mols_sdf, frags_sdf, link_sdf, pocket_data)), total=len(mols_sdf)):
         discard = table.loc[i, 'discard']
         dataset = table.loc[i, 'dataset']
@@ -120,6 +121,7 @@ def filter_and_split(mol_path, frag_path, link_path, pockets_path, table_path):
     }
 
     # Saving datasets
+    print("Saving data step...")
     template = mol_path.replace('_mol.sdf', '')
     for dataset in ['train', 'val', 'test']:
         mols_len = len(mols[dataset])
