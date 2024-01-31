@@ -97,8 +97,8 @@ def main(args):
     
     checkpoint_callback = callbacks.ModelCheckpoint(
         dirpath=checkpoints_dir,
-        filename=experiment + '-epoch={epoch:02d}-loss/val={loss/val:.2f}',
-        monitor='loss/val',
+        filename=experiment + '_{epoch:02d}-{val_loss:.2f}',
+        monitor='val_loss',
         save_top_k=5,
     )
     tqdmbar_callback =callbacks.TQDMProgressBar()
