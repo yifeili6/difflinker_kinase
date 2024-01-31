@@ -97,14 +97,16 @@ def main(args):
     
     checkpoint_callback = callbacks.ModelCheckpoint(
         dirpath=checkpoints_dir,
-        filename=experiment + '_{epoch:02d}_{loss/val:.2f}',
+        filename=experiment + '-epoch={epoch:02d}-loss/val={loss/val:.2f}',
         monitor='loss/val',
         save_top_k=5,
     )
+    tqdmbar_callback =callbacks.TQDMProgressBar()
+    
     trainer = Trainer(
         max_epochs=args.n_epochs,
         # logger=wandb_logger,
-        callbacks=checkpoint_callback,
+        callbacks=[checkpoint_callback, tqdmbar_callback],
         accelerator=args.device,
         devices=1,
         num_sanity_val_steps=0,
