@@ -145,7 +145,7 @@ def get_pocket(mol, pdb_path, backbone_atoms_only=False):
 
 
 def main(input_path, protein_path, backbone_atoms_only, model,
-         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size, timeseries=False):
+         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size, timeseries=False, nth_molecule=None):
 
     # Setup
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -209,6 +209,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     try:
         molecules = read_molecule(input_path)
+        if nth_molecule is not None:
+            molecules = [molecules[nth_molecule]]
         # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
@@ -333,6 +335,8 @@ if __name__ == '__main__':
         linker_size=args.linker_size,
         anchors=args.anchors,
         max_batch_size=args.max_batch_size,
+        nth_molecule=args.nth_molecule #following .csv table order
+        
     )
     
 ## [Current as of Jan 30th 2024]
