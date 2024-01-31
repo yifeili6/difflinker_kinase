@@ -7,7 +7,7 @@ logs: logs
 device: cuda
 log_iterations: null
 wandb_entity: nullpwd
-enable_progress_bar: False
+enable_progress_bar: True
 
 model: egnn_dynamics
 lr: 2.0e-4
