@@ -64,6 +64,7 @@ parser.add_argument(
     '--max_batch_size', action='store', type=int, required=False, default=64,
     help='Max batch size'
 )
+parser.add_argument('--nth_molecule', type=int, default=None, help='nth_molecule selection during generation')
 
 
 def read_molecule(path):
