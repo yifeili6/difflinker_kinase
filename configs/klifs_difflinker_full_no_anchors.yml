@@ -1,7 +1,7 @@
 exp_name: 'pockets_difflinker_full'
 data: datasets
-train_data_prefix: MOAD_train.full
-val_data_prefix: MOAD_val.full
+train_data_prefix: KLIF_train.full
+val_data_prefix: KLIF_val.full
 checkpoints: models
 logs: logs
 device: gpu
@@ -24,7 +24,6 @@ tanh: False
 norm_constant: 0.000001
 inv_sublayers: 2
 include_charges: False
-diffusion_loss_type: l2
 data_augmentation: False
 center_of_mass: fragments
 remove_anchors_context: True
