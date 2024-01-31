@@ -97,7 +97,7 @@ def main(args):
     
     checkpoint_callback = callbacks.ModelCheckpoint(
         dirpath=checkpoints_dir,
-        filename=experiment + '_{epoch:02d}',
+        filename=experiment + '_{epoch:02d}_{loss/val:.2f}',
         monitor='loss/val',
         save_top_k=5,
     )
