@@ -287,7 +287,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 except FoundNaNException:
                     continue
             if chain is None:
-                raise Exception('Could not generate in 5 attempts')
+                # raise Exception('Could not generate in 5 attempts')
+                print("Skipping... Could not generate in 5 attempts")
                 continue
     
             x = chain[0][:, :, :ddpm.n_dims]
