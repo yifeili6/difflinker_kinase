@@ -18,6 +18,7 @@ from typing import Dict, List, Optional
 from tqdm import tqdm
 
 from pdb import set_trace
+import collections
 
 
 def get_activation(activation):
@@ -194,6 +195,15 @@ class DDPM(pl.LightningModule):
             context=context
         )
 
+    def on_train_epoch_start(self, ) -> None:
+        self.training_step_outputs = collections.defaultdict(list)
+
+    def on_validation_epoch_start(self, ) -> None:
+        self.validation_step_outputs = collections.defaultdict(list)
+
+    def on_test_epoch_start(self, ) -> None:
+        self.test_step_outputs = collections.defaultdict(list)
+    
     def training_step(self, data, *args):
         delta_log_px, kl_prior, loss_term_t, loss_term_0, l2_loss, noise_t, noise_0 = self.forward(data, training=True)
         vlb_loss = kl_prior + loss_term_t + loss_term_0 - delta_log_px
@@ -263,33 +273,33 @@ class DDPM(pl.LightningModule):
             'noise_0': noise_0
         }
 
-    def on_train_epoch_end(self, training_step_outputs):
-        for metric in training_step_outputs[0].keys():
-            avg_metric = self.aggregate_metric(training_step_outputs, metric)
+    def on_train_epoch_end(self, ):
+        for metric in self.training_step_outputs[0].keys():
+            avg_metric = self.aggregate_metric(self.training_step_outputs, metric)
             self.metrics.setdefault(f'{metric}/train', []).append(avg_metric)
             self.log(f'{metric}/train', avg_metric, prog_bar=True)
 
-    def on_validation_epoch_end(self, validation_step_outputs):
-        for metric in validation_step_outputs[0].keys():
-            avg_metric = self.aggregate_metric(validation_step_outputs, metric)
+    def on_validation_epoch_end(self, ):
+        for metric in self.validation_step_outputs[0].keys():
+            avg_metric = self.aggregate_metric(self.validation_step_outputs, metric)
             self.metrics.setdefault(f'{metric}/val', []).append(avg_metric)
             self.log(f'{metric}/val', avg_metric, prog_bar=True)
 
-        if (self.current_epoch + 1) % self.test_epochs == 0:
-            sampling_results = self.sample_and_analyze(self.val_dataloader())
-            for metric_name, metric_value in sampling_results.items():
-                self.log(f'{metric_name}/val', metric_value, prog_bar=True)
-                self.metrics.setdefault(f'{metric_name}/val', []).append(metric_value)
+        # if (self.current_epoch + 1) % self.test_epochs == 0:
+        #     sampling_results = self.sample_and_analyze(self.val_dataloader())
+        #     for metric_name, metric_value in sampling_results.items():
+        #         self.log(f'{metric_name}/val', metric_value, prog_bar=True)
+        #         self.metrics.setdefault(f'{metric_name}/val', []).append(metric_value)
 
-            # Logging the results corresponding to the best validation_and_connectivity
-            best_metrics, best_epoch = self.compute_best_validation_metrics()
-            self.log('best_epoch', int(best_epoch), prog_bar=True, batch_size=self.batch_size)
-            for metric, value in best_metrics.items():
-                self.log(f'best_{metric}', value, prog_bar=True, batch_size=self.batch_size)
+        #     # Logging the results corresponding to the best validation_and_connectivity
+        #     best_metrics, best_epoch = self.compute_best_validation_metrics()
+        #     self.log('best_epoch', int(best_epoch), prog_bar=True, batch_size=self.batch_size)
+        #     for metric, value in best_metrics.items():
+        #         self.log(f'best_{metric}', value, prog_bar=True, batch_size=self.batch_size)
 
-    def on_test_epoch_end(self, test_step_outputs):
-        for metric in test_step_outputs[0].keys():
-            avg_metric = self.aggregate_metric(test_step_outputs, metric)
+    def on_test_epoch_end(self, ):
+        for metric in self.test_step_outputs[0].keys():
+            avg_metric = self.aggregate_metric(self.test_step_outputs, metric)
             self.metrics.setdefault(f'{metric}/test', []).append(avg_metric)
             self.log(f'{metric}/test', avg_metric, prog_bar=True)
 
