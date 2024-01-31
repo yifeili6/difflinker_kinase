@@ -258,8 +258,8 @@ if __name__ == '__main__':
         config_dict = {}
     main(args=args)
 
-    ##Current as of Jan 30th 2024
-    ## python -W ignore train_difflinker.py --config configs/klifs_difflinker_full_no_anchors.yml --resume --checkpoint_name pocket_difflinker_fullpocket_no_anchors.ckpt --diffusion_loss_type l2 
+    ## [Current as of Jan 30th 2024]
+    ## git pull && python -W ignore train_difflinker.py --config configs/klifs_difflinker_full_no_anchors.yml --resume --checkpoint_name pocket_difflinker_fullpocket_no_anchors.ckpt --diffusion_loss_type l2 
 
 
 
