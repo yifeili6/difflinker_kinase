@@ -173,7 +173,7 @@ if __name__ == '__main__':
     p.add_argument('--val_data_prefix', action='store', type=str,  default='zinc_final_val')
     p.add_argument('--checkpoints', action='store', type=str, default='checkpoints')
     p.add_argument('--logs', action='store', type=str, default='logs')
-    p.add_argument('--device', action='store', type=str, default='gpu')
+    p.add_argument('--device', action='store', type=str, default='cuda')
     p.add_argument('--trainer_params', type=dict, help='parameters with keywords of the lightning trainer')
     p.add_argument('--log_iterations', action='store', type=str, default=20)
 
