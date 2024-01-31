@@ -1,4 +1,4 @@
-exp_name: 'pockets_difflinker_full'
+exp_name: 'klifs_pockets_difflinker_full'
 data: datasets
 train_data_prefix: KLIF_train.full
 val_data_prefix: KLIF_val.full
@@ -6,7 +6,7 @@ checkpoints: models
 logs: logs
 device: gpu
 log_iterations: null
-wandb_entity: null
+wandb_entity: nullpwd
 enable_progress_bar: False
 
 model: egnn_dynamics
