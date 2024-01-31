@@ -3,6 +3,7 @@ import os
 import pwd
 import sys
 import yaml
+import shutil
 
 from datetime import datetime
 from pytorch_lightning import Trainer, callbacks, loggers
@@ -21,11 +22,13 @@ def find_last_checkpoint(checkpoints_dir):
     latest_fname = max(epoch2fname, key=lambda t: t[0])[1]
     return os.path.join(checkpoints_dir, latest_fname)
 
+def find_last_checkpoint_direct(checkpoints_dir, checkpoint_name):
+    return os.path.join(checkpoints_dir, checkpoint_name)
 
 def main(args):
     start_time = datetime.now().strftime('date%d-%m_time%H-%M-%S.%f')
     run_name = f'{os.path.splitext(os.path.basename(args.config))[0]}_{pwd.getpwuid(os.getuid())[0]}_{args.exp_name}_bs{args.batch_size}_{start_time}'
-    experiment = run_name if args.resume is None else args.resume
+    experiment = run_name if args.resume is False else "finetune" #args.resume #should be a checkpoint dir name
     checkpoints_dir = os.path.join(args.checkpoints, experiment)
     os.makedirs(os.path.join(args.logs, "general_logs", experiment),exist_ok=True)
     sys.stdout = Logger(logpath=os.path.join(args.logs, "general_logs", experiment, f'log.log'), syspart=sys.stdout)
@@ -37,16 +40,16 @@ def main(args):
     samples_dir = os.path.join(args.logs, 'samples', experiment)
 
     torch_device = 'cuda:0' if args.device == 'gpu' else 'cpu'
-    wandb_logger = loggers.WandbLogger(
-        save_dir=args.logs,
-        project='e3_ddpm_linker_design',
-        name=experiment,
-        id=experiment,
-        resume='must' if args.resume is not None else 'allow',
-        entity=args.wandb_entity,
-    )
+    # wandb_logger = loggers.WandbLogger(
+    #     save_dir=args.logs,
+    #     project='e3_ddpm_linker_design',
+    #     name=experiment,
+    #     id=experiment,
+    #     resume='must' if args.resume is not None else 'allow',
+    #     entity=args.wandb_entity,
+    # )
 
-    is_geom = ('geom' in args.train_data_prefix) or ('MOAD' in args.train_data_prefix)
+    is_geom = ('geom' in args.train_data_prefix) or ('MOAD' in args.train_data_prefix) or ('KLIF' in args.train_data_prefix)
     number_of_atoms = GEOM_NUMBER_OF_ATOM_TYPES if is_geom else NUMBER_OF_ATOM_TYPES
     in_node_nf = number_of_atoms + args.include_charges
     anchors_context = not args.remove_anchors_context
@@ -74,7 +77,7 @@ def main(args):
         diffusion_steps=args.diffusion_steps,
         diffusion_noise_schedule=args.diffusion_noise_schedule,
         diffusion_noise_precision=args.diffusion_noise_precision,
-        diffusion_loss_type=args.diffusion_loss_type,
+        diffusion_loss_type="l2", #For resume training with everything for KLIF (i.e., all hyperparams must match!!!)
         normalize_factors=args.normalize_factors,
         include_charges=args.include_charges,
         lr=args.lr,
@@ -90,16 +93,17 @@ def main(args):
         center_of_mass=args.center_of_mass,
         inpainting=args.inpainting,
         anchors_context=anchors_context,
-    )
+    ) 
+    
     checkpoint_callback = callbacks.ModelCheckpoint(
         dirpath=checkpoints_dir,
         filename=experiment + '_{epoch:02d}',
         monitor='loss/val',
-        save_top_k=-1,
+        save_top_k=5,
     )
     trainer = Trainer(
         max_epochs=args.n_epochs,
-        logger=wandb_logger,
+        # logger=wandb_logger,
         callbacks=checkpoint_callback,
         accelerator=args.device,
         devices=1,
@@ -107,14 +111,58 @@ def main(args):
         enable_progress_bar=args.enable_progress_bar,
     )
 
-    if args.resume is None:
-        last_checkpoint = None
+    if args.checkpoint_name is None:
+        if args.resume is False:
+            last_checkpoint = None
+        else:
+            last_checkpoint = find_last_checkpoint(checkpoints_dir)
+            print(f'Training will be resumed from the latest checkpoint {last_checkpoint}')
+            trainer.fit(model=ddpm, ckpt_path=last_checkpoint) #Resume with everything!;; PyTorchLightning website
     else:
-        last_checkpoint = find_last_checkpoint(checkpoints_dir)
-        print(f'Training will be resumed from the latest checkpoint {last_checkpoint}')
+        assert args.resume, "resume should be turned on!"
+        shutil.copy(os.path.join(args.checkpoints, args.checkpoint_name), os.path.join(checkpoints_dir, args.checkpoint_name))
+        last_checkpoint = find_last_checkpoint_direct(checkpoints_dir, args.checkpoint_name)
+        ddpm = DDPM.load_from_checkpoint(last_checkpoint, 
+                                         strict=False,
+                                         data_path=args.data,
+                                         train_data_prefix=args.train_data_prefix,
+                                         val_data_prefix=args.val_data_prefix,
+                                         in_node_nf=in_node_nf,
+                                         n_dims=3,
+                                         context_node_nf=context_node_nf,
+                                         hidden_nf=args.nf,
+                                         activation=args.activation,
+                                         n_layers=args.n_layers,
+                                         attention=args.attention,
+                                         tanh=args.tanh,
+                                         norm_constant=args.norm_constant,
+                                         inv_sublayers=args.inv_sublayers,
+                                         sin_embedding=args.sin_embedding,
+                                         normalization_factor=args.normalization_factor,
+                                         aggregation_method=args.aggregation_method,
+                                         diffusion_steps=args.diffusion_steps,
+                                         diffusion_noise_schedule=args.diffusion_noise_schedule,
+                                         diffusion_noise_precision=args.diffusion_noise_precision,
+                                         diffusion_loss_type=args.diffusion_loss_type,
+                                         normalize_factors=args.normalize_factors,
+                                         include_charges=args.include_charges,
+                                         lr=args.lr,
+                                         batch_size=args.batch_size,
+                                         torch_device=args.device,
+                                         model=args.model,
+                                         test_epochs=args.test_epochs,
+                                         n_stability_samples=args.n_stability_samples,
+                                         normalization=args.normalization,
+                                         log_iterations=args.log_iterations,
+                                         samples_dir=None,
+                                         data_augmentation=args.data_augmentation,
+                                         center_of_mass=args.center_of_mass,
+                                         inpainting=args.inpainting,
+                                         anchors_context=anchors_context, )
+        print(f'Training will be resumed from the latest checkpoint {args.checkpoint_name}')
+        trainer.fit(model=ddpm) #Resume with weights & hyperparams AFTER load_from_checkpoint staticmethod!;; PyTorchLightning website
 
     print('Start training')
-    trainer.fit(model=ddpm, ckpt_path=last_checkpoint)
 
 
 if __name__ == '__main__':
@@ -125,7 +173,7 @@ if __name__ == '__main__':
     p.add_argument('--val_data_prefix', action='store', type=str,  default='zinc_final_val')
     p.add_argument('--checkpoints', action='store', type=str, default='checkpoints')
     p.add_argument('--logs', action='store', type=str, default='logs')
-    p.add_argument('--device', action='store', type=str, default='cpu')
+    p.add_argument('--device', action='store', type=str, default='gpu')
     p.add_argument('--trainer_params', type=dict, help='parameters with keywords of the lightning trainer')
     p.add_argument('--log_iterations', action='store', type=str, default=20)
 
@@ -137,7 +185,7 @@ if __name__ == '__main__':
     p.add_argument('--diffusion_steps', type=int, default=500)
     p.add_argument('--diffusion_noise_schedule', type=str, default='polynomial_2', help='learned, cosine')
     p.add_argument('--diffusion_noise_precision', type=float, default=1e-5, )
-    p.add_argument('--diffusion_loss_type', type=str, default='l2', help='vlb, l2')
+    p.add_argument('--diffusion_loss_type', type=str, default='l2', help='vlb, l2', choices=['vlb', 'l2'])
 
     p.add_argument('--n_epochs', type=int, default=200)
     p.add_argument('--batch_size', type=int, default=128)
@@ -174,7 +222,9 @@ if __name__ == '__main__':
     p.add_argument('--test_epochs', type=int, default=1)
     p.add_argument('--data_augmentation', type=eval, default=False, help='use attention in the EGNN')
     p.add_argument("--conditioning", nargs='+', default=[], help='arguments : homo | lumo | alpha | gap | mu | Cv')
-    p.add_argument('--resume', type=str, default=None, help='')
+    # p.add_argument('--resume', type=str, default=None, help='')
+    p.add_argument('--resume', type=bool, action="store_true", help='resume training')
+    p.add_argument('--checkpoint_name', type=str, default="pocket_difflinker_fullpocket_no_anchors.ckpt" help='resume training')
     p.add_argument('--start_epoch', type=int, default=0, help='')
     p.add_argument('--ema_decay', type=float, default=0.999, help='Amount of EMA decay, 0 means off. A reasonable value is 0.999.')
     p.add_argument('--augment_noise', type=float, default=0)
@@ -207,3 +257,8 @@ if __name__ == '__main__':
     else:
         config_dict = {}
     main(args=args)
+
+    python -W ignore train_difflinker.py --config configs/klifs_difflinker_full_no_anchors.yml --resume --checkpoint_name pocket_difflinker_fullpocket_no_anchors.ckpt --diffusion_loss_type l2 
+
+
+
