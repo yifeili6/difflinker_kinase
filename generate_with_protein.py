@@ -288,6 +288,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                     continue
             if chain is None:
                 raise Exception('Could not generate in 5 attempts')
+                continue
     
             x = chain[0][:, :, :ddpm.n_dims]
             h = chain[0][:, :, ddpm.n_dims:]
