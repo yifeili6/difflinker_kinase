@@ -242,6 +242,7 @@ if __name__ == '__main__':
     p.add_argument('--center_of_mass', type=str, default='fragments', help='Where to center the data: fragments | anchors')
     p.add_argument('--inpainting', action='store_true', default=False, help='Inpainting mode (full generation)')
     p.add_argument('--remove_anchors_context', action='store_true', default=False, help='Remove anchors context')
+    p.add_argument('--nth_molecule', type=int, default=None, help='nth_molecule selection during generation')
 
     disable_rdkit_logging()
 
