@@ -70,7 +70,7 @@ class DDPM(pl.LightningModule):
         self.include_charges = include_charges
         self.anchors_context = anchors_context
 
-        self.is_geom = ('geom' in self.train_data_prefix) or ('MOAD' in self.train_data_prefix)
+        self.is_geom = ('geom' in self.train_data_prefix) or ('MOAD' in self.train_data_prefix) or ('KLIF' in self.train_data_prefix) 
 
         if type(activation) is str:
             activation = get_activation(activation)
@@ -111,7 +111,7 @@ class DDPM(pl.LightningModule):
     def setup(self, stage: Optional[str] = None):
         dataset_type = MOADDataset if '.' in self.train_data_prefix else ZincDataset
         if stage == 'fit':
-            self.is_geom = ('geom' in self.train_data_prefix) or ('MOAD' in self.train_data_prefix)
+            self.is_geom = ('geom' in self.train_data_prefix) or ('MOAD' in self.train_data_prefix) or ('KLIF' in self.train_data_prefix)
             self.train_dataset = dataset_type(
                 data_path=self.data_path,
                 prefix=self.train_data_prefix,
@@ -123,7 +123,7 @@ class DDPM(pl.LightningModule):
                 device=self.torch_device
             )
         elif stage == 'val':
-            self.is_geom = ('geom' in self.val_data_prefix) or ('MOAD' in self.val_data_prefix)
+            self.is_geom = ('geom' in self.val_data_prefix) or ('MOAD' in self.val_data_prefix) or ('KLIF' in self.train_data_prefix)
             self.val_dataset = dataset_type(
                 data_path=self.data_path,
                 prefix=self.val_data_prefix,
