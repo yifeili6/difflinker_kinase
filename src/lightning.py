@@ -229,6 +229,8 @@ class DDPM(pl.LightningModule):
             for metric_name, metric in training_metrics.items():
                 self.metrics.setdefault(f'{metric_name}/train', []).append(metric)
                 self.log(f'{metric_name}/train', metric, prog_bar=True)
+                
+        self.training_step_outputs.append(training_metrics)
         return training_metrics
 
     def validation_step(self, data, *args):
@@ -240,7 +242,8 @@ class DDPM(pl.LightningModule):
             loss = vlb_loss
         else:
             raise NotImplementedError(self.loss_type)
-        return {
+            
+        validation_metrics = {
             'loss': loss,
             'delta_log_px': delta_log_px,
             'kl_prior': kl_prior,
@@ -251,6 +254,11 @@ class DDPM(pl.LightningModule):
             'noise_t': noise_t,
             'noise_0': noise_0
         }
+        self.validation_step_outputs.append(validation_metrics)
+        
+        return validation_metrics 
+ 
+
 
     def test_step(self, data, *args):
         delta_log_px, kl_prior, loss_term_t, loss_term_0, l2_loss, noise_t, noise_0 = self.forward(data, training=False)
@@ -261,7 +269,8 @@ class DDPM(pl.LightningModule):
             loss = vlb_loss
         else:
             raise NotImplementedError(self.loss_type)
-        return {
+            
+        test_metrics = {
             'loss': loss,
             'delta_log_px': delta_log_px,
             'kl_prior': kl_prior,
@@ -272,6 +281,9 @@ class DDPM(pl.LightningModule):
             'noise_t': noise_t,
             'noise_0': noise_0
         }
+        
+        self.test_step_outputs.append(test_metrics)
+        return test_metrics
 
     def on_train_epoch_end(self, ):
         for metric in self.training_step_outputs[0].keys():
