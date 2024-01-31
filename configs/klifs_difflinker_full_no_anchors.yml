@@ -4,7 +4,7 @@ train_data_prefix: KLIF_train.full
 val_data_prefix: KLIF_val.full
 checkpoints: models
 logs: logs
-device: gpu
+device: cuda
 log_iterations: null
 wandb_entity: nullpwd
 enable_progress_bar: False
