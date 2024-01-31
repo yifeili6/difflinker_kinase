@@ -340,4 +340,4 @@ if __name__ == '__main__':
     )
     
 ## [Current as of Jan 30th 2024]
-# git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/klif_pdbs_wl/4jik_chainA.pdb --model models/finetune/pocket_difflinker_fullpocket.ckpt --anchors 6,22 --linker_size models/geom_size_gnn.ckpt --output data_docking/result_difflinker --n_samples 15 --n_steps 2000
+# git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/klif_pdbs_wl/4jik_chainA.pdb --model models/finetune/pocket_difflinker_fullpocket.ckpt --anchors 6,22 --linker_size models/geom_size_gnn.ckpt --output data_docking/result_difflinker --n_samples 15 --n_steps 2000 --nth_molecule 3
