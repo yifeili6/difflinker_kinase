@@ -33,5 +33,3 @@ normalization_factor: 100
 normalize_factors: [1, 4, 10]
 aggregation_method: 'sum'
 normalization: batch_norm
-
-resume:
