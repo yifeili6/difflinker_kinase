@@ -296,6 +296,7 @@ class DDPM(pl.LightningModule):
             avg_metric = self.aggregate_metric(self.validation_step_outputs, metric)
             self.metrics.setdefault(f'{metric}/val', []).append(avg_metric)
             self.log(f'{metric}/val', avg_metric, prog_bar=True)
+        self.log("val_loss", avg_metric, prog_bar=True)
 
         # if (self.current_epoch + 1) % self.test_epochs == 0:
         #     sampling_results = self.sample_and_analyze(self.val_dataloader())
