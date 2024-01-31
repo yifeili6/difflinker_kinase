@@ -196,13 +196,13 @@ class DDPM(pl.LightningModule):
         )
 
     def on_train_epoch_start(self, ) -> None:
-        self.training_step_outputs = collections.defaultdict(list)
+        self.training_step_outputs = []
 
     def on_validation_epoch_start(self, ) -> None:
-        self.validation_step_outputs = collections.defaultdict(list)
+        self.validation_step_outputs = []
 
     def on_test_epoch_start(self, ) -> None:
-        self.test_step_outputs = collections.defaultdict(list)
+        self.test_step_outputs = []
     
     def training_step(self, data, *args):
         delta_log_px, kl_prior, loss_term_t, loss_term_0, l2_loss, noise_t, noise_0 = self.forward(data, training=True)
