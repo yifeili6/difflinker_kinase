@@ -332,5 +332,6 @@ if __name__ == '__main__':
         anchors=args.anchors,
         max_batch_size=args.max_batch_size,
     )
-
-# git pull && python -W ignore generate_with_protein.py --fragments ../DiffLinkerMOAD/processed/MOAD_test_frag.sdf --protein ../DiffLinkerMOAD/processed/proteins/3l9h_protein.pdb --model models/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output result_difflinker --n_samples 15 --n_steps 2000
+    
+## Current as of Jan 30th 2024
+# git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/klif_pdbs_wl/4jik_chainA.pdb --model models/finetune/pocket_difflinker_fullpocket_no_anchors.ckpt --linker_size models/geom_size_gnn.ckpt --output data_docking/result_difflinker --n_samples 15 --n_steps 2000
