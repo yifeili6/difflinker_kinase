@@ -227,7 +227,7 @@ if __name__ == '__main__':
     p.add_argument("--conditioning", nargs='+', default=[], help='arguments : homo | lumo | alpha | gap | mu | Cv')
     # p.add_argument('--resume', type=str, default=None, help='')
     p.add_argument('--resume', action="store_true", help='resume training')
-    p.add_argument('--checkpoint_name', type=str, default="pocket_difflinker_fullpocket_no_anchors.ckpt", help='resume training')
+    p.add_argument('--checkpoint_name', type=str, default=None, help='resume training')
     p.add_argument('--start_epoch', type=int, default=0, help='')
     p.add_argument('--ema_decay', type=float, default=0.999, help='Amount of EMA decay, 0 means off. A reasonable value is 0.999.')
     p.add_argument('--augment_noise', type=float, default=0)
