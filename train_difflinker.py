@@ -28,7 +28,7 @@ def find_last_checkpoint_direct(checkpoints_dir, checkpoint_name):
 def main(args):
     start_time = datetime.now().strftime('date%d-%m_time%H-%M-%S.%f')
     run_name = f'{os.path.splitext(os.path.basename(args.config))[0]}_{pwd.getpwuid(os.getuid())[0]}_{args.exp_name}_bs{args.batch_size}_{start_time}'
-    experiment = run_name if args.resume is False else "finetune" #args.resume #should be a checkpoint dir name
+    experiment = "train" if args.resume is False else "finetune" #args.resume #should be a checkpoint dir name
     checkpoints_dir = os.path.join(args.checkpoints, experiment)
     os.makedirs(os.path.join(args.logs, "general_logs", experiment),exist_ok=True)
     sys.stdout = Logger(logpath=os.path.join(args.logs, "general_logs", experiment, f'log.log'), syspart=sys.stdout)
