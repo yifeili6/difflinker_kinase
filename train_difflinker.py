@@ -77,7 +77,7 @@ def main(args):
         diffusion_steps=args.diffusion_steps,
         diffusion_noise_schedule=args.diffusion_noise_schedule,
         diffusion_noise_precision=args.diffusion_noise_precision,
-        diffusion_loss_type="l2", #For resume training with everything for KLIF (i.e., all hyperparams must match!!!)
+        diffusion_loss_type=args.diffusion_loss_type, #For resume training with everything for KLIF (i.e., all hyperparams must match!!!)
         normalize_factors=args.normalize_factors,
         include_charges=args.include_charges,
         lr=args.lr,
@@ -116,6 +116,7 @@ def main(args):
     if args.checkpoint_name is None:
         if args.resume is False:
             last_checkpoint = None
+            trainer.fit(model=ddpm) 
         else:
             last_checkpoint = find_last_checkpoint(checkpoints_dir)
             print(f'Training will be resumed from the latest checkpoint {last_checkpoint}')
