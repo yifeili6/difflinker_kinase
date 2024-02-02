@@ -1,4 +1,4 @@
-from posebusters import PosBusters
+from posebusters import PoseBusters
 from pathlib import Path
 from rdkit import Chem
 import argparse
