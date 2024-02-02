@@ -5,7 +5,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filename", "-f", type=str, help="xyz file name")
-args = parse.parse_args()
+args = parser.parse_args()
 
 def get_posebuster_stats(filename: str):
     pred_file = Chem.MolFromXYZFile(filename)
