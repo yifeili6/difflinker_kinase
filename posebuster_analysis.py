@@ -11,7 +11,8 @@ def get_posebuster_stats(filename: str):
     pred_file = Chem.MolFromXYZFile(filename)
     buster = PoseBusters(config="mol")
     df = buster.bust([pred_file], None, None, full_report=False)
-    print(df)
+    print(df.columns)
+    print(df.values)
 
 if __name__ == "__main__":
     get_posebuster_stats(args.filename)
