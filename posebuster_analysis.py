@@ -15,3 +15,6 @@ def get_posebuster_stats(filename: str):
 
 if __name__ == "__main__":
     get_posebuster_states(args.filename)
+
+    ## Current as of [Feb 1st 2024]
+    ## git pull && python -m posebuster_analysis --filename data_docking/result_difflinker/output_0_2_KLIF_test_frag_.xyz
