@@ -3,6 +3,8 @@
 
 [Hyun's Colab](https://colab.research.google.com/drive/1f0BgleDsLUsIFX4LAup7kGpmkkGVj9Fg#scrollTo=VpqnUomgmmGK)
 
+*Please contact hyunp2@illinois.edu or yifei6@illinois.edu for any questions!*
+
 ---------------------------------------------------------------------------------------------------------------------------------------
 **Below is from forked repo**
 
