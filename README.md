@@ -1,7 +1,10 @@
+# Welcome to Generative Drug for Kinase Repo!
+### We have customized version of [DiffLinker](https://github.com/igashov/DiffLinker/tree/main), which is fine-tuned on kinase database (KLIFS)
+
 [Hyun's Colab](https://colab.research.google.com/drive/1f0BgleDsLUsIFX4LAup7kGpmkkGVj9Fg#scrollTo=VpqnUomgmmGK)
 
-# Customized version of [DiffLinker](https://github.com/igashov/DiffLinker/tree/main); Fine-tuned on kinase Database
-
+---------------------------------------------------------------------------------------------------------------------------------------
+**Below is from forked repo**
 
 [![Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/igashov/DiffLinker)
 
@@ -271,4 +274,4 @@ All the metrics will be saved in the directory `./formatted`.
 If you have any questions, please contact me at ilia.igashov@epfl.ch
 
 
-# difflinker_kinase
+
