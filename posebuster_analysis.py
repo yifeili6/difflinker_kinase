@@ -3,6 +3,7 @@ from pathlib import Path
 from rdkit import Chem
 import argparse
 from typing import List
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
