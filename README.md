@@ -11,7 +11,7 @@ To sample,
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins/2hzi_altA_chainA_protein.pdb --model models/finetune/finetune_anchors.ckpt --anchors 5,17 --linker_size 13 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --nth_molecule -1
 
 To bust poses,
-git pull && python -m posebuster_analysis --filename data_docking/result_difflinker/output_0_2_KLIF_test_frag_.xyz
+git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
 ```
 
 *Please contact hyunp2@illinois.edu or yifei6@illinois.edu for any questions!*
