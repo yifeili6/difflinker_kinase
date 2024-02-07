@@ -14,7 +14,7 @@ To bust poses,
 git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
 ```
 
-*Please contact hyunp2@illinois.edu or yifei6@illinois.edu for any questions!*
+*Please contact hyunp2@illinois.edu or li.yifei@abbvie.com for any questions!*
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 **Below is from forked repo**
