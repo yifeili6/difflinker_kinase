@@ -315,10 +315,11 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             else:
                 save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
                 # visualize_chain(output_dir, wandb=None, mode=name, is_geom=ddpm.is_geom)
-            # for i in range(batch_size):
-            #     out_xyz = f'{output_dir}/output_{offset_idx+i}_{name}_.xyz'
-            #     out_sdf = f'{output_dir}/output_{offset_idx+i}_{name}_.sdf'
-            #     subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
+             
+            for i in range(batch_size):
+                out_xyz = f'{output_dir}/output_{offset_idx+i}_{name}_.xyz'
+                out_sdf = f'{output_dir}/output_{offset_idx+i}_{name}_.sdf'
+                subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
 
     print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
 
