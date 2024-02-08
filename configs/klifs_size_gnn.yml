@@ -1,14 +1,37 @@
-                 --experiment zinc_size_gnn \
-                 --data datasets \
-                 --train_data_prefix zinc_final_val \
-                 --val_data_prefix zinc_final_val \
-                 --hidden_nf 256 \
-                 --n_layers 5 \
-                 --batch_size 256 \
-                 --normalization batch_norm \
-                 --lr 1e-3 \
-                 --task classification \
-                 --loss_weights \
-                 --device gpu \
-                 --checkpoints models \
-                 --logs logs
+exp_name: 'klifs_size_gnn'
+data: datasets
+train_data_prefix: KLIF_train.full
+val_data_prefix: KLIF_val.full
+checkpoints: models
+logs: logs
+device: gpu
+log_iterations: null
+wandb_entity: nullpwd
+enable_progress_bar: True
+loss_weights: True
+task: classification
+
+model: egnn_dynamics
+lr: 1e-3
+batch_size: 256
+n_layers: 5
+n_epochs: 1000
+test_epochs: 20
+n_stability_samples: 5
+nf: 128
+activation: silu
+attention: False
+condition_time: True
+tanh: False
+norm_constant: 0.000001
+inv_sublayers: 2
+include_charges: False
+data_augmentation: False
+center_of_mass: anchors
+hidden_nf: 256
+
+sin_embedding: False
+normalization_factor: 100
+normalize_factors: [1, 4, 10]
+aggregation_method: 'sum'
+normalization: batch_norm
