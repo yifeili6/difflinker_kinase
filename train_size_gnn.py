@@ -42,7 +42,8 @@ def main(args):
     sys.stdout = Logger(logpath=os.path.join(args.logs, "general_logs", run_name, f'log.log'), syspart=sys.stdout)
     sys.stderr = Logger(logpath=os.path.join(args.logs, "general_logs", run_name, f'log.log'), syspart=sys.stderr)
 
-    is_geom = 'geom' in args.train_data_prefix
+    # is_geom = 'geom' in args.train_data_prefix
+    is_geom = ('geom' in args.train_data_prefix) or ('MOAD' in args.train_data_prefix) or ('KLIF' in args.train_data_prefix)
     loss_weights = None
 
     if is_geom:
@@ -61,14 +62,14 @@ def main(args):
             loss_weights = const.ZINC_TRAIN_LINKER_SIZE_WEIGHTS
 
     torch_device = 'cuda:0' if args.device == 'gpu' else 'cpu'
-    wandb_logger = loggers.WandbLogger(
-        save_dir=args.logs,
-        project='linker_size_classifier',
-        name=run_name,
-        id=run_name,
-        resume='allow',
-        entity=args.wandb_entity,
-    )
+    # wandb_logger = loggers.WandbLogger(
+    #     save_dir=args.logs,
+    #     project='linker_size_classifier',
+    #     name=run_name,
+    #     id=run_name,
+    #     resume='allow',
+    #     entity=args.wandb_entity,
+    # )
     # wandb_logger = False
     checkpoint_callback = callbacks.ModelCheckpoint(
         dirpath=checkpoints_dir,
@@ -126,7 +127,7 @@ def main(args):
         raise NotImplementedError
     trainer = Trainer(
         max_epochs=1000,
-        logger=wandb_logger,
+        # logger=wandb_logger,
         callbacks=[checkpoint_callback],
         accelerator=args.device,
         devices=1,
