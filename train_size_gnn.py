@@ -138,4 +138,18 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(parser.parse_args())
+    args = parser.parse_args()
+    if args.config:
+        config_dict = yaml.load(args.config, Loader=yaml.FullLoader)
+        arg_dict = args.__dict__
+        for key, value in config_dict.items():
+            if isinstance(value, list) and key != 'normalize_factors':
+                for v in value:
+                    arg_dict[key].append(v)
+            else:
+                arg_dict[key] = value
+        args.config = args.config.name
+    else:
+        config_dict = {}
+    
+    main(args)
