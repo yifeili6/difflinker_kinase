@@ -12,6 +12,9 @@ git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_
 
 To bust poses,
 git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
+
+To choose kinase indices from processed KLIFS dataset with ligands,
+git pull && python -m misc_utils --kinase_names 2xa4 4rx5
 ```
 
 *Please contact hyunp2@illinois.edu or li.yifei@abbvie.com for any questions!*
