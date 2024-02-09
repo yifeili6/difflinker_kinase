@@ -1,5 +1,9 @@
 import pandas as pd
 from typing import *
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--kinase_names', nargs="*", type=str, required=True)
 
 def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     """Return corresponding indices of kinase indices"""
@@ -11,9 +15,10 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     df=pd.concat([df0, df1, df2], axis=0)
     df.reset_index(drop=True, inplace=True)
     
-    indices = df.index[df.molecule_name.apply(lambda inp: inp.startswith('5lqf'))].tolist()
+    indices = df.index[df.molecule_name.apply(lambda inp: inp in kinase_names)].tolist()
 
-    return 
+    return indices
 
 if __name__ == "__main__":
-    get_kinase_indices(["5lqf"])
+    args = parser.get_args()
+    get_kinase_indices(args.kinase_names)
