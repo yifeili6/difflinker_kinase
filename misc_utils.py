@@ -20,5 +20,5 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     return indices
 
 if __name__ == "__main__":
-    args = parser.get_args()
+    args = parser.parse_args()
     get_kinase_indices(args.kinase_names)
