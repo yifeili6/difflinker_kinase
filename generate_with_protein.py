@@ -64,9 +64,9 @@ parser.add_argument(
     '--max_batch_size', action='store', type=int, required=False, default=64,
     help='Max batch size'
 )
-parser.add_argument('--nth_molecules', nargs="*" help='list of indices')
+parser.add_argument('--nth_molecules', nargs="*", help='list of indices')
 
-parser.add_argument('--timeseries', action="store_true" help='save trajectory?')
+parser.add_argument('--timeseries', action="store_true", help='save trajectory?')
 
 
 def read_molecule(path):
