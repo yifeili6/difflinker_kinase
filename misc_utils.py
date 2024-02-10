@@ -15,7 +15,7 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     df=pd.concat([df0, df1, df2], axis=0)
     df.reset_index(drop=True, inplace=True)
     
-    indices = df.index[df.molecule_name.apply(lambda inp: inp in kinase_names)].tolist()
+    indices = df.index[df.molecule_name.apply(lambda inp: inp == '2xa4')].tolist()
 
     return indices
 
