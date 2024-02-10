@@ -66,6 +66,8 @@ parser.add_argument(
 )
 parser.add_argument('--nth_molecule', type=int, default=None, help='nth_molecule selection during generation')
 
+parser.add_argument('--timeseries', action="store_true" help='save trajectory?')
+
 
 def read_molecule(path):
     if path.endswith('.pdb'):
