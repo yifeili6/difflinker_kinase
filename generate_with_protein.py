@@ -213,7 +213,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     try:
         molecules = read_molecule(input_path)
         if nth_molecule is not None:
-            molecules = [molecules[nth_molecule]]
+            molecules = [molecules[nth_mol] for nth_mol in nth_molecule]
         # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
@@ -285,7 +285,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             batch_size = len(data['positions'])
     
             chain = None
-            for i in range(5):
+            while True:
                 try:
                     chain, node_mask = ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=1) if not timeseries else ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=None)
                     break
