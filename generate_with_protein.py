@@ -64,7 +64,7 @@ parser.add_argument(
     '--max_batch_size', action='store', type=int, required=False, default=64,
     help='Max batch size'
 )
-parser.add_argument('--nth_molecule', type=int, default=None, help='nth_molecule selection during generation')
+parser.add_argument('--nth_molecules', nargs="*" help='list of indices')
 
 parser.add_argument('--timeseries', action="store_true" help='save trajectory?')
 
@@ -212,8 +212,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     try:
         molecules = read_molecule(input_path)
-        if nth_molecule is not None:
-            molecules = [molecules[nth_mol] for nth_mol in nth_molecule]
+        if nth_molecules is not None:
+            molecules = [molecules[nth_mol] for nth_mol in nth_molecules]
         # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
