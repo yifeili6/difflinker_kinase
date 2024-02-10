@@ -337,8 +337,8 @@ if __name__ == '__main__':
         linker_size=args.linker_size,
         anchors=args.anchors,
         max_batch_size=args.max_batch_size,
-        nth_molecule=args.nth_molecule #following .csv table order
-        
+        nth_molecule=args.nth_molecule, #following .csv table order
+        timeseries=args.timeseries
     )
     
 ## [Current as of Jan 30th 2024]
