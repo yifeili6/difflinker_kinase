@@ -16,7 +16,7 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     df.reset_index(drop=True, inplace=True)
     
     indices = df.index[df.molecule_name.apply(lambda inp: inp[:4] in kinase_names)].tolist()
-    info = df.loc[df.molecule_name.apply(lambda inp: inp[:4] in kinase_names), ["molecule_name", "anchors"]]
+    info = df.loc[df.molecule_name.apply(lambda inp: inp[:4] in kinase_names), ["molecule_name", "anchor_1", "anchor_2", "linker_size"]]
 
     return indices, info
 
