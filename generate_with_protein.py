@@ -17,10 +17,9 @@ from tqdm.auto import tqdm
 
 from src.linker_size_lightning import SizeClassifier
 
-
 from pdb import set_trace
 import torch
-
+from misc_utils import get_kinase_indices
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -330,6 +329,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    get_kinase_indices(args.kinase_names)
     main(
         input_path=args.fragments,
         protein_path=args.protein,
