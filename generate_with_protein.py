@@ -206,6 +206,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         print('Please upload the fragments file in one of the following formats: .pdb, .sdf, .mol, .mol2')
         return
 
+    molecules_to_gen = None
     if protein_path.endswith(".pdb"):
         protein_extension = protein_path.split('.')[-1]
         if protein_extension != 'pdb':
@@ -216,129 +217,144 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         for kinase in kinase_names:
             indices, info = get_kinase_indices([kinase])
             info = info.values
-            for frag_index, one_info in zip(indices, info):
+            for order, (frag_index, one_info) in enumerate(zip(indices, info)):
                 molecule_name, anchor_1, anchor_2, linker_size = one_info
                 protein_file = "_".join(molecule_name.split("_")[:-1]) + "_protein.pdb"
                 protein_file = os.path.join(protein_path, protein_file) #absolute dir file
-                molecules_to_gen.append([kinase, frag_index, protein_file, anchor_1, anchor_2, linker_size])
+                molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), intl(inker_size), order])
         print(molecules_to_gen)
+        molecules_to_gen = np.array(molecules_to_gen)
                 
-    # try:
-    #     molecules = read_molecule(input_path)
-    #     print(nth_molecules)
-    #     if nth_molecules is not None:
-    #         molecules = [molecules[int(nth_mol)] for nth_mol in nth_molecules]
-    #     # molecules = Chem.RemoveAllHs(molecules)
-    #     name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
-    # except Exception as e:
-    #     return f'Could not read the file with fragments: {e}'
+    try:
+        molecules = read_molecule(input_path)
+        # print(nth_molecules)
+        nth_molecules = nth_molecules if molecules_to_gen is None else molecules_to_gen[:, 1]
+        if nth_molecules is not None:
+            molecules = [molecules[int(nth_mol)] for nth_mol in nth_molecules]
+        
+        # molecules = Chem.RemoveAllHs(molecules)
+        name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
+    except Exception as e:
+        return f'Could not read the file with fragments: {e}'
 
              
-    # pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
-    # for nth_molecule, molecule in enumerate(pbar):        
-    #     pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
-    #     # Parsing fragments data
-    #     frag_pos, frag_one_hot, frag_charges = parse_molecule(molecule, is_geom=ddpm.is_geom)
+    pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
+    for nth_molecule, molecule in enumerate(pbar):        
+        pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
+        # Parsing fragments data
+        frag_pos, frag_one_hot, frag_charges = parse_molecule(molecule, is_geom=ddpm.is_geom)
+        protein_path = protein_path if molecules_to_gen is None else molecules_to_gen[nth_molecule, 2]
+        kinase_name = "kinase" if molecules_to_gen is None else "_".join(os.path.basename(protein_path).split("_")[:-1])
+        anchors = anchors if molecules_to_gen is None else molecules_to_gen[nth_molecule, 3:5]
+        kinase_order = nth_molecule  if molecules_to_gen is None else molecules_to_gen[nth_molecule, -1]
+        # Parsing pocket data
+        try:
+            pocket_pos, pocket_one_hot, pocket_charges = get_pocket(molecule, protein_path, backbone_atoms_only)
+        except Exception as e:
+            return f'Could not read the file with pocket: {e}'
     
-    #     # Parsing pocket data
-    #     try:
-    #         pocket_pos, pocket_one_hot, pocket_charges = get_pocket(molecule, protein_path, backbone_atoms_only)
-    #     except Exception as e:
-    #         return f'Could not read the file with pocket: {e}'
+        positions = np.concatenate([frag_pos, pocket_pos], axis=0)
+        one_hot = np.concatenate([frag_one_hot, pocket_one_hot], axis=0)
+        charges = np.concatenate([frag_charges, pocket_charges], axis=0)
+        anchor_flags = np.zeros_like(charges)
+        
+        if anchors is not None:
+            assert molecules_to_gen is None
+            for anchor in anchors.split(','):
+                anchor_flags[int(anchor.strip()) - 1] = 1
+        elif molecules_to_gen is not None:
+            for anchor in anchors:
+                anchor_flags[int(anchor) - 1] = 1            
     
-    #     positions = np.concatenate([frag_pos, pocket_pos], axis=0)
-    #     one_hot = np.concatenate([frag_one_hot, pocket_one_hot], axis=0)
-    #     charges = np.concatenate([frag_charges, pocket_charges], axis=0)
-    #     anchor_flags = np.zeros_like(charges)
-    #     if anchors is not None:
-    #         for anchor in anchors.split(','):
-    #             anchor_flags[int(anchor.strip()) - 1] = 1
+        fragment_only_mask = np.concatenate([
+            np.ones_like(frag_charges),
+            np.zeros_like(pocket_charges),
+        ])
+        pocket_mask = np.concatenate([
+            np.zeros_like(frag_charges),
+            np.ones_like(pocket_charges),
+        ])
+        linker_mask = np.concatenate([
+            np.zeros_like(frag_charges),
+            np.zeros_like(pocket_charges),
+        ])
+        fragment_mask = np.concatenate([
+            np.ones_like(frag_charges),
+            np.ones_like(pocket_charges),
+        ])
     
-    #     fragment_only_mask = np.concatenate([
-    #         np.ones_like(frag_charges),
-    #         np.zeros_like(pocket_charges),
-    #     ])
-    #     pocket_mask = np.concatenate([
-    #         np.zeros_like(frag_charges),
-    #         np.ones_like(pocket_charges),
-    #     ])
-    #     linker_mask = np.concatenate([
-    #         np.zeros_like(frag_charges),
-    #         np.zeros_like(pocket_charges),
-    #     ])
-    #     fragment_mask = np.concatenate([
-    #         np.ones_like(frag_charges),
-    #         np.ones_like(pocket_charges),
-    #     ])
+        dataset = [{
+            'uuid': '0',
+            'name': '0',
+            'positions': torch.tensor(positions, dtype=const.TORCH_FLOAT, device=device),
+            'one_hot': torch.tensor(one_hot, dtype=const.TORCH_FLOAT, device=device),
+            'charges': torch.tensor(charges, dtype=const.TORCH_FLOAT, device=device),
+            'anchors': torch.tensor(anchor_flags, dtype=const.TORCH_FLOAT, device=device),
+            'fragment_only_mask': torch.tensor(fragment_only_mask, dtype=const.TORCH_FLOAT, device=device),
+            'pocket_mask': torch.tensor(pocket_mask, dtype=const.TORCH_FLOAT, device=device),
+            'fragment_mask': torch.tensor(fragment_mask, dtype=const.TORCH_FLOAT, device=device),
+            'linker_mask': torch.tensor(linker_mask, dtype=const.TORCH_FLOAT, device=device),
+            'num_atoms': len(positions),
+        }] * n_samples
+        dataset = MOADDataset(data=dataset)
+        ddpm.val_dataset = dataset
     
-    #     dataset = [{
-    #         'uuid': '0',
-    #         'name': '0',
-    #         'positions': torch.tensor(positions, dtype=const.TORCH_FLOAT, device=device),
-    #         'one_hot': torch.tensor(one_hot, dtype=const.TORCH_FLOAT, device=device),
-    #         'charges': torch.tensor(charges, dtype=const.TORCH_FLOAT, device=device),
-    #         'anchors': torch.tensor(anchor_flags, dtype=const.TORCH_FLOAT, device=device),
-    #         'fragment_only_mask': torch.tensor(fragment_only_mask, dtype=const.TORCH_FLOAT, device=device),
-    #         'pocket_mask': torch.tensor(pocket_mask, dtype=const.TORCH_FLOAT, device=device),
-    #         'fragment_mask': torch.tensor(fragment_mask, dtype=const.TORCH_FLOAT, device=device),
-    #         'linker_mask': torch.tensor(linker_mask, dtype=const.TORCH_FLOAT, device=device),
-    #         'num_atoms': len(positions),
-    #     }] * n_samples
-    #     dataset = MOADDataset(data=dataset)
-    #     ddpm.val_dataset = dataset
+        global_batch_size = min(n_samples, max_batch_size)
+        dataloader = get_dataloader(
+            dataset, batch_size=global_batch_size, collate_fn=collate_with_fragment_without_pocket_edges
+        )
     
-    #     global_batch_size = min(n_samples, max_batch_size)
-    #     dataloader = get_dataloader(
-    #         dataset, batch_size=global_batch_size, collate_fn=collate_with_fragment_without_pocket_edges
-    #     )
+        # Sampling
+        print('Sampling...')
+        pbar2 = tqdm(enumerate(dataloader), total=len(dataloader), unit="batch")
+        for batch_i, data in pbar2:
+            pbar2.set_description(f"Batch {batch_i} is sampled...")
+            batch_size = len(data['positions'])
     
-    #     # Sampling
-    #     print('Sampling...')
-    #     pbar2 = tqdm(enumerate(dataloader), total=len(dataloader), unit="batch")
-    #     for batch_i, data in pbar2:
-    #         pbar2.set_description(f"Batch {batch_i} is sampled...")
-    #         batch_size = len(data['positions'])
+            chain = None
+            while True:
+                try:
+                    chain, node_mask = ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=1) if not timeseries else ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=None)
+                    break
+                except FoundNaNException:
+                    continue
+            if chain is None:
+                # raise Exception('Could not generate in 5 attempts')
+                print("Skipping... Could not generate in 5 attempts")
+                continue
     
-    #         chain = None
-    #         while True:
-    #             try:
-    #                 chain, node_mask = ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=1) if not timeseries else ddpm.sample_chain(data, sample_fn=sample_fn, keep_frames=None)
-    #                 break
-    #             except FoundNaNException:
-    #                 continue
-    #         if chain is None:
-    #             # raise Exception('Could not generate in 5 attempts')
-    #             print("Skipping... Could not generate in 5 attempts")
-    #             continue
+            x = chain[0][:, :, :ddpm.n_dims]
+            h = chain[0][:, :, ddpm.n_dims:]
     
-    #         x = chain[0][:, :, :ddpm.n_dims]
-    #         h = chain[0][:, :, ddpm.n_dims:]
+            # Put the molecule back to the initial orientation
+            com_mask = data['fragment_only_mask'] if ddpm.center_of_mass == 'fragments' else data['anchors']
+            pos_masked = data['positions'] * com_mask
+            N = com_mask.sum(1, keepdims=True)
+            mean = torch.sum(pos_masked, dim=1, keepdim=True) / N
+            x = x + mean * node_mask
     
-    #         # Put the molecule back to the initial orientation
-    #         com_mask = data['fragment_only_mask'] if ddpm.center_of_mass == 'fragments' else data['anchors']
-    #         pos_masked = data['positions'] * com_mask
-    #         N = com_mask.sum(1, keepdims=True)
-    #         mean = torch.sum(pos_masked, dim=1, keepdim=True) / N
-    #         x = x + mean * node_mask
+            offset_idx = batch_i * global_batch_size
+            # names = [f'output_{nth_molecule}_{offset_idx+i}_{name}' for i in range(batch_size)] 
+            names = [f'{kinase_name}_{kinase_order}_{offset_idx+i}_{name}' for i in range(batch_size)] # e.g. 1yol_chainB_2_3_KLIF_ValTest_frac
     
-    #         offset_idx = batch_i * global_batch_size
-    #         names = [f'output_{nth_molecule}_{offset_idx+i}_{name}' for i in range(batch_size)]
-    
-    #         node_mask[torch.where(data['pocket_mask'])] = 0
+            node_mask[torch.where(data['pocket_mask'])] = 0
 
-    #         if timeseries:
-    #             setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{nth_molecule}_ligand"))
-    #             ddpm.generate_animation(chain, node_mask, 0)
-    #         else:
-    #             save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
-    #             # visualize_chain(output_dir, wandb=None, mode=name, is_geom=ddpm.is_geom)
+            if timeseries:
+                # setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{nth_molecule}_ligand"))
+                setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{kinase_name}_{kinase_order}_ligand"))
+                ddpm.generate_animation(chain, node_mask, 0)
+            else:
+                save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
+                # visualize_chain(output_dir, wandb=None, mode=name, is_geom=ddpm.is_geom)
              
-    #         for i in range(batch_size):
-    #             out_xyz = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.xyz'
-    #             out_sdf = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.sdf'
-    #             subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
+            for i in range(batch_size):
+                # out_xyz = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.xyz'
+                # out_sdf = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.sdf'
+                out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}_.xyz'
+                out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}.sdf'
+                subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
 
-    # print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
+    print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
 
 
 if __name__ == '__main__':
