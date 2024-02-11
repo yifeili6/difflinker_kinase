@@ -212,6 +212,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     try:
         molecules = read_molecule(input_path)
+        print(nth_molecules)
         if nth_molecules is not None:
             molecules = [molecules[nth_mol] for nth_mol in nth_molecules]
         # molecules = Chem.RemoveAllHs(molecules)
