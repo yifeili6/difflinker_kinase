@@ -219,6 +219,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
 
+    print("ABCD HERE")
+             
     pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
     for nth_molecule, molecule in enumerate(pbar):        
         pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
