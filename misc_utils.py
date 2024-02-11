@@ -16,10 +16,12 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
     df.reset_index(drop=True, inplace=True)
     
     indices = df.index[df.molecule_name.apply(lambda inp: inp[:4] in kinase_names)].tolist()
+    info = df.loc[df.molecule_name.apply(lambda inp: inp[:4] in kinase_names), ["molecule_name", "anchors"]]
 
-    return indices
+    return indices, info
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    indices = get_kinase_indices(args.kinase_names)
+    indices, info = get_kinase_indices(args.kinase_names)
     print(indices)
+    print(info)
