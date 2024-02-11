@@ -20,6 +20,7 @@ from src.linker_size_lightning import SizeClassifier
 from pdb import set_trace
 import torch
 from misc_utils import get_kinase_indices
+from typing import List
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
