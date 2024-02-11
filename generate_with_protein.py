@@ -214,7 +214,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         molecules = read_molecule(input_path)
         print(nth_molecules)
         if nth_molecules is not None:
-            molecules = [molecules[nth_mol] for nth_mol in nth_molecules]
+            molecules = [molecules[int(nth_mol)] for nth_mol in nth_molecules]
         # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
