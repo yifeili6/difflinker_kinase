@@ -186,6 +186,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                     sizes.append(size_nn.linker_id2size[label])
                 sizes = torch.tensor(sizes, device=samples.device, dtype=const.TORCH_INT)
                 return sizes
+    print("ABCD HERE")
 
     ddpm = DDPM.load_from_checkpoint(model, map_location=device).eval().to(device)
 
@@ -219,7 +220,6 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
 
-    print("ABCD HERE")
              
     pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
     for nth_molecule, molecule in enumerate(pbar):        
