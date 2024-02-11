@@ -4,6 +4,7 @@ from rdkit import Chem
 import argparse
 from typing import List
 import os
+import pandas as pd
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
