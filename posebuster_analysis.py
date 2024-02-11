@@ -15,7 +15,7 @@ def get_posebuster_stats(filenames: List[str]):
     df = buster.bust(pred_files, None, None, full_report=False)
     # print(df.columns)
     # print(df.values)
-    print(Df)
+    print(df)
 
 if __name__ == "__main__":
     get_posebuster_stats(args.filenames)
