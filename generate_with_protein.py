@@ -186,7 +186,6 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                     sizes.append(size_nn.linker_id2size[label])
                 sizes = torch.tensor(sizes, device=samples.device, dtype=const.TORCH_INT)
                 return sizes
-    print("ABCD HERE")
 
     ddpm = DDPM.load_from_checkpoint(model, map_location=device).eval().to(device)
 
@@ -199,6 +198,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             'or use another DiffLinker model that does not require information about anchors'
         )
         return
+    print("ABCD HERE")
 
     # Reading input fragments
     extension = input_path.split('.')[-1]
