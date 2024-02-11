@@ -15,6 +15,7 @@ def get_posebuster_stats(filenames: List[str]):
     df = buster.bust(pred_files, None, None, full_report=False)
     # print(df.columns)
     # print(df.values)
+    df.drop(index="molecule", inplace=True)
     print(df)
 
 if __name__ == "__main__":
