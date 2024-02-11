@@ -210,6 +210,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     if protein_extension != 'pdb':
         print('Please upload the protein file in .pdb format')
         return
+    print("ABCD HERE")
 
     try:
         molecules = read_molecule(input_path)
@@ -219,6 +220,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
+    print("ABCD HERE")
 
              
     pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
