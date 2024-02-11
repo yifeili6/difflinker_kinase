@@ -148,7 +148,7 @@ def get_pocket(mol, pdb_path, backbone_atoms_only=False):
 
 
 def main(input_path, protein_path, backbone_atoms_only, model,
-         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size, timeseries=False, nth_molecule=None):
+         output_dir, n_samples, n_steps, linker_size, anchors, max_batch_size, timeseries=False, nth_molecules=None):
 
     # Setup
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -212,14 +212,12 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     try:
         molecules = read_molecule(input_path)
-        print("ABCD HERE")
         if nth_molecules is not None:
             molecules = [molecules[nth_mol] for nth_mol in nth_molecules]
         # molecules = Chem.RemoveAllHs(molecules)
         name = '.'.join(input_path.split('/')[-1].split('.')[:-1])
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
-    print("ABCD HERE")
 
              
     pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
