@@ -31,8 +31,8 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
         except Exception as e:
-            raise RuntimeError from e
-            print("Something happend... skipping!!!\n", e)
+            # raise RuntimeError from e #cannot continue if raising errors!
+            print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
             
 if __name__ == "__main__":
