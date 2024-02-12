@@ -9,7 +9,7 @@ import glob
 import curtsies.fmtfuncs as cf
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
+# parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
 parser.add_argument("--kinase_prefix_names", "-f", nargs="*", help="kinase file names to test")
 args = parser.parse_args()
 
