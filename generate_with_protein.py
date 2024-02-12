@@ -223,7 +223,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 protein_file = os.path.join(protein_path, protein_file) #absolute dir file
                 molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), int(linker_size), order])
         molecules_to_gen = np.array(molecules_to_gen)
-        print(molecules_to_gen)
+        # print(molecules_to_gen)
 
     try:
         molecules = read_molecule(input_path)
@@ -243,6 +243,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
         # Parsing fragments data
         frag_pos, frag_one_hot, frag_charges = parse_molecule(molecule, is_geom=ddpm.is_geom)
+        print(frag_pos)
         protein_path = protein_path if molecules_to_gen is None else molecules_to_gen[nth_molecule, 2]
         kinase_name = "kinase" if molecules_to_gen is None else "_".join(os.path.basename(protein_path).split("_")[:-1])
         anchors = anchors if molecules_to_gen is None else molecules_to_gen[nth_molecule, 3:5]
@@ -252,7 +253,6 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             pocket_pos, pocket_one_hot, pocket_charges = get_pocket(molecule, protein_path, backbone_atoms_only)
         except Exception as e:
             return f'Could not read the file with pocket: {e}'
-        print(len(molecules))
         positions = np.concatenate([frag_pos, pocket_pos], axis=0)
         one_hot = np.concatenate([frag_one_hot, pocket_one_hot], axis=0)
         charges = np.concatenate([frag_charges, pocket_charges], axis=0)
