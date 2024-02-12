@@ -193,7 +193,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     if n_steps is not None:
         ddpm.edm.T = n_steps
 
-    if ddpm.center_of_mass == 'anchors' and anchors is None:
+    if ddpm.center_of_mass == 'anchors' and kinase_names is None: #anchors is None:
         print(
             'Please pass anchor atoms indices '
             'or use another DiffLinker model that does not require information about anchors'
