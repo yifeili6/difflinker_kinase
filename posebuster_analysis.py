@@ -27,6 +27,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # print(df.values)
             Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
             print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
+            Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
