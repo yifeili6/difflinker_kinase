@@ -258,8 +258,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         one_hot = np.concatenate([frag_one_hot, pocket_one_hot], axis=0)
         charges = np.concatenate([frag_charges, pocket_charges], axis=0)
         anchor_flags = np.zeros_like(charges)
-        print(anchors)
-        if anchors is not None:
+
+        if kinase_names is None:
             assert molecules_to_gen is None
             for anchor in anchors.split(','):
                 anchor_flags[int(anchor.strip()) - 1] = 1
