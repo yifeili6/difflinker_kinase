@@ -28,7 +28,8 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print("Result:\n", Df)
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
-        except Exception("Something happend... skipping!"):
+        except Exception as e:
+            print(e, "Something happend... skipping!")
             continue
             
 if __name__ == "__main__":
