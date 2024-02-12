@@ -252,7 +252,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             pocket_pos, pocket_one_hot, pocket_charges = get_pocket(molecule, protein_path, backbone_atoms_only)
         except Exception as e:
             return f'Could not read the file with pocket: {e}'
-    
+        print(len(molecules))
         positions = np.concatenate([frag_pos, pocket_pos], axis=0)
         one_hot = np.concatenate([frag_one_hot, pocket_one_hot], axis=0)
         charges = np.concatenate([frag_charges, pocket_charges], axis=0)
