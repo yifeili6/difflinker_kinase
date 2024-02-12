@@ -6,6 +6,7 @@ from typing import List
 import os
 import pandas as pd
 import glob
+import curtsies.fmtfuncs as cf
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
@@ -22,7 +23,8 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
         # print(df.columns)
         # print(df.values)
         Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
-        print(Df)
+        print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
+        print("Result:\n", Df)
         # df.drop(index=["molecule", "file"], inplace=True)
         # print(df)
 
