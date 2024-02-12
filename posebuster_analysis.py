@@ -15,19 +15,22 @@ args = parser.parse_args()
 
 def get_posebuster_stats(kinase_prefix_names: List[str]):
     for kinase_file_prefix in kinase_prefix_names:
-        filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
-        # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
-        pred_files = [Chem.SDMolSupplier(filename)[0] for filename in filenames] 
-        buster = PoseBusters(config="mol")
-        df = buster.bust(pred_files, None, None, full_report=False)
-        # print(df.columns)
-        # print(df.values)
-        Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
-        print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
-        print("Result:\n", Df)
-        # df.drop(index=["molecule", "file"], inplace=True)
-        # print(df)
-
+        try:
+            filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
+            # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
+            pred_files = [Chem.SDMolSupplier(filename)[0] for filename in filenames] 
+            buster = PoseBusters(config="mol")
+            df = buster.bust(pred_files, None, None, full_report=False)
+            # print(df.columns)
+            # print(df.values)
+            Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
+            print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
+            print("Result:\n", Df)
+            # df.drop(index=["molecule", "file"], inplace=True)
+            # print(df)
+        except Exception("Something happend... skipping!"):
+            continue
+            
 if __name__ == "__main__":
     get_posebuster_stats(args.kinase_prefix_names)
 
