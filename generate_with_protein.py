@@ -1,6 +1,7 @@
 import argparse
 import os
 import numpy as np
+import curtsies.fmtfuncs as cf
 
 import subprocess
 from rdkit import Chem
@@ -238,16 +239,16 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     except Exception as e:
         return f'Could not read the file with fragments: {e}'
 
-             
     pbar = tqdm(molecules, total=len(molecules), unit='n_th molecule')
     for nth_molecule, molecule in enumerate(pbar):        
-        pbar.set_description(f"{nth_molecule}-th molecule is parsed...")
         # Parsing fragments data
         frag_pos, frag_one_hot, frag_charges = parse_molecule(molecule, is_geom=ddpm.is_geom)
         protein_path = protein_path if molecules_to_gen is None else molecules_to_gen[nth_molecule, 2]
         kinase_name = "kinase" if molecules_to_gen is None else "_".join(os.path.basename(protein_path).split("_")[:-1])
         anchors = anchors if molecules_to_gen is None else molecules_to_gen[nth_molecule, 3:5]
-        kinase_order = nth_molecule  if molecules_to_gen is None else molecules_to_gen[nth_molecule, -1]
+        kinase_order = nth_molecule if molecules_to_gen is None else molecules_to_gen[nth_molecule, -1]
+        pbar.set_description(f"{nth_molecule}-th loop: {kinase_name}'s {kinase_order}-th fragmentation is sampled...")
+        
         # Parsing pocket data
         try:
             pocket_pos, pocket_one_hot, pocket_charges = get_pocket(molecule, protein_path, backbone_atoms_only)
@@ -306,7 +307,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
         )
     
         # Sampling
-        print('Sampling...')
+        print(cf.on_yellow('Sampling...'))
         pbar2 = tqdm(enumerate(dataloader), total=len(dataloader), unit="batch")
         for batch_i, data in pbar2:
             pbar2.set_description(f"Batch {batch_i} is sampled...")
@@ -320,8 +321,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 except FoundNaNException:
                     continue
             if chain is None:
-                # raise Exception('Could not generate in 5 attempts')
-                print("Skipping... Could not generate in 5 attempts")
+                raise Exception('Could not generate in 5 attempts. This cannot happen anymore!')
+                # print("Skipping... Could not generate in 5 attempts")
                 continue
     
             x = chain[0][:, :, :ddpm.n_dims]
@@ -354,7 +355,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}_.xyz'
                 out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}.sdf'
                 subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
-
+                subprocess.run(f'rm -rf {out_xyz}', shell=True)
+        print("\n")
     print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
 
 
