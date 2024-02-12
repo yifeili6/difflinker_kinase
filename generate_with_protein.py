@@ -84,7 +84,7 @@ def read_molecule(path):
 
 def get_pocket(mol, pdb_path, backbone_atoms_only=False):
     struct = PDBParser().get_structure('', pdb_path)
-    assert struct is not None
+
     residue_ids = []
     atom_coords = []
 
