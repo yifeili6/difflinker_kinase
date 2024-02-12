@@ -7,12 +7,14 @@ import os
 import pandas as pd
 import glob
 import curtsies.fmtfuncs as cf
+import warnings
 
 parser = argparse.ArgumentParser()
 # parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
 parser.add_argument("--kinase_prefix_names", "-f", nargs="*", help="kinase file names to test")
 args = parser.parse_args()
 
+warnings.simplefilter('ignore')
 def get_posebuster_stats(kinase_prefix_names: List[str]):
     for kinase_file_prefix in kinase_prefix_names:
         try:
@@ -29,7 +31,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
         except Exception as e:
-            print(e, "Something happend... skipping!")
+            print("Something happend... skipping!!!\n", e)
             continue
             
 if __name__ == "__main__":
