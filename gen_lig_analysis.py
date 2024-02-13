@@ -25,6 +25,7 @@ args = parser.parse_args()
 warnings.simplefilter('ignore')
 
 def get_posebuster_stats(kinase_prefix_names: List[str]):
+    retun_good_smiles = []
     for kinase_file_prefix in kinase_prefix_names:
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
@@ -40,23 +41,29 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
             Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
+            good_smiles = np.array(pred_files)[Df.values[:,-1]]
+            retun_good_smiles.extend(good_smiles.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
         except Exception as e:
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
+    return retun_good_smiles
 
 def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
                     test=None, test_scaffolds=None,
                     ptest=None, ptest_scaffolds=None,
                     train=None):
-                        
-    gen = glob.glob(gen + "/*.sdf")
-    # print(gen)
-    gen: List[str] = [Chem.SDMolSupplier(g)[0] for g in gen]
-    gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+    if isinstance(gen, list):
+        pass
+    else:
+        gen = glob.glob(gen + "/*.sdf")
+        # print(gen)
+        gen: List[str] = [Chem.SDMolSupplier(g)[0] for g in gen]
+        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+        
     train = pd.read_csv(train).molecule.drop_duplicates().tolist()
     test = pd.read_csv(test).molecule.drop_duplicates().tolist()
     test_scaffolds = pd.read_csv(test_scaffolds).molecule.drop_duplicates().tolist()
@@ -71,8 +78,12 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     return metrics
     
 if __name__ == "__main__":
-    get_moses_stats(args.gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest)
-    get_posebuster_stats(args.kinase_prefix_names)
+    gen = get_posebuster_stats(args.kinase_prefix_names)
+    if len(gen) !=0:
+        pass
+    else:
+        gen = args.gen
+    get_moses_stats(gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest)
 
     ## Current as of [Feb 1st 2024]
     ## git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
