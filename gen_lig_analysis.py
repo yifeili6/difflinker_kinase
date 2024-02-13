@@ -66,7 +66,8 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     test=test, test_scaffolds=test_scaffolds,
                     ptest=ptest, ptest_scaffolds=ptest_scaffolds,
                     train=train)
-    print(cf.on_blue(metrics))
+    print(cf.on_blue("MOSES metrics"))    
+    print(metrics)
     return metrics
     
 if __name__ == "__main__":
