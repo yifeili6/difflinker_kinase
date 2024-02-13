@@ -25,7 +25,7 @@ args = parser.parse_args()
 warnings.simplefilter('ignore')
 
 def get_posebuster_stats(kinase_prefix_names: List[str]):
-    retun_good_smiles = []
+    return_good_smiles = []
     for kinase_file_prefix in kinase_prefix_names:
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
@@ -43,7 +43,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print("Result:\n", Df)
 
             good_smiles = np.array(pred_files)[Df.values[:,-1].astype(bool)]
-            retun_good_smiles.extend(good_smiles.tolist())
+            return_good_smiles.extend(good_smiles.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
         except Exception as e:
@@ -51,7 +51,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
     print(return_good_smiles)
-    return retun_good_smiles
+    return return_good_smiles
 
 def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
