@@ -43,7 +43,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print("Result:\n", Df)
             print(np.array(pred_files), Df.values[:,-1])
 
-            good_smiles = np.array(pred_files)[Df.values[:,-1]]
+            good_smiles = np.array(pred_files)[Df.values[:,-1].astype(bool)]
 
             retun_good_smiles.extend(good_smiles.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
