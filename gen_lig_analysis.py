@@ -59,7 +59,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     ptest=None, ptest_scaffolds=None,
                     train=None):
     if isinstance(gen, list):
-        pass
+        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     else:
         gen = glob.glob(gen + "/*.sdf")
         # print(gen)
