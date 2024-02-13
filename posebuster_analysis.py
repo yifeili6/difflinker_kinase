@@ -8,6 +8,9 @@ import pandas as pd
 import glob
 import curtsies.fmtfuncs as cf
 import warnings
+from rdkit import rdBase
+
+rdBase.DisableLog('rdApp.*')
 
 parser = argparse.ArgumentParser()
 # parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
