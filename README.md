@@ -16,14 +16,15 @@ git pull && python -W ignore train_difflinker.py --config configs/klifs_difflink
 
 To sample,
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins/2hzi_altA_chainA_protein.pdb --model models/finetune/finetune_anchors.ckpt --anchors 5,17 --linker_size 13 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --nth_molecules 3 10
-[RECOMMENDED BELOW]
+[USE BELOW]
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_ValTest_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins --model models/finetune/finetune_anchors.ckpt --linker_size 11 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --kinase_names 2xa4 4rx5 3c4c --timeseries
 
 To bust poses,
 git pull && python -m posebuster_analysis --kinase_file output_0_2_KLIF_test_frag.sdf output_0_3_KLIF_test_frag.sdf
-[RECOMMENDED BELOW]
+[USE BELOW]
 git pull && python -m posebuster_analysis --kinase_prefix_names git pull && python -m posebuster_analysis --kinase_prefix_names 2xa4_altB_chainA_0 2xa4_altB_chainA_1 2xa4_altA_chainB_2 2xa4_altA_chainB_3 2xa4_altA_chainB_4 2xa4_altB_chainB_5 2xa4_altB_chainB_6 4rx5_altA_chainA_0 4rx5_altA_chainA_1 3c4c_chainA_0
 
+[DEPRECATED]
 To choose kinase indices from processed KLIFS dataset with ligands,
 git pull && python -m misc_utils --kinase_names 2xa4 4rx5 5jga 3c4c 5cau 1yol 5lqf 3cs9 4ag8 3oxz 4ase braf 4u7z 7m0u 4an2 [train/val/test]
 [RECOMMENDED BELOW]
