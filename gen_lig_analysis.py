@@ -41,8 +41,9 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
             Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
-            good_smiles = np.array(pred_files)[Df.values[:,-1]]
             print(np.array(pred_files), Df.values[:,-1])
+
+            good_smiles = np.array(pred_files)[Df.values[:,-1]]
 
             retun_good_smiles.extend(good_smiles.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
