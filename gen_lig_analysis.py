@@ -41,10 +41,8 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
             Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
-            print(np.array(pred_files), Df.values[:,-1])
 
             good_smiles = np.array(pred_files)[Df.values[:,-1].astype(bool)]
-
             retun_good_smiles.extend(good_smiles.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
@@ -52,6 +50,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
+    print(return_good_smiles)
     return retun_good_smiles
 
 def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
