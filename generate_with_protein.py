@@ -355,7 +355,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}_.xyz'
                 out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}.sdf'
                 subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
-                subprocess.run(f'rm -rf {out_xyz}', shell=True)
+                # subprocess.run(f'rm -rf {out_xyz}', shell=True)
         print("\n")
     print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
 
