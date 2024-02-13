@@ -96,7 +96,7 @@ def get_lipinski(gen: List[str]):
         '''
         try:
             mol = Chem.MolFromSmiles(smiles)
-        except Exception, e:
+        except Exception as e:
             raise SmilesError('%s returns a None molecule' % smiles)
             
         return Crippen.MolLogP(mol)
