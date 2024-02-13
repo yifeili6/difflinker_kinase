@@ -15,6 +15,7 @@ rdBase.DisableLog('rdApp.*')
 
 parser = argparse.ArgumentParser()
 # parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
+parser.add_argument("--gen", "-g", type=str, help="data_docking/result_difflinker")
 parser.add_argument("--train", "-t", type=str, help="datasets/KLIF_train_table.csv")
 parser.add_argument("--valtest", "-vt", type=str, help="datasets/KLIF_ValTest_table.csv")
 parser.add_argument("--kinase_prefix_names", "-f", nargs="*", help="kinase file names to test")
@@ -49,6 +50,8 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     ptest=None, ptest_scaffolds=None,
                     train=None):
                         
+    gen = glob.glob(gen)
+    gen: List[str] = [Chem.MolToSmiles(Chem.SDMolSupplier(g)[0]) for g in gen]
     train = pd.read_csv(train).molecule.drop_duplicates().tolist()
     test = pd.read_csv(test).molecule.drop_duplicates().tolist()
                         
