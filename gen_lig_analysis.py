@@ -53,7 +53,8 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                         
     gen = glob.glob(gen + "/*.sdf")
     # print(gen)
-    gen: List[str] = [Chem.MolToSmiles(Chem.SDMolSupplier(g)[0]) for g in gen]
+    gen: List[str] = [Chem.SDMolSupplier(g)[0] for g in gen]
+    gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     train = pd.read_csv(train).molecule.drop_duplicates().tolist()
     test = pd.read_csv(test).molecule.drop_duplicates().tolist()
                         
@@ -65,7 +66,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     return metrics
     
 if __name__ == "__main__":
-    # get_moses_stats(args.gen, train=args.train, test=args.valtest)
+    get_moses_stats(args.gen, train=args.train, test=args.valtest)
     get_posebuster_stats(args.kinase_prefix_names)
 
     ## Current as of [Feb 1st 2024]
