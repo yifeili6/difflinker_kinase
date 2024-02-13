@@ -10,6 +10,7 @@ import curtsies.fmtfuncs as cf
 import warnings
 from rdkit import rdBase
 import moses
+import numpy as np
 
 rdBase.DisableLog('rdApp.*')
 
