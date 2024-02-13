@@ -345,6 +345,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 # setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{nth_molecule}_ligand"))
                 setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{kinase_name}_{kinase_order}_ligand"))
                 ddpm.generate_animation(chain, node_mask, 0)
+                save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
             else:
                 save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
                 # visualize_chain(output_dir, wandb=None, mode=name, is_geom=ddpm.is_geom)
@@ -355,9 +356,10 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}_.xyz'
                 out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}.sdf'
                 subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
+                subprocess.run(f'rm -rf {out_xyz}', shell=True)
         print("\n")
-    xyzs = glob.glob(output_dir + "/*.xyz")
-    subprocess.run(f'rm -rf {xyzs}', shell=True)
+    # xyzs = glob.glob(output_dir + "/*.xyz")
+    # subprocess.run(f'rm -rf {xyzs}', shell=True)
     print(f'Saved generated molecules in .xyz and .sdf format in directory {output_dir}')
 
 
