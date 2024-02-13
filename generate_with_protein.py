@@ -225,7 +225,7 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 protein_file = os.path.join(protein_path, protein_file) #absolute dir file
                 molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), int(linker_size), order])
         molecules_to_gen = np.array(molecules_to_gen)
-        # print(molecules_to_gen)
+        print(molecules_to_gen)
 
     try:
         molecules = read_molecule(input_path)
