@@ -57,7 +57,8 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     train = pd.read_csv(train).molecule.drop_duplicates().tolist()
     test = pd.read_csv(test).molecule.drop_duplicates().tolist()
-                        
+    test_scaffolds = pd.read_csv(test_scaffolds).molecule.drop_duplicates().tolist()
+
     metrics = moses.get_all_metrics(gen=gen, k=k, n_jobs=n_jobs,
                     device=device, batch_size=batch_size, pool=pool,
                     test=test, test_scaffolds=test_scaffolds,
@@ -66,7 +67,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     return metrics
     
 if __name__ == "__main__":
-    get_moses_stats(args.gen, train=args.train, test=args.valtest)
+    get_moses_stats(args.gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest)
     get_posebuster_stats(args.kinase_prefix_names)
 
     ## Current as of [Feb 1st 2024]
