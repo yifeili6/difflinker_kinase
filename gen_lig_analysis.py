@@ -53,7 +53,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
-    print(return_good_smiles)
+    # print(return_good_smiles)
     return return_good_smiles
 
 def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
@@ -162,6 +162,8 @@ def get_lipinski(gen: List[str]):
 
     gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     lipinski_results = [lipinski_pass(smiles) for smiles in gen]
+    
+    print(cf.on_yellow("Lipinski Rule of 5"))
     print(np.mean(lipinski_results))
     return lipinski_results
     
