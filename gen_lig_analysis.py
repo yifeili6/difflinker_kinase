@@ -52,7 +52,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
                     train=None):
                         
     gen = glob.glob(gen + "/*.sdf")
-    print(gen)
+    # print(gen)
     gen: List[str] = [Chem.MolToSmiles(Chem.SDMolSupplier(g)[0]) for g in gen]
     train = pd.read_csv(train).molecule.drop_duplicates().tolist()
     test = pd.read_csv(test).molecule.drop_duplicates().tolist()
