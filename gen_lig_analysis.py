@@ -29,6 +29,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
             pred_files = [Chem.SDMolSupplier(filename)[0] for filename in filenames] 
+            print(pred_files)
             buster = PoseBusters(config="mol")
             df = buster.bust(pred_files, None, None, full_report=False)
             # print(df.columns)
@@ -64,7 +65,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     return metrics
     
 if __name__ == "__main__":
-    get_moses_stats(args.gen, train=args.train, test=args.valtest)
+    # get_moses_stats(args.gen, train=args.train, test=args.valtest)
     get_posebuster_stats(args.kinase_prefix_names)
 
     ## Current as of [Feb 1st 2024]
