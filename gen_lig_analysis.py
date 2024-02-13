@@ -15,9 +15,9 @@ rdBase.DisableLog('rdApp.*')
 
 parser = argparse.ArgumentParser()
 # parser.add_argument("--filenames", "-f", nargs="*", help="xyz file names")
-parser.add_argument("--gen", "-g", type=str, help="data_docking/result_difflinker")
-parser.add_argument("--train", "-t", type=str, help="datasets/KLIF_train_table.csv")
-parser.add_argument("--valtest", "-vt", type=str, help="datasets/KLIF_ValTest_table.csv")
+parser.add_argument("--gen", "-g", type=str, default="data_docking/result_difflinker", help="generated ligand SDF directory")
+parser.add_argument("--train", "-t", type=str, default="datasets/KLIF_train_table.csv", help="train dataset")
+parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest_table.csv", help="ValTest dataset")
 parser.add_argument("--kinase_prefix_names", "-f", nargs="*", help="kinase file names to test")
 args = parser.parse_args()
 
