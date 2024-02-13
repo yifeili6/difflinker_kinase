@@ -168,12 +168,15 @@ def get_lipinski(gen: List[str]):
     return lipinski_results
     
 if __name__ == "__main__":
+    ###3D
     gen = get_posebuster_stats(args.kinase_prefix_names)
     if len(gen) !=0:
         pass
     else:
         gen = args.gen
+    ###2D
     get_moses_stats(gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest)
+    ###Drugness
     get_lipinski(gen)
 
     ## Current as of [Feb 1st 2024]
