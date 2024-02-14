@@ -97,7 +97,7 @@ def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
     print(metrics)
     return gen, files
 
-def get_lipinski(gen: List[str]), files: List[str]):
+def get_lipinski(gen: List[str], files: List[str]):
     """
     Source:
     https://gist.github.com/strets123/fdc4db6d450b66345f46
