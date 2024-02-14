@@ -63,7 +63,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
     # print(return_good_smiles)
     return return_good_mols, return_good_files
 
-def get_moses_stats(gen, k=None, n_jobs=os.cpu_count()-1,
+def get_moses_stats(gen=gen, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
                     test=None, test_scaffolds=None,
                     ptest=None, ptest_scaffolds=None,
@@ -175,6 +175,7 @@ def get_lipinski(gen: List[str], files: List[str]):
         else:
             return True
             
+    print(gen, files)        
     if isinstance(gen, list):
         gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     else:
@@ -204,7 +205,7 @@ if __name__ == "__main__":
     ###Drugness
     gen, files = get_lipinski(gen, files) #filtration 2
     ###2D
-    gen, files = get_moses_stats(gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest) # final filtration
+    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest) # final filtration
     print(files)
 
     ## Current as of [Feb 1st 2024]
