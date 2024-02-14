@@ -32,7 +32,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
     return_good_mols = []
     return_good_files = []
 
-    for kinase_file_prefix in enumeratekinase_prefix_names:
+    for kinase_file_prefix in kinase_prefix_names:
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
