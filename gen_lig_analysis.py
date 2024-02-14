@@ -193,7 +193,7 @@ def get_lipinski(gen: List[str], files: List[str]):
 
     return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
     return_good_files = np.array(files)[np.array(lipinski_results).astype(bool)]
-    return return_good_smiles, return_good_files
+    return return_good_smiles.tolist(), return_good_files.tolist()
     
 if __name__ == "__main__":
     ###3D
