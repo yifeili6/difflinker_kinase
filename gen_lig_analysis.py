@@ -95,7 +95,7 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
     
     print(cf.on_blue("MOSES metrics"))    
     print(metrics)
-    return gen, files
+    return gen.tolist(), files.tolist()
 
 def get_lipinski(gen: List[str], files: List[str]):
     """
