@@ -159,25 +159,35 @@ def get_lipinski(gen: List[str]):
             return False
         else:
             return True
-
-    gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+            
+    if isinstance(gen, list):
+        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+    else:
+        gen = glob.glob(gen + "/*.sdf")
+        # print(gen)
+        gen: List[str] = [Chem.SDMolSupplier(g)[0] for g in gen]
+        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+        
     lipinski_results = [lipinski_pass(smiles) for smiles in gen]
     
     print(cf.on_yellow("Lipinski Rule of 5"))
     print(np.mean(lipinski_results))
-    return lipinski_results
+
+    return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
+    return return_good_smiles
     
 if __name__ == "__main__":
     ###3D
-    gen = get_posebuster_stats(args.kinase_prefix_names)
+    gen = get_posebuster_stats(args.kinase_prefix_names) # filtration 1
     if len(gen) !=0:
         pass
     else:
         gen = args.gen
-    ###2D
-    get_moses_stats(gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest)
     ###Drugness
-    get_lipinski(gen)
+    gen = get_lipinski(gen) #filtration 2
+    ###2D
+    get_moses_stats(gen, train=args.train, test=args.valtest, test_scaffolds=args.valtest) # final filtration
+
 
     ## Current as of [Feb 1st 2024]
     ## git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
