@@ -37,7 +37,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
             pred_files_ = [(filename, Chem.SDMolSupplier(filename)[0]) for filename in filenames] 
-            print(cf.red(f"None location: {np.where(np.array(pred_files)[:, 1] == None)[0]}"))
+            print(cf.red(f"None location: {np.where(np.array(pred_files_)[:, 1] == None)[0]}"))
             pred_files = [p[1] for p in pred_files_ if p[1] is not None] #List[MOL]
             pred_file_names = [p[0] for p in pred_files_ if p[1] is not None] #List[str]
 
