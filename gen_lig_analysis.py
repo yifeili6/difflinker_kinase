@@ -72,7 +72,10 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
     assert len(gen) == len(files), "gen and files must match in length!" ##files variable is not actively used here!
                         
     if isinstance(gen, list):
-        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+        if isinstance(gen[0], str):
+            pass
+        else:
+            gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     else:
         gen = glob.glob(gen + "/*.sdf")
         # print(gen)
@@ -175,9 +178,11 @@ def get_lipinski(gen: List[str], files: List[str]):
         else:
             return True
             
-    print(gen, files)        
     if isinstance(gen, list):
-        gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
+        if isinstance(gen[0], str):
+            pass
+        else:
+            gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     else:
         gen = glob.glob(gen + "/*.sdf")
         # print(gen)
