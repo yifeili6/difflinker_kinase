@@ -63,7 +63,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
     # print(return_good_smiles)
     return return_good_mols, return_good_files
 
-def get_moses_stats(gen=gen, k=None, n_jobs=os.cpu_count()-1,
+def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
                     test=None, test_scaffolds=None,
                     ptest=None, ptest_scaffolds=None,
