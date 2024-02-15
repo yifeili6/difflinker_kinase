@@ -65,7 +65,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
-    print(on_f"PoseBuster retained {current_file_counter/file_counter*100} % valid molecules")        
+    print(cf.on_yellow(f"PoseBuster retained {current_file_counter/file_counter*100} % valid molecules"))        
     # print(return_good_smiles)
     return return_good_mols, return_good_files, file_counter
 
@@ -105,7 +105,7 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
     assert metrics["Filters"] == 1.0, "Filters must be 1.0 since we already apply mole_passes_filter!"
     print(cf.on_blue("MOSES metrics"))    
     print(metrics)
-    print(f"MOSES retained {len(gen)/file_counter_from_posebuster*100} % valid molecules")        
+    print(cf.on_yellow(f"MOSES retained {len(gen)/file_counter_from_posebuster*100} % valid molecules"))        
                         
     return gen.tolist(), files.tolist()
 
@@ -208,7 +208,7 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
     return_good_files = np.array(files)[np.array(lipinski_results).astype(bool)]
 
-    print(f"MOSES retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules")        
+    print(cf.on_yellow(f"MOSES retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
     return return_good_smiles.tolist(), return_good_files.tolist()
     
 if __name__ == "__main__":
