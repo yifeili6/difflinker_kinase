@@ -202,7 +202,7 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
 
     lipinski_results = [lipinski_pass(smiles) for smiles in gen]
     
-    print(cf.on_yellow("Lipinski Rule of 5"))
+    print(cf.yellow("Lipinski Rule of 5"))
     print(np.mean(lipinski_results))
 
     return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
