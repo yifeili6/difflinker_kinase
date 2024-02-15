@@ -59,7 +59,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
             current_file_counter += len(return_good_mols)
-            file_counter += len(pred_files_)
+            total_file_counter += len(pred_files_)
 
         except Exception as e:
             # raise RuntimeError from e #cannot continue if raising errors!
@@ -67,7 +67,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             continue
     print(cf.on_yellow(f"PoseBuster retained {current_file_counter/file_counter*100} % valid molecules"))        
     # print(return_good_smiles)
-    return return_good_mols, return_good_files, file_counter
+    return return_good_mols, return_good_files, total_file_counter
 
 def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
