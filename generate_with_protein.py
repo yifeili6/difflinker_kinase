@@ -155,8 +155,9 @@ def main(input_path, protein_path, backbone_atoms_only, model,
 
     # Setup
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    os.makedirs(output_dir, exist_ok=True)
-
+    output_dir = f"{output_dir}/s{str(linker_size)}"
+    os.makedirs(f"{output_dir}", exist_ok=True)
+             
     if linker_size.isdigit():
         print(f'Will generate linkers with {linker_size} atoms')
         linker_size = int(linker_size)
@@ -220,10 +221,10 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             indices, info = get_kinase_indices([kinase])
             info = info.values
             for order, (frag_index, one_info) in enumerate(zip(indices, info)):
-                molecule_name, anchor_1, anchor_2, linker_size = one_info
+                molecule_name, anchor_1, anchor_2, _linker_size = one_info
                 protein_file = "_".join(molecule_name.split("_")[:-1]) + "_protein.pdb"
                 protein_file = os.path.join(protein_path, protein_file) #absolute dir file
-                molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), int(linker_size), order])
+                molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), int(_linker_size), order])
         molecules_to_gen = np.array(molecules_to_gen)
         print(molecules_to_gen)
 
@@ -337,13 +338,13 @@ def main(input_path, protein_path, backbone_atoms_only, model,
     
             offset_idx = batch_i * global_batch_size
             # names = [f'output_{nth_molecule}_{offset_idx+i}_{name}' for i in range(batch_size)] 
-            names = [f'{kinase_name}_{kinase_order}_{offset_idx+i}_{name}' for i in range(batch_size)] # e.g. 1yol_chainB_2_3_KLIF_ValTest_frac
+            names = [f'{kinase_name}_{kinase_order}_s{linker_size}_{offset_idx+i}_{name}' for i in range(batch_size)] # e.g. 1yol_chainB_2_3_KLIF_ValTest_frac
     
             node_mask[torch.where(data['pocket_mask'])] = 0
 
             if timeseries:
                 # setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{nth_molecule}_ligand"))
-                setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{kinase_name}_{kinase_order}_ligand"))
+                setattr(ddpm, "samples_dir", os.path.join(f"data_docking/samples_dir/{kinase_name}_{kinase_order}_s{linker_size}_ligand"))
                 ddpm.generate_animation(chain, node_mask, 0)
                 save_xyz_file(output_dir, h, x, node_mask, names=names, is_geom=ddpm.is_geom, suffix='')
             else:
@@ -353,8 +354,8 @@ def main(input_path, protein_path, backbone_atoms_only, model,
             for i in range(batch_size):
                 # out_xyz = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.xyz'
                 # out_sdf = f'{output_dir}/output_{nth_molecule}_{offset_idx+i}_{name}_.sdf'
-                out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}_.xyz'
-                out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_{offset_idx+i}_{name}.sdf'
+                out_xyz = f'{output_dir}/{kinase_name}_{kinase_order}_s{linker_size}_{offset_idx+i}_{name}_.xyz'
+                out_sdf = f'{output_dir}/{kinase_name}_{kinase_order}_s{linker_size}_{offset_idx+i}_{name}.sdf'
                 subprocess.run(f'obabel {out_xyz} -O {out_sdf} 2> /dev/null', shell=True)
                 subprocess.run(f'rm -rf {out_xyz}', shell=True)
         print("\n")
