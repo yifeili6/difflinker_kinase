@@ -208,7 +208,7 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
     return_good_files = np.array(files)[np.array(lipinski_results).astype(bool)]
 
-    print(cf.on_yellow(f"MOSES retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
+    print(cf.on_yellow(f"Lipinski's Rule of 5 retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
     return return_good_smiles.tolist(), return_good_files.tolist()
     
 if __name__ == "__main__":
