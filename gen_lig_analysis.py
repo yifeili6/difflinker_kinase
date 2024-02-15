@@ -38,7 +38,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*.sdf")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
-            pred_files_ = [(filename, Chem.SDMolSupplier(filename)[0]) for filename in filenames] 
+            pred_files_ = [(filename, Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)[0]) for filename in filenames] 
             print(cf.red(f"None location: {np.where(np.array(pred_files_)[:, 1] == None)[0]}"))
             pred_files = [p[1] for p in pred_files_ if p[1] is not None] #List[MOL]
             pred_file_names = [p[0] for p in pred_files_ if p[1] is not None] #List[str]
@@ -65,7 +65,7 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
-    print(cf.on_yellow(f"PoseBuster retained {current_file_counter/file_counter*100} % valid molecules"))        
+    print(cf.on_yellow(f"PoseBuster retained {current_file_counter/total_file_counter*100} % valid molecules"))        
     # print(return_good_smiles)
     return return_good_mols, return_good_files, total_file_counter
 
