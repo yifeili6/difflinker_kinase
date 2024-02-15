@@ -31,6 +31,8 @@ warnings.simplefilter('ignore')
 def get_posebuster_stats(kinase_prefix_names: List[str]):
     return_good_mols = []
     return_good_files = []
+    total_file_counter = 0
+    current_file_counter = 0
 
     for kinase_file_prefix in kinase_prefix_names:
         try:
@@ -56,18 +58,22 @@ def get_posebuster_stats(kinase_prefix_names: List[str]):
             return_good_files.extend(good_mol_files.tolist())
             # df.drop(index=["molecule", "file"], inplace=True)
             # print(df)
+            current_file_counter += len(return_good_mols)
+            file_counter += len(pred_files_)
+
         except Exception as e:
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
+    print(on_f"PoseBuster retained {current_file_counter/file_counter*100} % valid molecules")        
     # print(return_good_smiles)
-    return return_good_mols, return_good_files
+    return return_good_mols, return_good_files, file_counter
 
 def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
                     test=None, test_scaffolds=None,
                     ptest=None, ptest_scaffolds=None,
-                    train=None, files=None):
+                    train=None, files=None, file_counter_from_posebuster=None):
                         
     assert len(gen) == len(files), "gen and files must match in length!" ##files variable is not actively used here!
                         
@@ -95,12 +101,15 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     test=test, test_scaffolds=test_scaffolds,
                     ptest=ptest, ptest_scaffolds=ptest_scaffolds,
                     train=train)
-    
+                        
+    assert metrics["Filters"] == 1.0, "Filters must be 1.0 since we already apply mole_passes_filter!"
     print(cf.on_blue("MOSES metrics"))    
     print(metrics)
+    print(f"MOSES retained {len(gen)/file_counter_from_posebuster*100} % valid molecules")        
+                        
     return gen.tolist(), files.tolist()
 
-def get_lipinski(gen: List[str], files: List[str]):
+def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster: int):
     """
     Source:
     https://gist.github.com/strets123/fdc4db6d450b66345f46
@@ -198,19 +207,21 @@ def get_lipinski(gen: List[str], files: List[str]):
 
     return_good_smiles = np.array(gen)[np.array(lipinski_results).astype(bool)]
     return_good_files = np.array(files)[np.array(lipinski_results).astype(bool)]
+
+    print(f"MOSES retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules")        
     return return_good_smiles.tolist(), return_good_files.tolist()
     
 if __name__ == "__main__":
     ###3D
-    gen, files = get_posebuster_stats(args.kinase_prefix_names) # filtration 1
+    gen, files, file_counter = get_posebuster_stats(args.kinase_prefix_names) # filtration 1
     if len(gen) !=0:
         pass
     else:
         gen = args.gen
     ###Drugness
-    gen, files = get_lipinski(gen, files) #filtration 2
+    gen, files = get_lipinski(gen, files, file_counter) #filtration 2
     ###2D
-    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest) # final filtration
+    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter) # final filtration
     print(files)
 
     ## Current as of [Feb 1st 2024]
