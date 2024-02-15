@@ -69,7 +69,7 @@ parser.add_argument('--nth_molecules', nargs="*", help='list of indices')
 
 parser.add_argument('--timeseries', action="store_true", help='save trajectory?')
 
-parser.add_argument('--kinase_names', nargs="*", type=str, required=True)
+parser.add_argument('--kinase_names', nargs="*", type=str, required=False)
 
 def read_molecule(path):
     if path.endswith('.pdb'):
