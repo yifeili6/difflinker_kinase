@@ -218,10 +218,11 @@ if __name__ == "__main__":
         pass
     else:
         gen = args.gen
+    ###Drugness
+    gen, files = get_lipinski(gen, files, file_counter) #filtration 2
     ###2D
     gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter) # final filtration
     print(files)
-    ###Drugness
-    gen, files = get_lipinski(gen, files, file_counter) #filtration 2
+
     ## Current as of [Feb 1st 2024]
     ## git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
