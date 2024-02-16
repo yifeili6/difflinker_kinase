@@ -62,7 +62,7 @@ parser.add_argument(
          '(according to the order of atoms in the input fragments file, enumeration starts with 1)'
 )
 parser.add_argument(
-    '--max_batch_size', action='store', type=int, required=False, default=64,
+    '--max_batch_size', action='store', type=int, required=False, default=32,
     help='Max batch size'
 )
 parser.add_argument('--nth_molecules', nargs="*", help='list of indices')
