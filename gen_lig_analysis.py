@@ -15,6 +15,7 @@ from rdkit.Chem import Crippen
 from rdkit.Chem import Lipinski
 from rdkit.Chem import Descriptors
 from moses.metrics.utils import mapper, mol_passes_filters
+from tqdm.auto import tqdm
 
 rdBase.DisableLog('rdApp.*')
 
@@ -35,10 +36,11 @@ def get_posebuster_stats(size_prefixes: List[str]):
     current_file_counter = 0
 
     for size_prefix in size_prefixes:
+        print(f"Size {size_prefix.strip('s')} is chosen...")
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.sdf")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
-            pred_files_ = [(filename, Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)[0]) for filename in filenames] 
+            pred_files_ = [(filename, Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)[0]) for filename in tqdm(filenames)] 
             print(cf.red(f"None location: {np.where(np.array(pred_files_)[:, 1] == None)[0]}"))
             pred_files = [p[1] for p in pred_files_ if p[1] is not None] #List[MOL]
             pred_file_names = [p[0] for p in pred_files_ if p[1] is not None] #List[str]
