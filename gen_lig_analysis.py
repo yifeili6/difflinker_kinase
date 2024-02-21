@@ -23,20 +23,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--gen", "-g", type=str, default="data_docking/result_difflinker", help="generated ligand SDF directory")
 parser.add_argument("--train", "-t", type=str, default="datasets/KLIF_train_table.csv", help="train dataset")
 parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest_table.csv", help="ValTest dataset")
-parser.add_argument("--kinase_prefix_names", "-f", nargs="*", help="kinase file names to test")
+parser.add_argument("--size_prefix", "-f", nargs="*", help="size prefiexs e.g. s11, s21")
 args = parser.parse_args()
 
 warnings.simplefilter('ignore')
 
-def get_posebuster_stats(kinase_prefix_names: List[str]):
+def get_posebuster_stats(size_prefixes: List[str]):
     return_good_mols = []
     return_good_files = []
     total_file_counter = 0
     current_file_counter = 0
 
-    for kinase_file_prefix in kinase_prefix_names:
+    for size_prefix in size_prefixes:
         try:
-            filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", kinase_file_prefix + "*.sdf")))
+            filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.sdf")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
             pred_files_ = [(filename, Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)[0]) for filename in filenames] 
             print(cf.red(f"None location: {np.where(np.array(pred_files_)[:, 1] == None)[0]}"))
@@ -213,7 +213,7 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     
 if __name__ == "__main__":
     ###3D
-    gen, files, file_counter = get_posebuster_stats(args.kinase_prefix_names) # filtration 1
+    gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
     if len(gen) !=0:
         pass
     else:
