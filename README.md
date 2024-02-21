@@ -24,7 +24,8 @@ To evaluate SMILES and PoseBust,
 git pull && python -m gen_lig_analysis --kinase_file output_0_2_KLIF_test_frag.sdf output_0_3_KLIF_test_frag.sdf
 git pull && python -m gen_lig_analysis --kinase_prefix_names 2xa4_altB_chainA_0 2xa4_altB_chainA_1 2xa4_altA_chainB_2 2xa4_altA_chainB_3 2xa4_altA_chainB_4 2xa4_altB_chainB_5 2xa4_altB_chainB_6 4rx5_altA_chainA_0 4rx5_altA_chainA_1 3c4c_chainA_0
 git pull && python -m gen_lig_analysis --kinase_prefix_names "*" # for all sdf
-[USE_BELOW] git pull && python -m gen_lig_analysis --size_prefix s11 s12 # for all sdf
+[USE_BELOW]
+git pull && python -m gen_lig_analysis --size_prefix s11 s12 # for all sdf
 
 [DEPRECATED]
 To choose kinase indices from processed KLIFS dataset with ligands,
