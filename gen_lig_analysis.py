@@ -234,7 +234,7 @@ if __name__ == "__main__":
     else:
         gen = args.gen
     ###Drugness
-    gen, files = get_lipinski(gen, files, file_counter) #filtration 2
+    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
     ###2D
     gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
     print(files)
