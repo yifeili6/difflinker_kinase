@@ -17,6 +17,8 @@ from rdkit.Chem import Descriptors
 from moses.metrics.utils import mapper, mol_passes_filters
 from tqdm.auto import tqdm
 import time
+from rdkit.Chem.rdMolDescriptors import CalcNumRotatableBonds
+import networkx
 
 rdBase.DisableLog('rdApp.*')
 
@@ -112,6 +114,7 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     test=test, test_scaffolds=test_scaffolds,
                     ptest=ptest, ptest_scaffolds=ptest_scaffolds,
                     train=train)
+
     with open(os.path.join("data_docking/result_difflinker", size_prefix, "moses.pickle"), "wb") as f:
         pickle.dump(metrics, f)
                         
@@ -225,19 +228,89 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
 
     print(cf.on_yellow(f"Lipinski's Rule of 5 retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
     return return_good_smiles.tolist(), return_good_files.tolist()
-    
-if __name__ == "__main__":
-    ###3D
-    gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
-    if len(gen) !=0:
-        pass
-    else:
-        gen = args.gen
-    ###Drugness
-    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix[0]) #filtration 2
-    ###2D
-    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
-    print(files)
 
-    ## Current as of [Feb 1st 2024]
-    ## git pull && python -m posebuster_analysis --filenames output_0_2_KLIF_test_frag_.xyz output_0_3_KLIF_test_frag_.xyz
+def bonds_and_rings(gen: List[str]):
+    def rotatable_bonds(gen):
+        rot_bonds: List[int] = [CalcNumRotatableBonds(Chem.MolFromSmiles(g), True) for g in gen]
+        return rot_bonds
+
+    def symm_SSSR(gen):
+        rings: List[List[tuple]] = [frozenset(GetSymmSSSR(Chem.MolFromSmiles(g))) for g in gen]
+        return rings
+
+    def fused_rings_SSSR(gen: List[str], Rings_list: List[List[tuple]]):
+        assert len(gen) == len(Rings_list), "SMILES and Rings_list from SMILES must match"
+        fused_list = []
+        
+        for Rings in Rings_list:
+            G = networkx.Graph()
+    
+            L = len(Rings)
+            for i, j in ((i, j) for i in range(L) for j in range(i + 1, L)):
+                if len(Rings[i] & Rings[j]) >= 2:
+                    G.add_edge(i, j)
+            fused_rings = [
+                 frozenset(j for i in ring_ids for j in Rings[i])
+                for ring_ids in networkx.connected_components(G)
+                ]
+            fused_list.append(fused_rings)
+        return fused_list
+        
+    def hetero_rings_SSSR(gen: List[str], Rings_list: List[List[tuple]]):
+        assert len(gen) == len(Rings_list), "SMILES and Rings_list from SMILES must match"
+        
+        num_heteros = []
+        for i, g in enumerate(gen):
+            mol = Chem.MolFromSmiles(g) if g is not None else continue
+            heteros_tracking = []
+            Rings = Rings_list[i]
+            for R in Rings:
+                has_hetero = any(mol.GetAtomWithIdx(i).GetAtomicNum() != 6 for i in R)
+                heteros_tracking.append(has_hetero)
+            num_heteros.append(sum(heteros_tracking))
+        return num_heteros
+            
+    def aromatic_rings_SSSR(gen: List[str], Rings_list: List[List[tuple]]):
+        assert len(gen) == len(Rings_list), "SMILES and Rings_list from SMILES must match"
+        
+        num_aromatics = []
+        for i, g in enumerate(gen):
+            mol = Chem.MolFromSmiles(g) if g is not None else continue
+            aromatics_tracking = []
+            Rings = Rings_list[i]
+            for R in Rings:
+                is_arom = all(mol.GetAtomWithIdx(i).GetIsAromatic() for i in R)
+                aromatics_tracking.append(is_arom)
+            num_aromatics.append(sum(aromatics_tracking))
+        return num_aromatics
+
+    rot_bonds = rotatable_bonds(gen)
+    rings = symm_SSSR(gen)
+    fused_rings = fused_rings_SSSR(gen, rings)
+    num_hetero_rings = hetero_rings_SSSR(gen, rings)
+    num_aromatic_rings = aromatic_rings_SSSR(gen, rings)
+    num_rings = list(map(lambda inp: len(inp), rings ))
+    num_fused_rings = list(map(lambda inp: len(inp), fused_rings ))
+    
+    return rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings
+    
+    
+
+if __name__ == "__main__":
+    ###Current as of Feb 22, 2024
+    ###3D
+    # gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
+    # if len(gen) !=0:
+    #     pass
+    # else:
+    #     gen = args.gen
+    # ###Drugness
+    # gen, files = get_lipinski(gen, files, file_counter, args.size_prefix[0]) #filtration 2
+    # ###2D
+    # gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
+    # print(files)
+
+    gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "CCCCCC", "CCNCCC"]
+    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen)
+    for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
+        print(prop)
