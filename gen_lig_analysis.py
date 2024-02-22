@@ -14,6 +14,7 @@ import numpy as np
 from rdkit.Chem import Crippen
 from rdkit.Chem import Lipinski
 from rdkit.Chem import Descriptors
+import pickle
 from moses.metrics.utils import mapper, mol_passes_filters
 from tqdm.auto import tqdm
 import time
