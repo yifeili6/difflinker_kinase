@@ -262,7 +262,7 @@ def bonds_and_rings(gen: List[str]):
         
         num_heteros = []
         for i, g in enumerate(gen):
-            mol = Chem.MolFromSmiles(g) if g is not None else continue
+            mol = Chem.MolFromSmiles(g)
             heteros_tracking = []
             Rings = Rings_list[i]
             for R in Rings:
@@ -276,7 +276,7 @@ def bonds_and_rings(gen: List[str]):
         
         num_aromatics = []
         for i, g in enumerate(gen):
-            mol = Chem.MolFromSmiles(g) if g is not None else continue
+            mol = Chem.MolFromSmiles(g)
             aromatics_tracking = []
             Rings = Rings_list[i]
             for R in Rings:
