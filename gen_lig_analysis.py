@@ -247,11 +247,11 @@ def bonds_and_rings(gen: List[str]):
             G = networkx.Graph()
     
             L = len(Rings)
-            print(len(Rings))
+            # print(len(Rings))
             for i, j in ((i, j) for i in range(L) for j in range(i + 1, L)):
-                # if len(Rings[i] & Rings[j]) >= 2:
-                G.add_edge(i, j)
-            print(G.number_of_nodes())
+                if len({_ for _ in Rings[i]} & {_ for _ in Rings[j]}) >= 2:
+                    G.add_edge(i, j)
+            # print(G.number_of_nodes())
             fused_rings = [
                  list(frozenset(j for i in ring_ids for j in Rings[i]))
                 for ring_ids in networkx.connected_components(G)
