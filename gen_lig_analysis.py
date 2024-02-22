@@ -230,7 +230,7 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     print(cf.on_yellow(f"Lipinski's Rule of 5 retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
     return return_good_smiles.tolist(), return_good_files.tolist()
 
-def bonds_and_rings(gen: List[str]):
+def bonds_and_rings(gen: List[str], size_prefix: str):
     def rotatable_bonds(gen):
         rot_bonds: List[int] = [CalcNumRotatableBonds(Chem.MolFromSmiles(g), True) for g in gen]
         return rot_bonds
@@ -294,6 +294,11 @@ def bonds_and_rings(gen: List[str]):
     num_aromatic_rings = aromatic_rings_SSSR(gen, rings)
     num_rings = list(map(lambda inp: len(inp), rings ))
     num_fused_rings = list(map(lambda inp: len(inp), fused_rings ))
+
+    rings_results = np.stack([rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings], axis=0)
+    with open(os.path.join("data_docking/result_difflinker", size_prefix, "rings.pickle"), "wb") as f:
+        pickle.dump(rings_results, f)
+    print(rings_results)
     
     return rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings
     
@@ -313,6 +318,6 @@ if __name__ == "__main__":
     # gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
     # print(files)
     gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
-    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen)
+    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix[0])
     for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
         print(prop)
