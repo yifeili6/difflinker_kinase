@@ -37,6 +37,7 @@ def get_posebuster_stats(size_prefixes: List[str]):
 
     for size_prefix in size_prefixes:
         print(f"Size {size_prefix.strip('s')} is chosen...")
+        s = time.time()
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.sdf")))
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
@@ -50,7 +51,7 @@ def get_posebuster_stats(size_prefixes: List[str]):
             # print(df.columns)
             # print(df.values)
             Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
-            print(cf.on_green(f"{kinase_file_prefix} is pose busted"))
+            print(cf.on_green(f"s{size_prefix} is pose busted"))
             Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
 
@@ -67,6 +68,9 @@ def get_posebuster_stats(size_prefixes: List[str]):
             # raise RuntimeError from e #cannot continue if raising errors!
             print(cf.on_red(f"Something happend... skipping!!!\n {e}"))
             continue
+        e = time.time()
+        print("Size", size_prefix.strip("s"), " : ", e-s, "seconds taken!")
+
     print(cf.on_yellow(f"PoseBuster retained {current_file_counter/total_file_counter*100} % valid molecules"))        
     # print(return_good_smiles)
     return return_good_mols, return_good_files, total_file_counter
