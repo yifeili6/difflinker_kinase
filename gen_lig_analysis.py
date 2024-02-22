@@ -236,7 +236,7 @@ def bonds_and_rings(gen: List[str]):
         return rot_bonds
 
     def symm_SSSR(gen):
-        rings: List[List[tuple]] = [frozenset(GetSymmSSSR(Chem.MolFromSmiles(g))) for g in gen]
+        rings: List[List[tuple]] = [frozenset(Chem.GetSymmSSSR(Chem.MolFromSmiles(g))) for g in gen]
         return rings
 
     def fused_rings_SSSR(gen: List[str], Rings_list: List[List[tuple]]):
