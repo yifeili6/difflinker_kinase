@@ -43,7 +43,7 @@ def get_posebuster_stats(size_prefixes: List[str]):
         s = time.time()
         try:
             filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.sdf")))
-            filenames = list(filter(lambda inp: "5lqf" in inp, filenames)) ###WIP: Will delete soon
+            # filenames = list(filter(lambda inp: "5lqf" in inp, filenames)) ###WIP: Will delete soon
             # pred_files = [Chem.MolFromXYZFile(os.path.join("data_docking/result_difflinker", filename)) if filename.endswith("xyz") else Chem.SDMolSupplier(os.path.join("data_docking/result_difflinker", filename))[0] for filename in filenames] 
             pred_files_ = [(filename, Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)[0]) for filename in tqdm(filenames)] 
             print(cf.red(f"None location: {np.where(np.array(pred_files_)[:, 1] == None)[0]}"))
