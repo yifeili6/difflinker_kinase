@@ -36,6 +36,8 @@ def get_posebuster_stats(size_prefixes: List[str]):
     total_file_counter = 0
     current_file_counter = 0
 
+    assert size_prefixes.__len__() == 1, "for paper's sake, let's use only one size evaluation!"
+    
     for size_prefix in size_prefixes:
         print(f"Size {size_prefix.strip('s')} is chosen...")
         s = time.time()
@@ -55,6 +57,7 @@ def get_posebuster_stats(size_prefixes: List[str]):
             print(cf.on_green(f"s{size_prefix} is pose busted"))
             Df["Total Pass"] = Df.all(axis=1)
             print("Result:\n", Df)
+            Df.to_pickle(os.path.join("data_docking/result_difflinker", size_prefix, "posebuster.pickle"))
 
             good_mols = np.array(pred_files)[Df.values[:,-1].astype(bool)]
             good_mol_files = np.array(pred_file_names)[Df.values[:,-1].astype(bool)]
@@ -80,7 +83,7 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     device='cuda', batch_size=512, pool=None,
                     test=None, test_scaffolds=None,
                     ptest=None, ptest_scaffolds=None,
-                    train=None, files=None, file_counter_from_posebuster=None):
+                    train=None, files=None, file_counter_from_posebuster=None, size_prefix=None):
                         
     assert len(gen) == len(files), "gen and files must match in length!" ##files variable is not actively used here!
                         
@@ -108,6 +111,8 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                     test=test, test_scaffolds=test_scaffolds,
                     ptest=ptest, ptest_scaffolds=ptest_scaffolds,
                     train=train)
+    with open(os.path.join("data_docking/result_difflinker", size_prefix, "moses.pickle"), "wb") as f:
+        pickle.dump(metrics, f)
                         
     assert metrics["Filters"] == 1.0, "Filters must be 1.0 since we already apply mole_passes_filter!"
     print(cf.on_blue("MOSES metrics"))    
@@ -116,7 +121,7 @@ def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                         
     return gen.tolist(), files.tolist()
 
-def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster: int):
+def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster: int, size_prefix: str):
     """
     Source:
     https://gist.github.com/strets123/fdc4db6d450b66345f46
@@ -208,7 +213,9 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     assert len(gen) == len(files), "gen and files must match in length!"
 
     lipinski_results = [lipinski_pass(smiles) for smiles in gen]
-    
+    with open(os.path.join("data_docking/result_difflinker", size_prefix, "lipinski.pickle"), "wb") as f:
+        pickle.dump(lipinski_results, f)
+        
     print(cf.yellow("Lipinski Rule of 5"))
     print(np.mean(lipinski_results))
 
@@ -228,7 +235,7 @@ if __name__ == "__main__":
     ###Drugness
     gen, files = get_lipinski(gen, files, file_counter) #filtration 2
     ###2D
-    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter) # final filtration
+    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
     print(files)
 
     ## Current as of [Feb 1st 2024]
