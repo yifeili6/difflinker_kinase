@@ -236,7 +236,7 @@ def bonds_and_rings(gen: List[str]):
         return rot_bonds
 
     def symm_SSSR(gen):
-        rings: List[List[tuple]] = [frozenset(Chem.GetSymmSSSR(Chem.MolFromSmiles(g))) for g in gen]
+        rings: List[List[tuple]] = [list(frozenset(Chem.GetSymmSSSR(Chem.MolFromSmiles(g)))) for g in gen]
         return rings
 
     def fused_rings_SSSR(gen: List[str], Rings_list: List[List[tuple]]):
@@ -252,7 +252,7 @@ def bonds_and_rings(gen: List[str]):
                 if len(Rings[i] & Rings[j]) >= 2:
                     G.add_edge(i, j)
             fused_rings = [
-                 frozenset(j for i in ring_ids for j in Rings[i])
+                 list(frozenset(j for i in ring_ids for j in Rings[i]))
                 for ring_ids in networkx.connected_components(G)
                 ]
             fused_list.append(fused_rings)
