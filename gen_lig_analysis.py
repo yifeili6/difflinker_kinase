@@ -247,7 +247,7 @@ def bonds_and_rings(gen: List[str]):
             G = networkx.Graph()
     
             L = len(Rings)
-            print(Rings)
+            print(Rings[0])
             for i, j in ((i, j) for i in range(L) for j in range(i + 1, L)):
                 if len(Rings[i] & Rings[j]) >= 2:
                     G.add_edge(i, j)
