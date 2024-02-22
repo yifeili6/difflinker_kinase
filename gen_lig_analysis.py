@@ -314,6 +314,6 @@ if __name__ == "__main__":
     gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2"]
     print([_ for _ in [list(frozenset(Chem.GetSymmSSSR(Chem.MolFromSmiles(g)))) for g in gen][-1]])
 
-    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen)
-    for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
-        print(prop)
+    # rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen)
+    # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
+    #     print(prop)
