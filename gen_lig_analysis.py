@@ -309,17 +309,17 @@ def bonds_and_rings(gen: List[str], size_prefix: str):
 if __name__ == "__main__":
     ###Current as of Feb 22, 2024
     ###3D
-    # gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
-    # if len(gen) !=0:
-    #     pass
-    # else:
-    #     gen = args.gen
-    # ###Drugness
-    # gen, files = get_lipinski(gen, files, file_counter, args.size_prefix[0]) #filtration 2
-    # ###2D
-    # gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
+    gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
+    if len(gen) !=0:
+        pass
+    else:
+        gen = args.gen
+    ###Drugness
+    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix[0]) #filtration 2
+    ###2D
+    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
     # print(files)
-    gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
+    # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
     rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix[0])
     # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
     #     print(prop)
