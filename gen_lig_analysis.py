@@ -28,7 +28,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--gen", "-g", type=str, default="data_docking/result_difflinker", help="generated ligand SDF directory")
 parser.add_argument("--train", "-t", type=str, default="datasets/KLIF_train_table.csv", help="train dataset")
 parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest_table.csv", help="ValTest dataset")
-parser.add_argument("--size_prefix", "-f", nargs="*", help="size prefiexs e.g. s11, s21")
+parser.add_argument("--size_prefix", "-pf", type=str, help="1 size prefix e.g. s11")
+parser.add_argument("--size_prefixes", "-f", nargs="*", help="size prefixes e.g. s11, s21")
 args = parser.parse_args()
 
 warnings.simplefilter('ignore')
@@ -48,6 +49,20 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
 
     return indices, info
 
+def get_complete_stats(size_prefixes: List[str]):
+    for size_prefix in size_prefixes:
+        filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.pickle")))
+        for f in filenames:
+            data = pd.read_pickle(f):
+            if "posebuster" in os.path.basename(f):
+                ...
+            if "lipinski" in os.path.basename(f):
+                ...            
+            if "moses" in os.path.basename(f):
+                ...
+            if "rings" in os.path.basename(f):
+                ...
+                
 def get_posebuster_stats(size_prefixes: List[str]):
     return_good_mols = []
     return_good_files = []
@@ -324,17 +339,17 @@ def bonds_and_rings(gen: List[str], size_prefix: str):
 if __name__ == "__main__":
     ###Current as of Feb 22, 2024
     ###3D
-    gen, files, file_counter = get_posebuster_stats(args.size_prefix) # filtration 1
+    gen, files, file_counter = get_posebuster_stats([args.size_prefix]) # filtration 1
     if len(gen) !=0:
         pass
     else:
         gen = args.gen
     ###Drugness
-    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix[0]) #filtration 2
+    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
     ###2D
-    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix[0]) # final filtration
+    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
     # print(files)
     # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
-    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix[0])
+    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix)
     # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
     #     print(prop)
