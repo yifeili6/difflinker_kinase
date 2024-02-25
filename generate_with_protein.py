@@ -226,11 +226,11 @@ def main(input_path, protein_path, backbone_atoms_only, model,
                 protein_file = "_".join(molecule_name.split("_")[:-1]) + "_protein.pdb"
                 protein_file = os.path.join(protein_path, protein_file) #absolute dir file
                 molecules_to_gen.append([kinase, int(frag_index), protein_file, int(anchor_1), int(anchor_2), int(_linker_size), order])
-        molecules_to_gen = np.array(molecules_to_gen)
+        molecules_to_gen = np.array(molecules_to_gen) #ValTest_table csv file from fragmentation (i.e., selected kinases! No longer all the fragments!)
         print(molecules_to_gen)
 
     try:
-        molecules = read_molecule(input_path)
+        molecules = read_molecule(input_path) #ValTest_fraf sdf file from fragmentation (i.e., all the fragments)!
         # print(nth_molecules)
         nth_molecules = nth_molecules if molecules_to_gen is None else molecules_to_gen[:, 1]
         if nth_molecules is not None:
