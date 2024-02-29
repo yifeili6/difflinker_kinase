@@ -19,7 +19,7 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     ligU.add_TopologyAttr("chainID", ["L"] * len(ligU.atoms))
   
     mergeU = mda.Merge(protU.atoms, ligU.atoms)
-    mergeU.add_TopologyAttr("resid", np.concatenate([protU.residues.resids, protU.residues.resids[-1] + 1]))
+    mergeU.add_TopologyAttr("resid", np.concatenate([protU.residues.resids, protU.residues.resids[-1:] + 1]))
     mergeU.add_TopologyAttr("resname", np.concatenate([protU.residues.resnames, ligU.residues.resnames]))
     mergeU.add_TopologyAttr("chainID", np.concatenate([protU.atoms.chainIDs, ligU.atoms.chainIDs]))
 
