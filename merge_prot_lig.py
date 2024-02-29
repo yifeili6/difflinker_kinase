@@ -23,6 +23,13 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     mergeU.add_TopologyAttr("resname", np.concatenate([protU.residues.resnames, ligU.residues.resnames]))
     mergeU.add_TopologyAttr("chainID", np.concatenate([protU.atoms.chainIDs, ligU.atoms.chainIDs]))
 
+    prot_segment = mergeU.add_Segment(segid='PRO')
+    lig_segment = mergeU.add_Segment(segid='LIG')
+    prot_atoms = mergeU.select_atoms(f'resid {mergeU.residues.resids[0]}:{mergeU.residues.resids[-2]}')
+    prot_atoms.residues.segments = prot_segment
+    lig_atoms = mergeU.select_atoms(f'resid {mergeU.residues.resids[-1]}')
+    lig_atoms.residues.segments = lig_segment
+    
     directory = args.merged_pdb_dir
     path_and_name = os.path.join(directory, "prot_lig.pdb")
     
