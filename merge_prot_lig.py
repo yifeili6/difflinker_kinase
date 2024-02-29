@@ -16,7 +16,7 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     mol = Chem.SDMolSupplier(lig, removeHs=False, sanitize=True)[0]
     ligU = mda.Universe(mol)
     ligU.add_TopologyAttr("resname", ["LIG"])
-    ligU.add_TopologyAttr("chainID", ["L"] * len(lig.atoms))
+    ligU.add_TopologyAttr("chainID", ["L"] * len(ligU.atoms))
   
     mergeU = mda.Merge(protU.atoms, ligU.atoms)
     mergeU.add_TopologyAttr("resname", np.concatenate([protU.atoms.resnames, ligU.atoms.resnames]))
