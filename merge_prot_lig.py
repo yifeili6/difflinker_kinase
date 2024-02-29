@@ -30,3 +30,4 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
 if __name__ == "__main__":
     args.merged_pdb_dir = "."
     load_prot_lig(args, "data_docking/complex/processed_klif_wl/proteins/1yol_chainA_protein.pdb", "data_docking/result_difflinker/s8/1yol_chainA_2_s8_12_KLIF_ValTest_frag.sdf")
+    # git pull && python -m merge_prot_lig --merged_pdb_dir [directory_to_save]
