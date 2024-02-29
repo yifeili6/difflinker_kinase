@@ -7,7 +7,7 @@ import os, sys, pathlib, shutil
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--merged_pdb_dir", type=str, default=None)
-args = parser.parser_args()
+args = parser.parse_args()
 
 def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     assert prot.endswith(".pdb") and lig.endswith(".sdf")
