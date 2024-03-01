@@ -80,7 +80,7 @@ class Analyse_generation(object):
         total_file_counter = 0
         current_file_counter = 0
     
-        filenames = os.path.join("data_docking/datasets", "KLIF_test_mol.sdf")
+        filename = os.path.join("data_docking/datasets", "KLIF_test_mol.sdf")
         pred_files_ = [m for m in Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)] 
         print(cf.red(f"None location: {np.where(np.array(pred_files_) == None)[0]}"))
         pred_files = [p for p in pred_files_ if p is not None] #List[MOL]
