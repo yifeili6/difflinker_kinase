@@ -385,7 +385,6 @@ class Analyse_generation(object):
     
         passes = mapper(n_jobs)(mol_passes_filters, gen)
         gen = np.array(gen)[np.array(passes).astype(bool)]
-        files = np.array(files)[np.array(passes).astype(bool)]
     
         metrics = moses.get_all_metrics(gen=gen, k=k, n_jobs=n_jobs,
                         device=device, batch_size=batch_size, pool=pool,
