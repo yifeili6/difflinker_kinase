@@ -33,7 +33,7 @@ parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest
 parser.add_argument("--size_prefix", "-pf", type=str, help="1 size prefix e.g. s11")
 parser.add_argument("--size_prefixes", "-f", nargs="*", help="size prefixes e.g. s11, s21")
 parser.add_argument("--run_analysis", "-ra", action="store_true", help="generting pickles!")
-parser.add_argument("--turn_off_run_test", "-ra", action="store_false", help="for ValTest_mol.sdf!")
+parser.add_argument("--turn_off_run_test", "-to", action="store_false", help="for ValTest_mol.sdf!")
 parser.add_argument("--merged_pdb_dir", "-mpdb", type=str, help="merge 1 PDB and 1 SDF")
 
 args = parser.parse_args()
