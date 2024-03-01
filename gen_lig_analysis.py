@@ -375,7 +375,7 @@ def collate_fn():
     DF_rings_dist = pd.concat(DF_rings_dist, axis=0, ignore_index=True) #(nmols, 5) ;; for distribution!
     DF_lipinski, DF_posebuster, DF_moses, DF_rings = list(map(lambda inp: pd.concat(inp, axis=0, ignore_index=True), [DF_lipinski, DF_posebuster, DF_moses, DF_rings] ))
     DF = pd.concat( [DF_lipinski, DF_posebuster, DF_moses, DF_rings], axis=1 ) #num_size, columns
-    DF.rename(mapper=lambda inp: f"size {inp + 8}", axis='index', inplace=True)
+    DF.rename(mapper=lambda inp: f"size_{inp + 8}", axis='index', inplace=True)
     
     return DF, DF_rings_dist
     
