@@ -6,7 +6,7 @@ import argparse
 import os, sys, pathlib, shutil
 import warnings
 
-warngins.simplefilter("ignore")
+warnings.simplefilter("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--merged_pdb_dir", type=str, default=None)
