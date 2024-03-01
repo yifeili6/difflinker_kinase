@@ -20,7 +20,7 @@ from tqdm.auto import tqdm
 import time
 from rdkit.Chem.rdMolDescriptors import CalcNumRotatableBonds
 import networkx
-from merge_prot_lig import load_prot_lig #load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str)
+# from merge_prot_lig import load_prot_lig #load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str)
 
 rdBase.DisableLog('rdApp.*')
 
