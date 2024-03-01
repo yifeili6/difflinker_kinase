@@ -90,7 +90,6 @@ class Analyse_generation(object):
         # print(df.columns)
         # print(df.values)
         Df = pd.DataFrame(data=df.values, columns=df.columns.tolist())
-        print(cf.on_green(f"s{size_prefix} is pose busted"))
         Df["Total Pass"] = Df.all(axis=1)
         print("Result:\n", Df)
         Df.to_pickle(os.path.join("datasets", "posebuster.pickle"))
