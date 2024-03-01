@@ -712,7 +712,7 @@ if __name__ == "__main__":
             gen = Analyse_generation.get_lipinski_for_test(gen, file_counter) #filtration 2
             ###2D
             gen = Analyse_generation.get_moses_stats_for_test(gen=gen,  train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter) # final filtration
-            rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen)
+            rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = Analyse_generation.bonds_and_rings_for_test(gen)
             
     else:
         if not args.turn_off_run_test:
