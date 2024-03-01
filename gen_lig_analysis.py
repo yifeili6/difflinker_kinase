@@ -400,7 +400,7 @@ if __name__ == "__main__":
         #     print(prop)
     else:
         DF, DF_rings_dist = collate_fn()
-        print(DF.columns)
+        print(DF.loc[:, ["IntDiv", "IntDiv2"]])
         print(DF)
         print(DF_rings_dist.groupby("size").mean())
         
