@@ -447,9 +447,7 @@ class Analyse_generation(object):
         return gen.tolist(), files.tolist()
                             
     @staticmethod
-    def bonds_and_rings_for_test(gen: List[str]):
-        assert len(gen) == len(files), "gen and files must have the same length"
-        
+    def bonds_and_rings_for_test(gen: List[str]):        
         def rotatable_bonds(gen):
             rot_bonds: List[int] = [CalcNumRotatableBonds(Chem.MolFromSmiles(g), True) for g in gen]
             return rot_bonds
