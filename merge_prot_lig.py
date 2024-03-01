@@ -4,6 +4,9 @@ from rdkit.Chem import AllChem
 import numpy as np
 import argparse
 import os, sys, pathlib, shutil
+import warnings
+
+warngins.simplefilter("ignore")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--merged_pdb_dir", type=str, default=None)
