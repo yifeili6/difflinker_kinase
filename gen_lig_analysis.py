@@ -400,6 +400,6 @@ if __name__ == "__main__":
         #     print(prop)
     else:
         DF, DF_rings_dist = collate_fn()
-        print(DF_rings_dist.groupby("size"))
+        print(DF_rings_dist.groupby("size").mean())
         
 
