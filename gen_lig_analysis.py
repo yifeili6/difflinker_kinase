@@ -30,8 +30,10 @@ parser.add_argument("--gen", "-g", type=str, default="data_docking/result_diffli
 parser.add_argument("--train", "-t", type=str, default="datasets/KLIF_train_table.csv", help="train dataset")
 parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest_table.csv", help="ValTest dataset")
 parser.add_argument("--size_prefix", "-pf", type=str, help="1 size prefix e.g. s11")
-parser.add_argument("--merged_pdb_dir", "-pf", type=str, help="1 size prefix e.g. s11")
 parser.add_argument("--size_prefixes", "-f", nargs="*", help="size prefixes e.g. s11, s21")
+parser.add_argument("--run_analysis", "-ra", action="store_true", help="generting pickles!")
+parser.add_argument("--merged_pdb_dir", "-mpdb", type=str, help="merge 1 PDB and 1 SDF")
+
 args = parser.parse_args()
 
 warnings.simplefilter('ignore')
@@ -338,10 +340,44 @@ def bonds_and_rings(gen: List[str], size_prefix: str):
 
 def collate_fn():
     # lipinski.pickle, posebuster.pickle, moses.pickle, rings.pickle
+    all_passes = []
+    for snum in range(8, 14, 1):
+        all_passes.append(all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("lipinski.pickle", "posebuster.pickle", "moses.pickle", "rings.pickle")]))
+    assert all(all_passes), "every file must exist!"
+    
+    DF_posebuster = []
+    DF_lipinski = []
+    DF_moses = []
+    DF_rings_dist = []
+    DF_rings = []
 
     for snum in range(8, 14, 1):
-        assert all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("lipinski.pickle", "posebuster.pickle", "moses.pickle", "rings.pickle")])
+        one_file = "posebuster.pickle" #summarize
+        df = pd.read_pickle(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file))
+        DF_posebuster.append(pd.DataFrame([df["Total Pass"].sum() / len(df)], columns=["posebuster"]))
+        
+        one_file = "lipinski.pickle" #summarize
+        df = pd.read_pickle(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file))
+        DF_lipinski.append(pd.DataFrame([sum(df) / len(df)], columns=["lipinski"])) #--> List[float]
+        
+        one_file = "moses.pickle" #use original
+        df = pd.read_pickle(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file))
+        df = pd.DataFrame.from_records([df])
+        DF_moses.append(df)
+        
+        one_file = "rings.pickle" #get distribution & Summary
+        df = pd.read_pickle(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file))
+        df = pd.DataFrame(df.T, columns=["rot_bonds", "num_rings", "num_fused_rings", "num_hetero_rings", "num_aromatic_rings"])
+        DF_rings_dist.append(df)
+        DF_rings.append(pd.DataFrame(df.mean(axis=0).values.reshape(1, -1), columns=df.columns))
 
+    DF_rings_dist = pd.concat(DF_rings_dist, axis=0, ignore_index=True) #(nmols, 5) ;; for distribution!
+    DF_lipinski, DF_posebuster, DF_moses, DF_rings = list(map(lambda inp: pd.concat(inp, axis=0, ignore_index=True), [DF_lipinski, DF_posebuster, DF_moses, DF_rings] ))
+    DF = pd.concat( [DF_lipinski, DF_posebuster, DF_moses, DF_rings], axis=1 ) #num_size, columns
+
+    return DF, DF_rings_dist
+    
+        
 if __name__ == "__main__":
     ###Current as of Feb 29th, 2024
     if args.run_analysis:
@@ -361,6 +397,6 @@ if __name__ == "__main__":
         # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
         #     print(prop)
     else:
-        ...
+        DF, DF_rings_dist = collate_fn()
         
 
