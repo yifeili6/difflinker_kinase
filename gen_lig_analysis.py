@@ -264,7 +264,9 @@ def get_lipinski(gen: List[str], files: List[str], file_counter_from_posebuster:
     print(cf.on_yellow(f"Lipinski's Rule of 5 retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
     return return_good_smiles.tolist(), return_good_files.tolist()
 
-def bonds_and_rings(gen: List[str], size_prefix: str):
+def bonds_and_rings(gen: List[str], files: List[str], size_prefix: str):
+    assert len(gen) == len(files), "gen and files must have the same length"
+    
     def rotatable_bonds(gen):
         rot_bonds: List[int] = [CalcNumRotatableBonds(Chem.MolFromSmiles(g), True) for g in gen]
         return rot_bonds
@@ -334,8 +336,12 @@ def bonds_and_rings(gen: List[str], size_prefix: str):
     rings_results = np.stack([rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings], axis=0)
     with open(os.path.join("data_docking/result_difflinker", size_prefix, "rings.pickle"), "wb") as f:
         pickle.dump(rings_results, f)
-    print(rings_results)
-    
+
+    gen = np.array(gen).reshape(-1,)
+    files = np.array(files).reshape(-1,)
+    gen_and_files = np.stack([gen, files], axis=1)
+    with open(os.path.join("data_docking/result_difflinker", size_prefix, "gen_and_files.pickle"), "wb") as f:
+        pickle.dump(gen_and_files, f)
     return rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings
 
 def collate_fn():
@@ -384,18 +390,19 @@ if __name__ == "__main__":
     ###Current as of Feb 29th, 2024
     if args.run_analysis:
         ###3D
-        gen, files, file_counter = get_posebuster_stats([args.size_prefix]) # filtration 1
-        if len(gen) !=0:
-            pass
-        else:
-            gen = args.gen
-        ###Drugness
-        gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
-        ###2D
-        gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
+        # gen, files, file_counter = get_posebuster_stats([args.size_prefix]) # filtration 1
+        # if len(gen) !=0:
+        #     pass
+        # else:
+        #     gen = args.gen
+        # ###Drugness
+        # gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
+        # ###2D
+        # gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
         # print(files)
-        # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
-        rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix)
+        gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
+        files = np.arange(len(gen))
+        rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, files, args.size_prefix)
         # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
         #     print(prop)
     else:
