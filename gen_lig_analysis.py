@@ -20,6 +20,7 @@ from tqdm.auto import tqdm
 import time
 from rdkit.Chem.rdMolDescriptors import CalcNumRotatableBonds
 import networkx
+from merge_prot_lig import load_prot_lig #load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str)
 
 rdBase.DisableLog('rdApp.*')
 
@@ -29,6 +30,7 @@ parser.add_argument("--gen", "-g", type=str, default="data_docking/result_diffli
 parser.add_argument("--train", "-t", type=str, default="datasets/KLIF_train_table.csv", help="train dataset")
 parser.add_argument("--valtest", "-vt", type=str, default="datasets/KLIF_ValTest_table.csv", help="ValTest dataset")
 parser.add_argument("--size_prefix", "-pf", type=str, help="1 size prefix e.g. s11")
+parser.add_argument("--merged_pdb_dir", "-pf", type=str, help="1 size prefix e.g. s11")
 parser.add_argument("--size_prefixes", "-f", nargs="*", help="size prefixes e.g. s11, s21")
 args = parser.parse_args()
 
@@ -333,23 +335,32 @@ def bonds_and_rings(gen: List[str], size_prefix: str):
     print(rings_results)
     
     return rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings
-    
-    
+
+def collate_fn():
+    # lipinski.pickle, posebuster.pickle, moses.pickle, rings.pickle
+
+    for snum in range(8, 14, 1):
+        assert all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("lipinski.pickle", "posebuster.pickle", "moses.pickle", "rings.pickle")])
 
 if __name__ == "__main__":
-    ###Current as of Feb 22, 2024
-    ###3D
-    gen, files, file_counter = get_posebuster_stats([args.size_prefix]) # filtration 1
-    if len(gen) !=0:
-        pass
+    ###Current as of Feb 29th, 2024
+    if args.run_analysis:
+        ###3D
+        gen, files, file_counter = get_posebuster_stats([args.size_prefix]) # filtration 1
+        if len(gen) !=0:
+            pass
+        else:
+            gen = args.gen
+        ###Drugness
+        gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
+        ###2D
+        gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
+        # print(files)
+        # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
+        rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix)
+        # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
+        #     print(prop)
     else:
-        gen = args.gen
-    ###Drugness
-    gen, files = get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
-    ###2D
-    gen, files = get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
-    # print(files)
-    # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
-    rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, args.size_prefix)
-    # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
-    #     print(prop)
+        ...
+        
+
