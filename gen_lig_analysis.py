@@ -80,7 +80,7 @@ class Analyse_generation(object):
         total_file_counter = 0
         current_file_counter = 0
     
-        filename = os.path.join("data_docking/datasets", "KLIF_test_mol.sdf")
+        filename = os.path.join("datasets", "KLIF_test_mol.sdf")
         pred_files_ = [m for m in Chem.SDMolSupplier(filename, sanitize=False, removeHs=True)] 
         print(cf.red(f"None location: {np.where(np.array(pred_files_) == None)[0]}"))
         pred_files = [p for p in pred_files_ if p is not None] #List[MOL]
@@ -93,7 +93,7 @@ class Analyse_generation(object):
         print(cf.on_green(f"s{size_prefix} is pose busted"))
         Df["Total Pass"] = Df.all(axis=1)
         print("Result:\n", Df)
-        Df.to_pickle(os.path.join("data_docking/datasets", "posebuster.pickle"))
+        Df.to_pickle(os.path.join("datasets", "posebuster.pickle"))
     
         good_mols = np.array(pred_files)[Df.values[:,-1].astype(bool)]
         return_good_mols.extend(good_mols.tolist())
@@ -246,7 +246,7 @@ class Analyse_generation(object):
             gen: List[str] = [Chem.MolToSmiles(g) for g in gen if g is not None]
     
         lipinski_results = [lipinski_pass(smiles) for smiles in gen]
-        with open(os.path.join("data_docking/datasets", "lipinski.pickle"), "wb") as f:
+        with open(os.path.join("datasets", "lipinski.pickle"), "wb") as f:
             pickle.dump(lipinski_results, f)
             
         print(cf.yellow("Lipinski Rule of 5"))
@@ -394,7 +394,7 @@ class Analyse_generation(object):
                         ptest=ptest, ptest_scaffolds=ptest_scaffolds,
                         train=train)
     
-        with open(os.path.join("data_docking/datasets", "moses.pickle"), "wb") as f:
+        with open(os.path.join("datasets", "moses.pickle"), "wb") as f:
             pickle.dump(metrics, f)
                             
         assert metrics["Filters"] == 1.0, "Filters must be 1.0 since we already apply mole_passes_filter!"
@@ -519,11 +519,11 @@ class Analyse_generation(object):
         num_fused_rings = list(map(lambda inp: len(inp), fused_rings ))
     
         rings_results = np.stack([rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings], axis=0)
-        with open(os.path.join("data_docking/datasets", "rings.pickle"), "wb") as f:
+        with open(os.path.join("datasets", "rings.pickle"), "wb") as f:
             pickle.dump(rings_results, f)
     
         gen = np.array(gen).reshape(-1,)
-        with open(os.path.join("data_docking/datasets", "gen_and_files.pickle"), "wb") as f:
+        with open(os.path.join("datasets", "gen_and_files.pickle"), "wb") as f:
             pickle.dump(gen, f)
         return rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings
         
@@ -612,7 +612,7 @@ class Analyse_generation(object):
     def collate_fn_for_test():
         # lipinski.pickle, posebuster.pickle, moses.pickle, rings.pickle
         all_passes = []
-        all_passes.append(all([os.path.isfile(os.path.join(f"data_docking/datasets", one_file)) for one_file in ("lipinski.pickle", "posebuster.pickle", "moses.pickle", "rings.pickle")]))
+        all_passes.append(all([os.path.isfile(os.path.join(f"datasets", one_file)) for one_file in ("lipinski.pickle", "posebuster.pickle", "moses.pickle", "rings.pickle")]))
         assert all(all_passes), "every file must exist!"
         
         DF_posebuster = []
@@ -622,20 +622,20 @@ class Analyse_generation(object):
         DF_rings = []
     
         one_file = "posebuster.pickle" #summarize
-        df = pd.read_pickle(os.path.join(f"data_docking/datasets", one_file))
+        df = pd.read_pickle(os.path.join(f"datasets", one_file))
         DF_posebuster.append(pd.DataFrame([df["Total Pass"].sum() / len(df)], columns=["posebuster"]))
         
         one_file = "lipinski.pickle" #summarize
-        df = pd.read_pickle(os.path.join(f"data_docking/datasets", one_file))
+        df = pd.read_pickle(os.path.join(f"datasets", one_file))
         DF_lipinski.append(pd.DataFrame([sum(df) / len(df)], columns=["lipinski"])) #--> List[float]
         
         one_file = "moses.pickle" #use original
-        df = pd.read_pickle(os.path.join(f"data_docking/datasets", one_file))
+        df = pd.read_pickle(os.path.join(f"datasets", one_file))
         df = pd.DataFrame.from_records([df])
         DF_moses.append(df)
         
         one_file = "rings.pickle" #get distribution & Summary
-        df = pd.read_pickle(os.path.join(f"data_docking/datasets", one_file))
+        df = pd.read_pickle(os.path.join(f"datasets", one_file))
         df = pd.DataFrame(df.T, columns=["rot_bonds", "num_rings", "num_fused_rings", "num_hetero_rings", "num_aromatic_rings"])
         DF_rings_dist.append(df)
     
