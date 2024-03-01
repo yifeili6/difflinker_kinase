@@ -53,19 +53,19 @@ def get_kinase_indices(kinase_names: List[str]) -> List[List[str]]:
 
     return indices, info
 
-def get_complete_stats(size_prefixes: List[str]):
-    for size_prefix in size_prefixes:
-        filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.pickle")))
-        for f in filenames:
-            data = pd.read_pickle(f):
-            if "posebuster" in os.path.basename(f):
-                ...
-            if "lipinski" in os.path.basename(f):
-                ...            
-            if "moses" in os.path.basename(f):
-                ...
-            if "rings" in os.path.basename(f):
-                ...
+# def get_complete_stats(size_prefixes: List[str]):
+#     for size_prefix in size_prefixes:
+#         filenames = sorted(glob.glob(os.path.join("data_docking/result_difflinker", size_prefix, "*.pickle")))
+#         for f in filenames:
+#             data = pd.read_pickle(f):
+#             if "posebuster" in os.path.basename(f):
+#                 ...
+#             if "lipinski" in os.path.basename(f):
+#                 ...            
+#             if "moses" in os.path.basename(f):
+#                 ...
+#             if "rings" in os.path.basename(f):
+#                 ...
                 
 def get_posebuster_stats(size_prefixes: List[str]):
     return_good_mols = []
