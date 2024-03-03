@@ -9,7 +9,7 @@ import warnings
 warnings.simplefilter("ignore")
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--merged_pdb_dir", type=str, default=None)
+parser.add_argument("--merged_pdb_dir", type=str, default="data_docking/result_hydrogenated")
 args = parser.parse_args()
 
 def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
@@ -34,11 +34,14 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     lig_atoms.residues.segments = lig_segment
     
     directory = args.merged_pdb_dir
-    path_and_name = os.path.join(directory, "prot_lig.pdb")
+    complex_name = os.path.basename(lig).splitext()[0] + ".pdb"
+    path_and_name = os.path.join(directory, complex_name)
     
     mergeU.atoms.write(path_and_name)
 
 if __name__ == "__main__":
-    args.merged_pdb_dir = "."
-    load_prot_lig(args, "data_docking/complex/processed_klif_wl/proteins/1yol_chainA_protein.pdb", "data_docking/result_difflinker/s8/1yol_chainA_2_s8_12_KLIF_ValTest_frag.sdf")
+    lig_list: List[str] = glob.glob(os.path.join(args.merged_pdb_dir, "*.sdf"))
+    for one_lig in lig_list:
+        one_prot = "_".join(os.path.basename(one_lig).split("_")[:-6]) + "_protein.pdb" #match the protein prefix!
+        load_prot_lig(args, f"data_docking/complex/processed_klif_wl/proteins/{one_prot}", one_lig)
     # git pull && python -m merge_prot_lig --merged_pdb_dir [directory_to_save]
