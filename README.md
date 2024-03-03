@@ -17,7 +17,7 @@ git pull && python -W ignore train_difflinker.py --config configs/klifs_difflink
 To sample,
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins/2hzi_altA_chainA_protein.pdb --model models/finetune/finetune_anchors.ckpt --anchors 5,17 --linker_size 13 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --nth_molecules 3 10
 [USE BELOW]
-git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_ValTest_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins --model models/finetune/finetune_anchors.ckpt --linker_size 11 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --kinase_names 2xa4 4rx5 3c4c --timeseries
+git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_ValTest_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins --model models/finetune/finetune_anchors.ckpt --linker_size 11 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --kinase_names 2xa4 4rx5 3c4c  --batch_size 16 --timeseries
 
 To evaluate SMILES and PoseBust,
 [DEPRECATED]
