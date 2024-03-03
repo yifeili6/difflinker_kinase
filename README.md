@@ -30,6 +30,9 @@ git pull && python -m gen_lig_analysis --turn_off_run_test # Concatenate all pic
 git pull && python -m gen_lig_analysis --run_analysis # Test analysis
 git pull && python -m gen_lig_analysis  # Test result concat
 
+Save hydrogenated generated ligands (e.g., PyMol), followed by saving into a PDB prot-lig complex
+git pull && pythom -m merge_prot_lig --
+
 [DEPRECATED]
 To choose kinase indices from processed KLIFS dataset with ligands,
 git pull && python -m misc_utils --kinase_names 2xa4 4rx5 5jga 3c4c 5cau 1yol 5lqf 3cs9 4ag8 3oxz 4ase braf 4u7z 7m0u 4an2 [train/val/test]
