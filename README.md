@@ -31,7 +31,7 @@ git pull && python -m gen_lig_analysis --run_analysis # Test analysis
 git pull && python -m gen_lig_analysis  # Test result concat
 
 Save hydrogenated generated ligands (e.g., PyMol), followed by saving into a PDB prot-lig complex
-git pull && pythom -m merge_prot_lig --
+git pull && pythom -m merge_prot_lig --merged_pdb_dir data_docking/result_hydrogenated
 
 [DEPRECATED]
 To choose kinase indices from processed KLIFS dataset with ligands,
