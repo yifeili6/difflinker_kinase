@@ -189,7 +189,7 @@ def plot_data3d(positions, atom_type, is_geom, camera_elev=0, camera_azim=0, sav
 
 
 def visualize_chain(
-        path, spheres_3d=False, bg="black", alpha=1.0, wandb=None, mode="chain", is_geom=False, fragment_mask=None
+        path, spheres_3d=False, bg="white", alpha=1.0, wandb=None, mode="chain", is_geom=False, fragment_mask=None
 ):
     files = load_xyz_files(path)
     save_paths = []
