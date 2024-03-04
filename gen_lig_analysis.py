@@ -15,7 +15,7 @@ from rdkit.Chem import Crippen
 from rdkit.Chem import Lipinski
 from rdkit.Chem import Descriptors
 import pickle
-from moses.metrics.utils import mapper, mol_passes_filters
+from moses.metrics.utils import mapper, mol_passes_filters, logP, QED, SA, weight
 from tqdm.auto import tqdm
 import time
 from rdkit.Chem.rdMolDescriptors import CalcNumRotatableBonds
@@ -360,7 +360,8 @@ class Analyse_generation(object):
     
         print(cf.on_yellow(f"Lipinski's Rule of 5 retained {len(return_good_smiles)/file_counter_from_posebuster*100} % valid molecules"))        
         return return_good_smiles.tolist(), return_good_files.tolist()
-        
+    
+    ###This gives you W-distance btw test & generated for logP, SA, QED, weight...
     @staticmethod
     def get_moses_stats_for_test(gen=None, k=None, n_jobs=os.cpu_count()-1,
                         device='cuda', batch_size=512, pool=None,
@@ -401,7 +402,8 @@ class Analyse_generation(object):
         print(cf.on_yellow(f"MOSES retained {len(gen)/file_counter_from_posebuster*100} % valid molecules"))        
                             
         return gen.tolist()
-                            
+
+    ###This gives you W-distance btw test & generated for logP, SA, QED, weight...
     @staticmethod
     def get_moses_stats(gen=None, k=None, n_jobs=os.cpu_count()-1,
                         device='cuda', batch_size=512, pool=None,
@@ -434,7 +436,7 @@ class Analyse_generation(object):
                         device=device, batch_size=batch_size, pool=pool,
                         test=test, test_scaffolds=test_scaffolds,
                         ptest=ptest, ptest_scaffolds=ptest_scaffolds,
-                        train=train)
+                        train=train) 
     
         with open(os.path.join("data_docking/result_difflinker", size_prefix, "moses.pickle"), "wb") as f:
             pickle.dump(metrics, f)
@@ -682,7 +684,52 @@ class Analyse_generation(object):
         DF.rename(mapper=lambda inp: f"size_{inp + 8}", axis='index', inplace=True)
         
         return DF, DF_rings_dist
+
+    ###This gives you test & generated for logP, SA, QED, weight... MOSES only gives you W-distance
+    @staticmethod
+    def get_non_wass_stats_for_test():
+        all_passes = []
+        all_passes.append(all([os.path.isfile(os.path.join(f"datasets", one_file)) for one_file in ("gen_and_files.pickle")]))
+        assert all(all_passes), "every file must exist!"
+
+        DF_non_wass = []
+        one_file = "gen_and_files.pickle" #summarize
+        df = pd.read_pickle(os.path.join(f"datasets", one_file))
+        df = pd.DataFrame(data=np.array(df), columns=["SMILES"])
+        DF_non_wass.append(df)
+
+        DF = pd.concat(DF_non_wass, axis=0)
         
+        gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
+        for func_name, func in zip(["logP", "QED", "SA", "weight"], [logP, QED, SA, weight]):
+            vals = mapper(os.cpu_count() - 1)(func, gen)
+            DF[func_name] = np.array(vals)
+        return DF
+        
+    ###This gives you test & generated for logP, SA, QED, weight... MOSES only gives you W-distance
+    @staticmethod
+    def get_non_wass_stats():
+        all_passes = []
+        for snum in range(8, 14, 1):
+            all_passes.append(all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("gen_and_files.pickle")]))
+        assert all(all_passes), "every file must exist!"
+
+        DF_non_wass = []
+        for snum in range(8, 14, 1):
+            one_file = "gen_and_files.pickle" #summarize
+            df = pd.read_pickle(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file))
+            df = pd.DataFrame(data=np.array(df), columns=["SMILES", "files"])
+            df["size"] = [snum] * len(df)
+            DF_non_wass.append(df)
+
+        DF = pd.concat(DF_non_wass, axis=0)
+        
+        gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
+        for func_name, func in zip(["logP", "QED", "SA", "weight"], [logP, QED, SA, weight]):
+            vals = mapper(os.cpu_count() - 1)(func, gen)
+            DF[func_name] = np.array(vals)
+        return DF
+
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     if args.run_analysis:
@@ -721,11 +768,14 @@ if __name__ == "__main__":
             print(DF.loc[:, ["IntDiv", "IntDiv2"]])
             print(DF)
             print(DF_rings_dist.groupby("size").mean())
+            DF = Analyse_generation.get_non_wass_stats()
+            print(DF)
         else:
             print(cf.on_red(f"Concatenating TEST data statistics!!!!"))
             DF, DF_rings_dist = Analyse_generation.collate_fn_for_test()
             print(DF.loc[:, ["IntDiv", "IntDiv2"]])
             print(DF)
             print(DF_rings_dist.mean(axis=0))
-        
+            DF = Analyse_generation.get_non_wass_stats_for_test()
+            print(DF)
 
