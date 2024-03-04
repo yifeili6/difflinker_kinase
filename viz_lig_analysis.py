@@ -199,10 +199,10 @@ if __name__ == "__main__":
     plot_properties(args)
     root_h = "data_docking/result_hydrogenated"
     root_d = "datasets"
-    test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
+    test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
     # test_ms = [edit_ligand(m) for m in test_ms]
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
-    qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=False)[900]
+    qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900]
     print(Chem.MolToSmiles(qry).split("."))
     qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     matches = [x.GetSubstructMatch(qry[1]) for x in test_ms] 
