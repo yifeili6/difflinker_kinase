@@ -702,6 +702,8 @@ class Analyse_generation(object):
         DF = pd.concat(DF_non_wass, axis=0)
         
         gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
+        print(gen)
+    
         for func_name, func in zip(["logP", "QED", "SA", "weight"], [logP, QED, SA, weight]):
             vals = mapper(os.cpu_count() - 1)(func, gen)
             DF[func_name] = np.array(vals)
