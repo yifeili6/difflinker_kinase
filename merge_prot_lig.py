@@ -44,7 +44,6 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
 if __name__ == "__main__":
     lig_list: List[str] = glob.glob(os.path.join(args.merged_pdb_dir, "*.sdf"))
     for one_lig in lig_list:
-        one_prot = "_".join(os.path.basename(one_lig).split("_")[:-5]) + "_protein.pdb" #match the protein prefix!
-        print(one_prot)
+        one_prot = "_".join(os.path.basename(one_lig).split("_")[:3]) + "_protein.pdb" if "alt" in os.path.basename(one_lig) else "_".join(os.path.basename(one_lig).split("_")[:2]) + "_protein.pdb" #match the protein prefix!
         load_prot_lig(args, f"data_docking/complex/processed_klif_wl/proteins/{one_prot}", one_lig)
     # git pull && python -m merge_prot_lig --merged_pdb_dir [directory_to_save]
