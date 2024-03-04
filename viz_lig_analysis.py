@@ -114,3 +114,53 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
         svg2png(bytestring=svg, write_to='tmp.png', dpi=100)
         img = imread('tmp.png')
         os.remove('tmp.png')
+
+
+if __name__ == "__main__":
+    ###Current as of Mar 1st, 2024
+    if args.run_analysis:
+        if not args.turn_off_run_test:
+            print(cf.on_yellow(f"Running Analysis on GENERATED data with {args.size_prefix}!!!!"))
+            ###3D
+            gen, files, file_counter = Analyse_generation.get_posebuster_stats([args.size_prefix]) # filtration 1
+            if len(gen) !=0:
+                pass
+            else:
+                gen = args.gen
+            ###Drugness
+            gen, files = Analyse_generation.get_lipinski(gen, files, file_counter, args.size_prefix) #filtration 2
+            ###2D
+            gen, files = Analyse_generation.get_moses_stats(gen=gen, files=files, train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter, size_prefix=args.size_prefix) # final filtration
+            # print(files)
+            # gen = ["c1ccccc1", "c1cnccc1", "C1CCCCC1", "C1CNCCC1", "CCCCCC", "CCNCCC", "c12ccccc1NC=C2", "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5", "Cc1c(Nc2nccc(-c3cnccc3)n2)cc(NC(=O)c2ccc(CN3CCN(C)CC3)cc2)cc1"]
+            # files = np.arange(len(gen))
+            rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = bonds_and_rings(gen, files, args.size_prefix)
+            # for prop in [rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings]:
+            #     print(prop)
+        else:
+            print(cf.on_green(f"Running Analysis on TEST data!!!!"))
+            ###3D
+            gen, file_counter = Analyse_generation.get_posebuster_stats_for_test() # filtration 1
+            ###Drugness
+            gen = Analyse_generation.get_lipinski_for_test(gen, file_counter) #filtration 2
+            ###2D
+            gen = Analyse_generation.get_moses_stats_for_test(gen=gen,  train=args.train, test=args.valtest, test_scaffolds=args.valtest, file_counter_from_posebuster=file_counter) # final filtration
+            rot_bonds, num_rings, num_fused_rings, num_hetero_rings, num_aromatic_rings = Analyse_generation.bonds_and_rings_for_test(gen)
+            
+    else:
+        if not args.turn_off_run_test:
+            print(cf.on_blue(f"Concatenating GENERATED data statistics!!!!"))
+            DF, DF_rings_dist = Analyse_generation.collate_fn()
+            print(DF.loc[:, ["IntDiv", "IntDiv2"]])
+            print(DF)
+            print(DF_rings_dist.groupby("size").mean())
+            DF = Analyse_generation.get_non_wass_stats()
+            print(DF)
+        else:
+            print(cf.on_red(f"Concatenating TEST data statistics!!!!"))
+            DF, DF_rings_dist = Analyse_generation.collate_fn_for_test()
+            print(DF.loc[:, ["IntDiv", "IntDiv2"]])
+            print(DF)
+            print(DF_rings_dist.mean(axis=0))
+            DF = Analyse_generation.get_non_wass_stats_for_test()
+            print(DF)
