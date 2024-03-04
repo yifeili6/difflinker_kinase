@@ -210,8 +210,8 @@ if __name__ == "__main__":
     am = {}
     for idx, atom in enumerate(test_ms[0].GetAtoms()):
         # print(atom.GetIdx(), atom.GetAtomMapNum())
-        # am[atom.GetAtomMapNum()] = atom.GetIdx()
-        am.SetAtomMapNum(idx)
+        atom.SetAtomMapNum(idx)
+        am[atom.GetAtomMapNum()] = atom.GetIdx()
     for idx, atom in enumerate(test_ms[0].GetAtoms()):
         print(atom.GetIdx(), atom.GetAtomMapNum())
         # am[atom.GetAtomMapNum()] = atom.GetIdx()
