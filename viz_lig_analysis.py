@@ -207,11 +207,13 @@ if __name__ == "__main__":
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
+    am = {}
     for test_m in test_ms:
+        at[test_m.GetProp("_Name")] = {}
         for idx, atom in enumerate(test_m.GetAtoms()):
             # print(atom.GetIdx(), atom.GetAtomMapNum())
             atom.SetAtomMapNum(idx)
-            am[atom.GetAtomMapNum()] = atom.GetIdx()
+            am[test_m.GetProp("_Name")][atom.GetAtomMapNum()] = atom.GetIdx()
             print(atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
 
 
