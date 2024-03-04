@@ -39,7 +39,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--turn_off_run_test", "-to", action="store_false", help="for ValTest_mol.sdf!")
 args = parser.parse_args()
 
-def findMCS(ms: List[Chem.Mol], qry: Chem.Mol):
+def findMCS(ms: List[Chem.Mol]):
     """
       https://greglandrum.github.io/rdkit-blog/posts/2022-06-23-3d-mcs.html
       https://greglandrum.github.io/rdkit-blog/posts/2023-10-27-mcswhatsnew.html
@@ -181,6 +181,6 @@ if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     plot_properties(args)
     root = "data_docking/result_hydrogenated"
-    test_ms = [Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=False, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
-    query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=False, sanitize=False)[0]
-    findMCS(test_ms, query)
+    test_ms = [Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
+    # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
+    findMCS(test_ms)
