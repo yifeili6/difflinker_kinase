@@ -220,6 +220,6 @@ if __name__ == "__main__":
     #         # print(atom.GetIdx(), atom.GetAtomMapNum())
     #         atom.SetAtomMapNum(idx)
     #         am[test_m.GetProp("_Name")][atom.GetAtomMapNum()] = (atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
-    print(am)
+    # print(am)
         
     findMCS(test_ms)
