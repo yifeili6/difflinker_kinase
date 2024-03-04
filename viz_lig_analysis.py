@@ -83,7 +83,7 @@ def findMCS(ms: List[Chem.Mol]):
     pathlib.Path("data_docking/result_images").mkdir(exist_ok=True)
     img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms], returnPNG=False)    
     if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
-        shutil.rmtree('data_docking/result_images/cdk2_molgrid.png')
+        pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
     else:
         img.save('data_docking/result_images/cdk2_molgrid.png')    
 
