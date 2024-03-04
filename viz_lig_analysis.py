@@ -8,7 +8,7 @@ import matplotlib.cm as cm
 import curtsies.fmtfuncs as cf
 # from skimage.io import imread
 # from cairosvg import svg2png, svg2ps
-import os
+import os, shutil
 from torch_geometric.data import DataLoader
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
@@ -81,7 +81,10 @@ def findMCS(ms: List[Chem.Mol]):
 
     pathlib.Path("data_docking/result_images").mkdir(exist_ok=True)
     img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms], returnPNG=False)    
-    img.save('data_docking/result_images/cdk2_molgrid.png')    
+    if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
+        shutil.rmtree('data_docking/result_images/cdk2_molgrid.png')
+    else:
+        img.save('data_docking/result_images/cdk2_molgrid.png')    
 
 def plot_properties(args: argparse.ArgumentParser):
     if not args.turn_off_run_test:
