@@ -725,7 +725,7 @@ class Analyse_generation(object):
             df["size"] = [snum] * len(df)
             DF_non_wass.append(df)
 
-        DF = pd.concat(DF_non_wass, axis=0)
+        DF = pd.concat(DF_non_wass, axis=0, ignore_index=True)
         
         gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
         gen = mapper(os.cpu_count() - 1)(get_mol, gen)
