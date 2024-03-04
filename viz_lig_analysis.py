@@ -208,9 +208,13 @@ if __name__ == "__main__":
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
     am = {}
-    for atom in test_ms[0].GetAtoms():
+    for idx, atom in enumerate(test_ms[0].GetAtoms()):
+        # print(atom.GetIdx(), atom.GetAtomMapNum())
+        # am[atom.GetAtomMapNum()] = atom.GetIdx()
+        am.SetAtomMapNum(idx)
+    for idx, atom in enumerate(test_ms[0].GetAtoms()):
         print(atom.GetIdx(), atom.GetAtomMapNum())
-        am[atom.GetAtomMapNum()] = atom.GetIdx()
-    print(am)
+        # am[atom.GetAtomMapNum()] = atom.GetIdx()
 
+        
     # findMCS(test_ms)
