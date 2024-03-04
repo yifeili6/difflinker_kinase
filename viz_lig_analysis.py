@@ -29,6 +29,7 @@ from rdkit.Chem.Draw import IPythonConsole
 from rdkit import rdBase
 from gen_lig_analysis import Analyse_generation
 import pathlib
+import copy
 
 rdDepictor.SetPreferCoordGen(True)
 IPythonConsole.ipython_3d = True
@@ -42,7 +43,7 @@ args = parser.parse_args()
 def edit_ligand(ligand, num_frag_atoms: int=16):
     atoms = ligand.GetAtoms()
     bonds = ligand.GetBonds()
-    eligand = Chem.EditableMol(ligand)
+    eligand = Chem.EditableMol(copy.deepcopy(ligand))
 
     for bond in bonds:
         source_idx = bond.GetBeginAtomIdx()
@@ -204,22 +205,21 @@ if __name__ == "__main__":
     root_d = "datasets"
     test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
     test_ms = [Chem.RemoveHs(m) for m in test_ms]
-    # test_ms = [edit_ligand(m) for m in test_ms]
+    test_ms = [edit_ligand(m) for m in test_ms]
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
     # qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900]
     # print(Chem.MolToSmiles(qry).split("."))
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
-    am = {}
-    for test_m in test_ms:
-        am[test_m.GetProp("_Name")] = {}
-        for idx, atom in enumerate(test_m.GetAtoms()):
-            # print(atom.GetIdx(), atom.GetAtomMapNum())
-            atom.SetAtomMapNum(idx)
-            am[test_m.GetProp("_Name")][atom.GetAtomMapNum()] = (atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
+    
+    # am = {}
+    # for test_m in test_ms:
+    #     am[test_m.GetProp("_Name")] = {}
+    #     for idx, atom in enumerate(test_m.GetAtoms()):
+    #         # print(atom.GetIdx(), atom.GetAtomMapNum())
+    #         atom.SetAtomMapNum(idx)
+    #         am[test_m.GetProp("_Name")][atom.GetAtomMapNum()] = (atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
     print(am)
-
-
         
-    # findMCS(test_ms)
+    findMCS(test_ms)
