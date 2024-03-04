@@ -63,7 +63,7 @@ def findMCS(ms: List[Chem.Mol], qry: Chem.Mol):
         rdDepictor.GenerateDepictionMatching2DStructure(m, qry) # constrained coord to qry
 
     pathlib.Path("data_docking/result_images").mkdir(exist_ok=True)
-    img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms])    
+    img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms], returnPNG=False)    
     img.save('data_docking/result_images/cdk2_molgrid.png')    
 
 def plot_properties(args: argparse.ArgumentParser):
