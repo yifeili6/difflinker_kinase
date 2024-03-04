@@ -43,7 +43,7 @@ args = parser.parse_args()
 def edit_ligand(ligand, num_frag_atoms: int=16):
     atoms = ligand.GetAtoms()
     bonds = ligand.GetBonds()
-    eligand = Chem.EditableMol(copy.deepcopy(ligand))
+    eligand = Chem.RWMol(copy.deepcopy(ligand))
 
     for bond in bonds:
         source_idx = bond.GetBeginAtomIdx()
