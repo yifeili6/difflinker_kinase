@@ -84,9 +84,9 @@ def plot_properties(args: argparse.ArgumentParser):
         print(DF)
 
 def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=True, new_edge_index: torch.LongTensor=None):
-  """
+    """
     https://gitlab.com/hyunp2/argonne_gnn_gitlab/-/blob/main/train/explainer.py?ref_type=heads
-  """
+    """
     highlight_kwargs = {}
     
     if len(atom_weights) > 0:
