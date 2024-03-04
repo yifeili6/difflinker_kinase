@@ -39,6 +39,23 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--turn_off_run_test", "-to", action="store_false", help="for ValTest_mol.sdf!")
 args = parser.parse_args()
 
+def edit_ligand(ligand, num_frag_atoms: int=16):
+    atoms = ligand.GetAtoms()
+    bonds = ligand.GetBonds()
+    eligand = Chem.EditableMol(ligand)
+
+    for bond in bonds:
+        source_idx = bond.GetBeginAtomIdx()
+        target_idx = bond.GetEndAtomIdx()
+        if max(source_idx, target_idx) < num_frag_atoms:
+            eligand.RemoveBond(source_idx, target_idx)
+    
+    for atom in atoms:
+        if atom.GetIdx() < num_frag_atoms:
+            eligand.RemoveAtom(atom.GetIdx())
+    
+    return eligand.GetMol()
+
 def findMCS(ms: List[Chem.Mol]):
     """
       https://greglandrum.github.io/rdkit-blog/posts/2022-06-23-3d-mcs.html
@@ -182,5 +199,6 @@ if __name__ == "__main__":
     plot_properties(args)
     root = "data_docking/result_hydrogenated"
     test_ms = [Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
+    test_ms = [edit_ligand(m) for m in test_ms]
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
     findMCS(test_ms)
