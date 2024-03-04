@@ -208,7 +208,7 @@ if __name__ == "__main__":
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
     am = {}
-    for idx, atom in enumerate(test_ms[0].GetAtoms()):
+    for idx, atom in enumerate(test_ms[1].GetAtoms()):
         # print(atom.GetIdx(), atom.GetAtomMapNum())
         atom.SetAtomMapNum(idx)
         am[atom.GetAtomMapNum()] = atom.GetIdx()
