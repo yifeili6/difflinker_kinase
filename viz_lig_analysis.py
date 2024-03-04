@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.cm as cm
-from skimage.io import imread
-from cairosvg import svg2png, svg2ps
+# from skimage.io import imread
+# from cairosvg import svg2png, svg2ps
 import os
 from torch_geometric.data import DataLoader
 import pandas as pd
