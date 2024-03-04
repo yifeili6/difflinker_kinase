@@ -712,7 +712,7 @@ class Analyse_generation(object):
     def get_non_wass_stats():
         all_passes = []
         for snum in range(8, 14, 1):
-            all_passes.append(all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("gen_and_files.pickle")]))
+            all_passes.append(all([os.path.isfile(os.path.join(f"data_docking/result_difflinker/s{snum}", one_file)) for one_file in ("gen_and_files.pickle", )]))
         assert all(all_passes), "every file must exist!"
 
         DF_non_wass = []
