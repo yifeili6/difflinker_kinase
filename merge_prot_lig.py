@@ -18,7 +18,7 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     assert prot.endswith(".pdb") and lig.endswith(".sdf")
     protU = mda.Universe(prot)
   
-    mol = Chem.SDMolSupplier(lig, removeHs=False, sanitize=True)[0]
+    mol = Chem.SDMolSupplier(lig, removeHs=False, sanitize=False)[0]
     ligU = mda.Universe(mol)
     ligU.add_TopologyAttr("resname", ["LIG"])
     ligU.add_TopologyAttr("chainID", ["L"] * len(ligU.atoms))
