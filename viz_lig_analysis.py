@@ -207,14 +207,13 @@ if __name__ == "__main__":
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
-    am = {}
-    for idx, atom in enumerate(test_ms[1].GetAtoms()):
-        # print(atom.GetIdx(), atom.GetAtomMapNum())
-        atom.SetAtomMapNum(idx)
-        am[atom.GetAtomMapNum()] = atom.GetIdx()
-    for idx, atom in enumerate(test_ms[0].GetAtoms()):
-        print(atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
-        # am[atom.GetAtomMapNum()] = atom.GetIdx()
+    for test_m in test_ms:
+        for idx, atom in enumerate(test_m.GetAtoms()):
+            # print(atom.GetIdx(), atom.GetAtomMapNum())
+            atom.SetAtomMapNum(idx)
+            am[atom.GetAtomMapNum()] = atom.GetIdx()
+            print(atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
+
 
         
     # findMCS(test_ms)
