@@ -690,6 +690,7 @@ class Analyse_generation(object):
     def get_non_wass_stats_for_test():
         all_passes = []
         all_passes.append(all([os.path.isfile(os.path.join(f"datasets", one_file)) for one_file in ("gen_and_files.pickle")]))
+        print(all_passes)
         assert all(all_passes), "every file must exist!"
 
         DF_non_wass = []
