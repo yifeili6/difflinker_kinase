@@ -4,22 +4,22 @@
 [Hyun's Colab](https://colab.research.google.com/drive/1f0BgleDsLUsIFX4LAup7kGpmkkGVj9Fg#scrollTo=VpqnUomgmmGK)
 
 ```bash
-To train from scratch,
+[TRAIN] To train from scratch,
   with anchors
   change best checkpoint name to train_anchors.ckpt
 git pull && python -W ignore train_difflinker.py --config configs/klifs_difflinker_full.yml --diffusion_loss_type l2  
 
-To train from last checkpoint,
+[RESUME] To train from last checkpoint,
   with anchors
   resume from pocket_difflinker_fullpocket.ckpt and name best checkpoint to finetune_anchors.ckpt
 git pull && python -W ignore train_difflinker.py --config configs/klifs_difflinker_full.yml --diffusion_loss_type l2 --resume --checkpoint_name pocket_difflinker_fullpocket.ckpt 
 
-To sample,
+[SAMPLE] To sample,
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_test_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins/2hzi_altA_chainA_protein.pdb --model models/finetune/finetune_anchors.ckpt --anchors 5,17 --linker_size 13 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --nth_molecules 3 10
 [USE BELOW]
 git pull && python -W ignore generate_with_protein.py --fragments datasets/KLIF_ValTest_frag.sdf --protein data_docking/complex/processed_klif_wl/proteins --model models/finetune/finetune_anchors.ckpt --linker_size 11 --output data_docking/result_difflinker --n_samples 5 --n_steps 3000 --kinase_names 2xa4 4rx5 3c4c  --batch_size 16 --timeseries
 
-To evaluate SMILES and PoseBust,
+[ANALYZE] To evaluate SMILES and PoseBust,
 [DEPRECATED]
 git pull && python -m gen_lig_analysis --kinase_file output_0_2_KLIF_test_frag.sdf output_0_3_KLIF_test_frag.sdf
 git pull && python -m gen_lig_analysis --kinase_prefix_names 2xa4_altB_chainA_0 2xa4_altB_chainA_1 2xa4_altA_chainB_2 2xa4_altA_chainB_3 2xa4_altA_chainB_4 2xa4_altB_chainB_5 2xa4_altB_chainB_6 4rx5_altA_chainA_0 4rx5_altA_chainA_1 3c4c_chainA_0
@@ -30,8 +30,11 @@ git pull && python -m gen_lig_analysis --turn_off_run_test # Concatenate all pic
 git pull && python -m gen_lig_analysis --run_analysis # Test analysis
 git pull && python -m gen_lig_analysis  # Test result concat
 
-Save hydrogenated generated ligands (e.g., PyMol), followed by saving into a PDB prot-lig complex
+[STRUCTURE SAVE] To Save hydrogenated generated ligands (e.g., PyMol), followed by saving into a PDB prot-lig complex
 git pull && python -m merge_prot_lig --merged_pdb_dir data_docking/result_hydrogenated
+
+[PLOT] To plot analyzed values, MCS etc.
+git pull && python -m viz_lig_analysis --turn_off_run_test
 
 [DEPRECATED]
 To choose kinase indices from processed KLIFS dataset with ligands,
