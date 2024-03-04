@@ -27,6 +27,7 @@ from rdkit.Chem import Draw
 from rdkit.Chem.Draw import IPythonConsole
 from rdkit import rdBase
 from gen_lig_analysis import Analyse_generation
+import pathlib
 
 rdDepictor.SetPreferCoordGen(True)
 IPythonConsole.ipython_3d = True
@@ -54,12 +55,13 @@ def findMCS(ms: List[Chem.Mol], qry: Chem.Mol):
     matches = [x.GetSubstructMatch(qry) for x in ms] 
     
     conf = Chem.Conformer(qry.GetNumAtoms())
-    for i,mi in enumerate(matches[0]):
-        conf.SetAtomPosition(i,ms2d[0].GetConformer().GetAtomPosition(mi))
+    for i, mi in enumerate(matches[0]):
+        conf.SetAtomPosition(i, ms[0].GetConformer().GetAtomPosition(mi))
     qry.AddConformer(conf)
     for m in ms:
-        rdDepictor.GenerateDepictionMatching2DStructure(m, qry)
-      
+        rdDepictor.GenerateDepictionMatching2DStructure(m, qry) # constrained coord to qry
+
+    pathlib.Path("data_docking/result_images").mkdir(exist_ok=True)
     img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms)    
     img.save('data_docking/result_images/cdk2_molgrid.png')    
 
@@ -177,3 +179,7 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     plot_properties(args)
+    root = "data_docking/result_hydrogenated"
+    test_ms = [Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=False, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
+    query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=False, sanitize=False)[0]
+    findMCS(test_ms, query)
