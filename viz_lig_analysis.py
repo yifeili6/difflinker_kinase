@@ -209,6 +209,7 @@ if __name__ == "__main__":
     # print(matches)
     am = {}
     for atom in test_ms[0].GetAtoms():
+        print(atom.GetIdx(), atom.GetAtomMapNum())
         am[atom.GetAtomMapNum()] = atom.GetIdx()
     print(am)
 
