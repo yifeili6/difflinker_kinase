@@ -213,7 +213,7 @@ if __name__ == "__main__":
         atom.SetAtomMapNum(idx)
         am[atom.GetAtomMapNum()] = atom.GetIdx()
     for idx, atom in enumerate(test_ms[0].GetAtoms()):
-        print(atom.GetIdx(), atom.GetAtomMapNum())
+        print(atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
         # am[atom.GetAtomMapNum()] = atom.GetIdx()
 
         
