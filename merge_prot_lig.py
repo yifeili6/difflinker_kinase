@@ -36,7 +36,7 @@ def load_prot_lig(args: argparse.ArgumentParser, prot: str, lig: str):
     lig_atoms.residues.segments = lig_segment
     
     directory = args.merged_pdb_dir
-    complex_name = os.path.basename(lig).splitext()[0] + ".pdb"
+    complex_name = os.path.splitext(os.path.basename(lig))[0] + ".pdb"
     path_and_name = os.path.join(directory, complex_name)
     
     mergeU.atoms.write(path_and_name)
