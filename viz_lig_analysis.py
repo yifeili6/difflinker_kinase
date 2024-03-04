@@ -197,8 +197,13 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     plot_properties(args)
-    root = "data_docking/result_hydrogenated"
-    test_ms = [Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
+    root_h = "data_docking/result_hydrogenated"
+    root_d = "datasets"
+    test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0] for num in [25, 27, 55, 60, 81, 82] ]
     test_ms = [edit_ligand(m) for m in test_ms]
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
-    findMCS(test_ms)
+    qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=False)[900]
+    matches = [x.GetSubstructMatch(qry) for x in test_ms] 
+    print(matches)
+
+    # findMCS(test_ms)
