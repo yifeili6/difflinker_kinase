@@ -16,6 +16,7 @@ from rdkit.Chem import Lipinski
 from rdkit.Chem import Descriptors
 import pickle
 from moses.metrics.utils import mapper, mol_passes_filters, logP, QED, SA, weight
+from moses.utils import get_mol
 from tqdm.auto import tqdm
 import time
 from rdkit.Chem.rdMolDescriptors import CalcNumRotatableBonds
@@ -702,7 +703,7 @@ class Analyse_generation(object):
         DF = pd.concat(DF_non_wass, axis=0)
         
         gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
-        gen = mapper(os.cpu_count() - 1)(Chem.MolFromSmiles, gen)
+        gen = mapper(os.cpu_count() - 1)(get_mol, gen)
         for func_name, func in zip(["logP", "QED", "SA", "weight"], [logP, QED, SA, weight]):
             vals = mapper(os.cpu_count() - 1)(func, gen)
             DF[func_name] = np.array(vals)
@@ -727,7 +728,7 @@ class Analyse_generation(object):
         DF = pd.concat(DF_non_wass, axis=0)
         
         gen = DF.loc[:, "SMILES"].values.reshape(-1, ).tolist()
-        gen = mapper(os.cpu_count() - 1)(Chem.MolFromSmiles, gen)
+        gen = mapper(os.cpu_count() - 1)(get_mol, gen)
         for func_name, func in zip(["logP", "QED", "SA", "weight"], [logP, QED, SA, weight]):
             vals = mapper(os.cpu_count() - 1)(func, gen)
             DF[func_name] = np.array(vals)
