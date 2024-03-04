@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.cm as cm
+import curtsies.fmtfuncs as cf
 # from skimage.io import imread
 # from cairosvg import svg2png, svg2ps
 import os
