@@ -209,7 +209,7 @@ if __name__ == "__main__":
     # print(matches)
     am = {}
     for test_m in test_ms:
-        at[test_m.GetProp("_Name")] = {}
+        am[test_m.GetProp("_Name")] = {}
         for idx, atom in enumerate(test_m.GetAtoms()):
             # print(atom.GetIdx(), atom.GetAtomMapNum())
             atom.SetAtomMapNum(idx)
