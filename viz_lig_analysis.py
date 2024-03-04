@@ -204,7 +204,7 @@ if __name__ == "__main__":
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
     qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=False)[900]
     qry = [Chem.MolFromSmiles(q) for q in Chem.MolToSmiles(qry).split(".")]
-    matches = [x.GetSubstructMatch(qry[0]) for x in test_ms] 
+    matches = [x.GetSubstructMatch(qry[1]) for x in test_ms] 
     print(matches)
 
     # findMCS(test_ms)
