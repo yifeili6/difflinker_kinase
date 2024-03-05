@@ -214,6 +214,10 @@ if __name__ == "__main__":
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
     
+    ps = rdFMCS.MCSParameters()
+    res = rdFMCS.FindMCS(ms, ps)
+    qry = Chem.MolFromSmarts(res.smartsString)
+    matches = [x.GetSubstructMatch(qry) for x in ms] 
     img = Draw.MolsToGridImage(test_ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in test_ms], returnPNG=False)    
     if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
         pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
