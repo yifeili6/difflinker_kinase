@@ -214,7 +214,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         if contribution == "atomic":
             atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         elif contribution == "atomic":
-            
+            ...
         
         atom_weights = np.array(atom_weights)
         atom_weights[:query_num_atoms] = 0
