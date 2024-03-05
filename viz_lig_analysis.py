@@ -237,7 +237,7 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
         contribution: atomic or qed
     """
     fig, axes = plt.subplots(len(ms)//3, 3, figsize=(10,7))
-    imgs = [img_for_mol(m , qry, query_num_atoms) for m in ms]
+    imgs = [img_for_mol(m , qry, query_num_atoms=query_num_atoms, contribution=contribution) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
     
     filename = "atomic_molgrid.png" if contribution == "atomic" else "qed_molgrid.png"
