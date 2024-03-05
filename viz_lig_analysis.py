@@ -195,9 +195,9 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_we
         drawer.FinishDrawing()
     return img
 
-def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol):
+def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int):
     fig, axes = plt.subplots(3, len(ms)//3, figsize=(10,7))
-    imgs = [img_for_mol(m , qry) for m in ms]
+    imgs = [img_for_mol(m , qry, query_num_atoms) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
     
     fig.tight_layout()
