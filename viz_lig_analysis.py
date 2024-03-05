@@ -253,7 +253,7 @@ if __name__ == "__main__":
     qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
 
     # plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa)
-    x=remove_one_atom_qed(query, qry_numa)
+    x=remove_one_atom_qed(test_ms[0], qry_numa)
     print(x)
 
     # test_ms = [edit_ligand(m) for m in test_ms]
