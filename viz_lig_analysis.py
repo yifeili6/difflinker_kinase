@@ -27,10 +27,15 @@ from rdkit.Chem import rdFMCS
 from rdkit.Chem import Draw
 from rdkit.Chem.Draw import IPythonConsole
 from rdkit import rdBase
+from rdkit.Chem import Crippen
+from rdkit.Chem import Lipinski
+from rdkit.Chem import Descriptors
 from gen_lig_analysis import Analyse_generation
+from moses.metrics.utils import QED
 import pathlib
 import copy
 import tempfile
+from gen_lig_analysis
 
 rdDepictor.SetPreferCoordGen(True)
 IPythonConsole.ipython_3d = True
@@ -107,7 +112,26 @@ def plot_properties(args: argparse.ArgumentParser):
         DF = Analyse_generation.get_non_wass_stats_for_test()
         print(DF)
 
-def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
+def remove_one_atom(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
+    assert remove_idx >= query_num_atoms, "remove_idx must be equal or larger than query_num_atoms; index starts from 0"
+    num_atoms = mol.GetNumAtoms()
+    original_qed = QED(mol)
+    contribs = []
+    
+    for idx in range(query_num_atoms, num_atoms, 1):
+        eligand = Chem.RWMol(copy.deepcopy(mol))
+        atom = eligand.GetAtomWithIdx(idx)
+        neigh = [x.GetIdx() for x in atom.GetNeighbors()]
+        [eligand.RemoveBond(idx, x) for x in neigh]
+        eligand.RemoveAtom(idx)
+        qed = QED(eligand.GetMol())
+        qed_diff = qed - original_qed
+        contribs.append(qed_diff)
+    
+    return contribs
+
+
+def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contribution: str= "atomic", atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
     """
     https://gitlab.com/hyunp2/argonne_gnn_gitlab/-/blob/main/train/explainer.py?ref_type=heads
     """
@@ -159,7 +183,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_we
                 'highlightBonds': list(range(len(bw_list))),
                 'highlightBondColors': bond_colors
             }
-    
+
     #########################
     #METHOD 1 for DRAWING MOL (DrawMolecule)
     #########################
@@ -183,8 +207,16 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_we
         import io
         from rdkit.Chem.Draw import SimilarityMaps
         # drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
+        contribution
         drawer = Draw.MolDraw2DCairo(280, 280)
-        atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
+
+        
+        assert contribution in ["atomic", "lipinski", "qed"], "Not a correct keyword!"
+        if contribution == "atomic":
+            atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
+        elif contribution == "atomic":
+            
+        
         atom_weights = np.array(atom_weights)
         atom_weights[:query_num_atoms] = 0
         atom_weights = atom_weights.tolist()
@@ -220,8 +252,10 @@ if __name__ == "__main__":
     query = Chem.RemoveHs(query)
     qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
 
-    plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa)
-    
+    # plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa)
+    x=remove_one_atom(query)
+    print(x)
+
     # test_ms = [edit_ligand(m) for m in test_ms]
     # print(Chem.MolToSmiles(qry).split("."))
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
