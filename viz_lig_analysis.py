@@ -215,13 +215,13 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         if contribution == "atomic":
             atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         elif contribution == "atomic":
-            ...
+            atom_weights = remove_one_atom_qed(mol, qry_numa)
         
         atom_weights = np.array(atom_weights)
         atom_weights[:query_num_atoms] = 0
         atom_weights = atom_weights.tolist()
         img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights, draw2d=None) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
-        # print(img.savefig)
+
         with tempfile.TemporaryDirectory() as fp:
             # print(fp.name)
             img.savefig(os.path.join(fp, "img.png"), bbox_inches='tight')
@@ -252,9 +252,7 @@ if __name__ == "__main__":
     query = Chem.RemoveHs(query)
     qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
 
-    # plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa)
-    x=remove_one_atom_qed(test_ms[0], qry_numa)
-    print(x)
+    plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution="atomic")
 
     # test_ms = [edit_ligand(m) for m in test_ms]
     # print(Chem.MolToSmiles(qry).split("."))
