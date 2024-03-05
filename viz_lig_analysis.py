@@ -214,6 +214,13 @@ if __name__ == "__main__":
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
     
+    img = Draw.MolsToGridImage(test_ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in test_ms], returnPNG=False)    
+    if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
+        pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
+        img.save('data_docking/result_images/cdk2_molgrid.png')    
+    else:
+        img.save('data_docking/result_images/cdk2_molgrid.png')   
+        
     # am = {}
     # for test_m in test_ms:
     #     am[test_m.GetProp("_Name")] = {}
@@ -223,4 +230,4 @@ if __name__ == "__main__":
     #         am[test_m.GetProp("_Name")][atom.GetAtomMapNum()] = (atom.GetIdx(), atom.GetAtomMapNum(), atom.GetSymbol())
     # print(am)
         
-    findMCS(test_ms)
+    # findMCS(test_ms)
