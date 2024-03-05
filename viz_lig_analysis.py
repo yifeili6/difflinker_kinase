@@ -176,7 +176,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Uni
         drawer.FinishDrawing()
         svg = drawer.GetDrawingText()
         svg = svg.replace('svg:', '')
-        with tempfile.NamedTemporaryFile(delete_on_close=True) as fp:
+        with tempfile.TemporaryFile() as fp:
             svg2png(bytestring=svg, write_to=fp.name, dpi=100)
             img = imread(fp.name)
     else:
@@ -185,7 +185,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Uni
         drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
         atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
-        with tempfile.NamedTemporaryFile(delete_on_close=True) as fp:
+        with tempfile.TemporaryFile() as fp:
             img.savefig(fp.name, bbox_inches='tight')
             img = imread(fp.name)
         drawer.FinishDrawing()
