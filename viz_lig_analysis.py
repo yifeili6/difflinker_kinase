@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.cm as cm
 import curtsies.fmtfuncs as cf
-# from skimage.io import imread
-# from cairosvg import svg2png, svg2ps
+from skimage.io import imread
+from cairosvg import svg2png, svg2ps
 import os, shutil
 from torch_geometric.data import DataLoader
 import pandas as pd
@@ -30,6 +30,7 @@ from rdkit import rdBase
 from gen_lig_analysis import Analyse_generation
 import pathlib
 import copy
+import tempfile
 
 rdDepictor.SetPreferCoordGen(True)
 IPythonConsole.ipython_3d = True
@@ -106,12 +107,12 @@ def plot_properties(args: argparse.ArgumentParser):
         DF = Analyse_generation.get_non_wass_stats_for_test()
         print(DF)
 
-def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=True, new_edge_index: torch.LongTensor=None):
+def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
     """
     https://gitlab.com/hyunp2/argonne_gnn_gitlab/-/blob/main/train/explainer.py?ref_type=heads
     """
     highlight_kwargs = {}
-    
+
     if len(atom_weights) > 0:
         norm = matplotlib.colors.Normalize(vmin=-1, vmax=1)
         cmap = cm.get_cmap('bwr')
@@ -144,18 +145,6 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
                 # all_bonds.append( (bond == new_edge_index).all(axis=-1) ) 
             # all_bonds = np.array(all_bonds).T.any(axis=-1) #(real_bonds, torch_geom_bonds) - > (torch_geom_bonds, real_bonds) -> Boolean array of (torch_geom_bonds, )
 
-
-        """
-        # np.isin(edge_index.detach().cpu().numpy().T, bonds_zip)
-
-        if not isinstance(bond_weights, type(None)):
-            bond_colors = {
-                i: plt_colors.to_rgba(bond_weights[i]) for i in range(len(bond_weights))
-            }
-        else:
-            bond_weights = []
-            bond_colors = {}
-        """
         if new_edge_index != None:
             highlight_kwargs = {
                 'highlightAtoms': [],
@@ -170,11 +159,7 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
                 'highlightBonds': list(range(len(bw_list))),
                 'highlightBondColors': bond_colors
             }
-
-        # print(highlight_kwargs)
-    # print(bond_weights, mol.GetNumBonds())
     
-
     #########################
     #METHOD 1 for DRAWING MOL (DrawMolecule)
     #########################
@@ -187,43 +172,52 @@ def img_for_mol(mol, atom_weights=[], bond_weights: Union[None, List]=[], start_
         drawer.SetFontSize(1)
         mol = rdMolDraw2D.PrepareMolForDrawing(mol)
         drawer.DrawMolecule(mol, **highlight_kwargs)
-                            # highlightAtoms=list(range(len(atom_weights))),
-                            # highlightBonds=[],
-                            # highlightAtomColors=atom_colors)
         # PrepareAndDrawMolecule #https://www.rdkit.org/docs/GettingStartedInPython.html?highlight=maccs#:~:text=%2C%20500)-,%3E%3E%3E%20rdMolDraw2D.PrepareAndDrawMolecule(d%2C%20mol%2C%20highlightAtoms%3Dhit_ats%2C,-...%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20highlightAtomColors%3D
         drawer.FinishDrawing()
         svg = drawer.GetDrawingText()
         svg = svg.replace('svg:', '')
-        svg2png(bytestring=svg, write_to='tmp.png', dpi=100)
-        img = imread('tmp.png')
-        os.remove('tmp.png')
+        with tempfile.NamedTemporaryFile(delete_on_close=True) as fp:
+            svg2png(bytestring=svg, write_to=fp.name, dpi=100)
+            img = imread(fp.name)
+    else:
+        import io
+        from rdkit.Chem.Draw import SimilarityMaps
+        drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
+        atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
+        img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
+        with tempfile.NamedTemporaryFile(delete_on_close=True) as fp:
+            img.savefig(fp.name, bbox_inches='tight')
+            img = imread(fp.name)
+        drawer.FinishDrawing()
+    return img
 
+def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol):
+    fig, axes = plt.subplots(3, len(ms)//3, figsize=(10,7))
+    imgs = [img_for_mol(m , qry) for m in ms]
+    [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
 
+    if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
+        pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
+        fig.savefig('data_docking/result_images/cdk2_molgrid.png')    
+    else:
+        fig.savefig('data_docking/result_images/cdk2_molgrid.png')    
+        
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     plot_properties(args)
     root_h = "data_docking/result_hydrogenated"
     root_d = "datasets"
     test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
-    # test_ms = [Chem.RemoveHs(m) for m in test_ms]
-    test_ms = [edit_ligand(m) for m in test_ms]
+    test_ms = [Chem.RemoveHs(m) for m in test_ms]
+
+    
+    # test_ms = [edit_ligand(m) for m in test_ms]
     # query = Chem.SDMolSupplier(os.path.join(root, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
     # qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900]
     # print(Chem.MolToSmiles(qry).split("."))
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
     # print(matches)
-    
-    ps = rdFMCS.MCSParameters()
-    res = rdFMCS.FindMCS(test_ms, ps)
-    qry = Chem.MolFromSmarts(res.smartsString)
-    matches = [x.GetSubstructMatch(qry) for x in test_ms] 
-    img = Draw.MolsToGridImage(test_ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in test_ms], returnPNG=False)    
-    if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
-        pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
-        img.save('data_docking/result_images/cdk2_molgrid.png')    
-    else:
-        img.save('data_docking/result_images/cdk2_molgrid.png')   
         
     # am = {}
     # for test_m in test_ms:
