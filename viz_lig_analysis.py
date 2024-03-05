@@ -123,6 +123,7 @@ def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
         neigh = [x.GetIdx() for x in atom.GetNeighbors()]
         [eligand.RemoveBond(idx, x) for x in neigh]
         eligand.RemoveAtom(idx)
+        print(idx)
         qed = QED(eligand.GetMol())
         qed_diff = qed - original_qed
         contribs.append(qed_diff)
