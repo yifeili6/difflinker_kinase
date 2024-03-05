@@ -123,7 +123,7 @@ def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
         neigh = [x.GetIdx() for x in atom.GetNeighbors()]
         [eligand.RemoveBond(idx, x) for x in neigh]
         eligand.RemoveAtom(idx)
-        print(idx)
+        # print(idx)
         qed = QED(eligand.GetMol())
         qed_diff = qed - original_qed
         contribs.append(qed_diff)
@@ -248,7 +248,7 @@ if __name__ == "__main__":
     root_d = "datasets"
     test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
     test_ms = [Chem.RemoveHs(m) for m in test_ms]
-    query = Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
+    query = Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0]
     query = Chem.RemoveHs(query)
     qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
 
