@@ -187,7 +187,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Uni
         img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
         # print(img.savefig)
         with tempfile.TemporaryDirectory() as fp:
-            print(fp.name)
+            # print(fp.name)
             img.savefig(os.path.join(fp, "img.png"), bbox_inches='tight')
             img = imread(os.path.join(fp, "img.png"))
         drawer.FinishDrawing()
