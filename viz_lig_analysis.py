@@ -127,7 +127,7 @@ def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
         try:
             qed = QED(eligand.GetMol())
         except:
-            qed = original_qed
+            qed = 0
         qed_diff = qed - original_qed
         contribs.append(qed_diff)
     contribs = [0] * query_num_atoms + contribs
