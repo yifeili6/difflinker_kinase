@@ -31,7 +31,7 @@ from rdkit.Chem import Crippen
 from rdkit.Chem import Lipinski
 from rdkit.Chem import Descriptors
 from gen_lig_analysis import Analyse_generation
-from moses.metrics.utils import QED
+from moses.metrics.utils import QED, SA
 import pathlib
 import copy
 import tempfile
