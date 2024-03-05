@@ -207,14 +207,14 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         import io
         from rdkit.Chem.Draw import SimilarityMaps
         # drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
-        contribution
+        
         drawer = Draw.MolDraw2DCairo(280, 280)
 
         
         assert contribution in ["atomic", "lipinski", "qed"], "Not a correct keyword!"
         if contribution == "atomic":
             atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
-        elif contribution == "atomic":
+        elif contribution == "qed":
             atom_weights = remove_one_atom_qed(mol, qry_numa)
         
         atom_weights = np.array(atom_weights)
@@ -229,7 +229,13 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         drawer.FinishDrawing()
     return img
 
-def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int):
+def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int, contribution: str):
+    """
+        ms: list of generated mols
+        qry: gt mol
+        query_num_atoms: number of atoms in fragments
+        contribution: atomic or qed
+    """
     fig, axes = plt.subplots(len(ms)//3, 3, figsize=(10,7))
     imgs = [img_for_mol(m , qry, query_num_atoms) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
