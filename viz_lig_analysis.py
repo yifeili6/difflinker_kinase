@@ -66,8 +66,8 @@ def findMCS(ms: List[Chem.Mol]):
     # ms: 5lqf_altB_chainA_3_25/27/55/60/81/82_KLIF_ValTest_frag
   
     ps = rdFMCS.MCSParameters()
-    ps.AtomCompareParameters.MaxDistance = 1.0
-    ps.AtomTyper = rdFMCS.AtomCompare.CompareAny
+    # ps.AtomCompareParameters.MaxDistance = 1.0
+    # ps.AtomTyper = rdFMCS.AtomCompare.CompareAny
     res = rdFMCS.FindMCS(ms, ps)
     qry = Chem.MolFromSmarts(res.smartsString)
     
@@ -78,7 +78,7 @@ def findMCS(ms: List[Chem.Mol]):
         conf.SetAtomPosition(i, ms[0].GetConformer().GetAtomPosition(mi))
     qry.AddConformer(conf)
     for m in ms:
-        rdDepictor.GenerateDepictionMatching2DStructure(m, qry) # constrained coord to qry
+        rdDepictor.GenerateDepictionMatching2DStructure(m, qry) # constrained coord to qry!
 
     pathlib.Path("data_docking/result_images").mkdir(exist_ok=True)
     img = Draw.MolsToGridImage(ms, highlightAtomLists=matches, molsPerRow=3, subImgSize=(200,200), legends=[x.GetProp("_Name") for x in ms], returnPNG=False)    
