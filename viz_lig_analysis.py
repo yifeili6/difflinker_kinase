@@ -197,7 +197,8 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol):
     fig, axes = plt.subplots(3, len(ms)//3, figsize=(10,7))
     imgs = [img_for_mol(m , qry) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
-
+    
+    fig.tight_layout()
     if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
         pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
         fig.savefig('data_docking/result_images/cdk2_molgrid.png')    
