@@ -240,12 +240,13 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
     imgs = [img_for_mol(m , qry, query_num_atoms) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
     
+    filename = "atomic_molgrid.png" if contribution == "atomic" else "qed_molgrid.png"
     fig.tight_layout()
-    if os.path.isfile('data_docking/result_images/cdk2_molgrid.png'):
-        pathlib.Path('data_docking/result_images/cdk2_molgrid.png').unlink()
-        fig.savefig('data_docking/result_images/cdk2_molgrid.png')    
+    if os.path.isfile(f'data_docking/result_images/{filename}'):
+        pathlib.Path(f'data_docking/result_images/{filename}').unlink()
+        fig.savefig(f'data_docking/result_images/{filename}')    
     else:
-        fig.savefig('data_docking/result_images/cdk2_molgrid.png')    
+        fig.savefig(f'data_docking/result_images/{filename}')    
         
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
