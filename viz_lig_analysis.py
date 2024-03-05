@@ -107,7 +107,7 @@ def plot_properties(args: argparse.ArgumentParser):
         DF = Analyse_generation.get_non_wass_stats_for_test()
         print(DF)
 
-def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
+def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
     """
     https://gitlab.com/hyunp2/argonne_gnn_gitlab/-/blob/main/train/explainer.py?ref_type=heads
     """
@@ -184,7 +184,9 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, atom_weights=[], bond_weights: Uni
         from rdkit.Chem.Draw import SimilarityMaps
         drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
         atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
-        img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
+        atom_weights = np.array(atom_weights)
+        atom_weights[:query_num_atoms] = 0
+        img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights, draw2d=drawer) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
         # print(img.savefig)
         with tempfile.TemporaryDirectory() as fp:
             # print(fp.name)
@@ -214,11 +216,11 @@ if __name__ == "__main__":
     test_ms = [Chem.RemoveHs(m) for m in test_ms]
     query = Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=False)[0]
     query = Chem.RemoveHs(query)
-    
-    plot_similarity_maps(test_ms, query)
+    qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
+
+    plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa)
     
     # test_ms = [edit_ligand(m) for m in test_ms]
-    # qry = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900]
     # print(Chem.MolToSmiles(qry).split("."))
     # qry = [Chem.MolFromSmarts(q) for q in Chem.MolToSmiles(qry).split(".")]
     # matches = [x.GetSubstructMatch(qry) for x in test_ms] 
