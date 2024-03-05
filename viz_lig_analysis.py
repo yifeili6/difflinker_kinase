@@ -182,13 +182,13 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, atom_we
     else:
         import io
         from rdkit.Chem.Draw import SimilarityMaps
-        drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
-        # drawer = Draw.MolDraw2DCairo(280, 280)
+        # drawer = rdMolDraw2D.MolDraw2DSVG(280, 280)
+        drawer = Draw.MolDraw2DCairo(280, 280)
         atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         atom_weights = np.array(atom_weights)
         atom_weights[:query_num_atoms] = 0
         atom_weights = atom_weights.tolist()
-        img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights, draw2d=drawer) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
+        img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights, draw2d=None) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
         # print(img.savefig)
         with tempfile.TemporaryDirectory() as fp:
             # print(fp.name)
