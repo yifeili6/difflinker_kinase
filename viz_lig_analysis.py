@@ -205,7 +205,7 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol):
         
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
-    plot_properties(args)
+    # plot_properties(args)
     root_h = "data_docking/result_hydrogenated"
     root_d = "datasets"
     test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
