@@ -35,6 +35,9 @@ from moses.metrics.utils import QED
 import pathlib
 import copy
 import tempfile
+import warnings
+
+warnings.simplefilter("ignore")
 
 rdDepictor.SetPreferCoordGen(True)
 IPythonConsole.ipython_3d = True
