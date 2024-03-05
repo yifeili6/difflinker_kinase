@@ -137,6 +137,28 @@ def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
     
     return contribs
 
+def remove_one_atom_sa(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
+    # assert remove_idx >= query_num_atoms, "remove_idx must be equal or larger than query_num_atoms; index starts from 0"
+    num_atoms = mol.GetNumAtoms()
+    original_qed = SA(mol)
+    contribs = []
+    
+    for idx in range(query_num_atoms, num_atoms, 1):
+        eligand = Chem.RWMol(copy.deepcopy(mol))
+        atom = eligand.GetAtomWithIdx(idx)
+        neigh = [x.GetIdx() for x in atom.GetNeighbors()]
+        [eligand.RemoveBond(idx, x) for x in neigh]
+        eligand.RemoveAtom(idx)
+        # print(idx)
+        try:
+            qed = SA(eligand.GetMol())
+        except:
+            qed = 0
+        qed_diff = qed - original_qed
+        contribs.append(qed_diff)
+    contribs = [0] * query_num_atoms + contribs
+    
+    return contribs
 
 def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contribution: str= "atomic", atom_weights=[], bond_weights: Union[None, List]=[], start_idx: int=0, edge_index: torch.LongTensor=None, use_custom_draw: bool=False, new_edge_index: torch.LongTensor=None):
     """
@@ -218,12 +240,14 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         drawer = Draw.MolDraw2DCairo(280, 280)
 
         
-        assert contribution in ["atomic", "lipinski", "qed"], "Not a correct keyword!"
+        assert contribution in ["atomic", "lipinski", "qed", "sa"], "Not a correct keyword!"
         if contribution == "atomic":
             atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         elif contribution == "qed":
             atom_weights = remove_one_atom_qed(mol, qry_numa)
-        
+        elif contribution == "sa":
+            atom_weights = remove_one_atom_sa(mol, qry_numa)
+            
         atom_weights = np.array(atom_weights)
         atom_weights = atom_weights / np.sum(atom_weights**2) #normalize
         atom_weights[:query_num_atoms] = 0
@@ -248,7 +272,7 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
     imgs = [img_for_mol(m , qry, query_num_atoms=query_num_atoms, contribution=contribution) for m in ms]
     [ax.imshow(img) for ax, img in zip(axes.flatten(), imgs)]
     
-    filename = "atomic_molgrid.png" if contribution == "atomic" else "qed_molgrid.png"
+    filename = f"{contribution.lower()}_molgrid.png" 
     fig.tight_layout()
     if os.path.isfile(f'data_docking/result_images/{filename}'):
         pathlib.Path(f'data_docking/result_images/{filename}').unlink()
@@ -267,7 +291,7 @@ if __name__ == "__main__":
     query = Chem.RemoveHs(query)
     qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
 
-    for contribution in ["qed", "atomic"]:
+    for contribution in ["qed", "atomic", "sa"]:
         plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
     # test_ms = [edit_ligand(m) for m in test_ms]
