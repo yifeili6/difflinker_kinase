@@ -111,8 +111,8 @@ def plot_properties(args: argparse.ArgumentParser):
         DF = Analyse_generation.get_non_wass_stats_for_test()
         print(DF)
 
-def remove_one_atom(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
-    assert remove_idx >= query_num_atoms, "remove_idx must be equal or larger than query_num_atoms; index starts from 0"
+def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
+    # assert remove_idx >= query_num_atoms, "remove_idx must be equal or larger than query_num_atoms; index starts from 0"
     num_atoms = mol.GetNumAtoms()
     original_qed = QED(mol)
     contribs = []
