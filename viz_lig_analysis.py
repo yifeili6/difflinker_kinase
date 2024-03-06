@@ -325,7 +325,7 @@ def plot_by_group(df: pd.DataFrame):
     # grid.refline(y=0, linestyle=":")
     
     # Draw a line plot to show the trajectory of each random walk
-    grid.map(plt.hist, "size", "QED", marker="o")
+    grid.map(plt.hist, "size", "QED")
     
     # # Adjust the tick positions and labels
     # grid.set(xticks=np.arange(5), yticks=[-3, 3],
