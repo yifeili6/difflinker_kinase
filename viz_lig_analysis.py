@@ -329,23 +329,24 @@ def plot_by_group(df: pd.DataFrame):
     
     index = 0
     fig, ax = plt.subplots(3, 3, figsize=(10, 10))
+    palette = sns.color_palette('pastel', 6)
     for i, metric in enumerate(metric_name):
         row_num = int(index / 3)
         col_num = index % 3
-        for n_atoms in range(8, 14, 1):
+        for idx, n_atoms in enumerate(range(8, 14, 1)):
             if metric.startswith("num_"):
                 data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
                 # ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
                 sns.barplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=sns.color_palette('pastel', 6))
+                            data=data, ax=ax[row_num][col_num], palette=palette[idx])
             else:
                 data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
                 # sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), label=n_atoms, ax=ax[row_num][col_num])
                 # Draw a nested boxplot to show bills by day and time
                 sns.violinplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=sns.color_palette('pastel', 6))
+                            data=data, ax=ax[row_num][col_num], palette=palette[idx])
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
         ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
