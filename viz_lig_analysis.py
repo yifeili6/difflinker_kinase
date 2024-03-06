@@ -358,7 +358,7 @@ def plot_by_group(df: pd.DataFrame):
     fig.suptitle("5LQF AltB ChainA", y=0.98, fontsize=15)
     fig.tight_layout()
     lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
-    fig.savefig(f'./test_.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    fig.savefig(f'data_docking/result_images/distribution.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
     
     print(f'Plotted distribution of metrics')
     
