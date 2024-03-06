@@ -308,7 +308,7 @@ def plot_maps():
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
-def plot_by_group(df: pd.DataFRame):
+def plot_by_group(df: pd.DataFfame):
     # https://seaborn.pydata.org/examples/many_facets.html
     import numpy as np
     import pandas as pd
