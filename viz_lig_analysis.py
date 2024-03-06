@@ -354,6 +354,7 @@ def plot_by_group(df: pd.DataFrame):
         index+=1
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
     
+    fig.subplots_adjust(top=0.8)
     fig.suptitle("5LQF AltB ChainA", y=1.2, fontsize=15)
     fig.tight_layout()
     lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
