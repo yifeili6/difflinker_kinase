@@ -356,7 +356,7 @@ def plot_by_group(df: pd.DataFrame):
     plt.tight_layout()
     lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
     plt.savefig(f'./test_.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
-    print(f'Plotted distribution of SAscore and SCscore')
+    print(f'Plotted distribution of metrics')
     
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
