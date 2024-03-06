@@ -336,7 +336,7 @@ def plot_by_group(df: pd.DataFrame):
     
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
-    DF0, DF1 = plot_properties(args)
+    DF0, DF1 = merge_properties(args)
     print(DF0, DF1)
     print(DF1.columns)
     DF0.to_csv("latex_table.csv")
