@@ -314,8 +314,8 @@ if __name__ == "__main__":
         query = Chem.RemoveHs(query)
 
         df = pd.read_csv(os.path.join(root_d, "KLIF_test_table.csv")).molecule_name
-        idx = df.index[df.apply(lambda inp: inp.startswith(file_header))][0] #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
-        print(idx)
+        idx = int(df.index[df.apply(lambda inp: inp.startswith(file_header))][0]) #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
+        # print(idx)
         qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[idx].GetNumAtoms()
 
         for contribution in ["qed", "atomic"]:
