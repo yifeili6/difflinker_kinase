@@ -308,6 +308,31 @@ def plot_maps():
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
+def plot_by_group(df: pd.DataFRame):
+    # https://seaborn.pydata.org/examples/many_facets.html
+    import numpy as np
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    
+    sns.set_theme(style="ticks")
+    
+    # Initialize a grid of plots with an Axes for each walk
+    grid = sns.FacetGrid(df.QED, col="size", hue="size", palette="tab20c",
+                         col_wrap=4, height=1.5)
+    
+    # Draw a horizontal line to show the starting point
+    # grid.refline(y=0, linestyle=":")
+    
+    # Draw a line plot to show the trajectory of each random walk
+    grid.map(plt.histogram, "size", "PDF", marker="o")
+    
+    # # Adjust the tick positions and labels
+    # grid.set(xticks=np.arange(5), yticks=[-3, 3],
+    #          xlim=(-.5, 4.5), ylim=(-3.5, 3.5))
+
+# Adjust the arrangement of the plots
+grid.fig.tight_layout(w_pad=1)
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     DF0, DF1 = plot_properties(args)
