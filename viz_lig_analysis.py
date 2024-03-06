@@ -318,7 +318,7 @@ def plot_by_group(df: pd.DataFrame):
     sns.set_theme(style="ticks")
     
     # Initialize a grid of plots with an Axes for each walk
-    grid = sns.FacetGrid(df.QED, col="size", hue="size", palette="tab20c",
+    grid = sns.FacetGrid(df.loc[:, ["QED"]], col="size", hue="size", palette="tab20c",
                          col_wrap=4, height=1.5)
     
     # Draw a horizontal line to show the starting point
