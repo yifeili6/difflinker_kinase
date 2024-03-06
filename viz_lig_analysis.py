@@ -326,7 +326,7 @@ def plot_by_group(df: pd.DataFrame):
     metric_name.remove("files")
     
     df.drop_duplicates(subset='SMILES', keep='first', inplace=True)
-    df.rename(mapper={"rot_bonds": "num_rot_bonds"}, axis=1, inplace=True)
+    df.rename(columns={"rot_bonds": "num_rot_bonds"}, inplace=True)
     
     index=0
     fig, ax = plt.subplots(3, 3, figsize=(10, 10))
