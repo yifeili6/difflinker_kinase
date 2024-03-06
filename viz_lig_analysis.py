@@ -314,25 +314,32 @@ def plot_by_group(df: pd.DataFrame):
     import pandas as pd
     import seaborn as sns
     import matplotlib.pyplot as plt
-    
-    sns.set_theme(style="ticks")
-    
-    # Initialize a grid of plots with an Axes for each walk
-    grid = sns.FacetGrid(df.loc[:, ["QED", "size"]], col="size", hue="size", palette="tab20c",
-                         col_wrap=4, height=1.5)
-    
-    # Draw a horizontal line to show the starting point
-    # grid.refline(y=0, linestyle=":")
-    
-    # Draw a line plot to show the trajectory of each random walk
-    grid.map(plt.hist, "size", "QED")
-    
-    # # Adjust the tick positions and labels
-    # grid.set(xticks=np.arange(5), yticks=[-3, 3],
-    #          xlim=(-.5, 4.5), ylim=(-3.5, 3.5))
 
-    # Adjust the arrangement of the plots
-    grid.fig.tight_layout(w_pad=1)
+
+    sns.set_theme(style="darkgrid")
+    sns.displot(
+        df, x="QED", col="size", row="QED",
+         height=3, facet_kws=dict(margin_titles=True),
+    )
+
+    # sns.set_theme(style="ticks")
+    
+    # # Initialize a grid of plots with an Axes for each walk
+    # grid = sns.FacetGrid(df.loc[:, ["QED", "size"]], col="size", hue="size", palette="tab20c",
+    #                      col_wrap=4, height=1.5)
+    
+    # # Draw a horizontal line to show the starting point
+    # # grid.refline(y=0, linestyle=":")
+    
+    # # Draw a line plot to show the trajectory of each random walk
+    # grid.map(plt.hist, "size", "QED")
+    
+    # # # Adjust the tick positions and labels
+    # # grid.set(xticks=np.arange(5), yticks=[-3, 3],
+    # #          xlim=(-.5, 4.5), ylim=(-3.5, 3.5))
+
+    # # Adjust the arrangement of the plots
+    # grid.fig.tight_layout(w_pad=1)
     
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
