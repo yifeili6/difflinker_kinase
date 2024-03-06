@@ -332,7 +332,7 @@ def plot_by_group(df: pd.DataFrame):
         row_num = int(index / 3)
         col_num = index % 3
         for n_atoms in range(8, 14, 1):
-            data = df.loc[df.index[df.loc[:, ["size"]].apply(lambda inp: inp == n_atoms)]]
+            data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
             ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
             ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
         ax[row_num][col_num].set_xlabel(metric)
