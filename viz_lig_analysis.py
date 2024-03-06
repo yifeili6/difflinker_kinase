@@ -99,20 +99,15 @@ def findMCS(ms: List[Chem.Mol]):
 def plot_properties(args: argparse.ArgumentParser):
     if not args.turn_off_run_test:
         print(cf.on_blue(f"Concatenating GENERATED data statistics!!!!"))
-        DF, DF_rings_dist = Analyse_generation.collate_fn()
-        print(DF.loc[:, ["IntDiv", "IntDiv2"]])
-        print(DF)
-        print(DF_rings_dist.groupby("size").mean())
+        DF0, DF_rings_dist = Analyse_generation.collate_fn()
         DF = Analyse_generation.get_non_wass_stats()
-        print(DF)
+        DF1 = pd.concat([DF_rings_dist, DF], axis=1)
     else:
         print(cf.on_red(f"Concatenating TEST data statistics!!!!"))
-        DF, DF_rings_dist = Analyse_generation.collate_fn_for_test()
-        print(DF.loc[:, ["IntDiv", "IntDiv2"]])
-        print(DF)
-        print(DF_rings_dist.mean(axis=0))
-        DF = Analyse_generation.get_non_wass_stats_for_test()
-        print(DF)
+        DF0, DF_rings_dist = Analyse_generation.collate_fn_for_test()
+        DF = Analyse_generation.get_non_wass_stats()
+        DF1 = pd.concat([DF_rings_dist, DF], axis=1)
+    return DF0, DF1
 
 def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
     # assert remove_idx >= query_num_atoms, "remove_idx must be equal or larger than query_num_atoms; index starts from 0"
@@ -315,8 +310,9 @@ def plot_maps():
 
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
-    # plot_properties(args)
-    plot_maps()
+    DF0, DF1 = plot_properties(args)
+    print(DF0, DF1)
+    # plot_maps()
     
     ####WARNING####
     ####DO Manually,
