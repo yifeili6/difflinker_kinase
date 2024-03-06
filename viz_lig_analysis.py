@@ -285,6 +285,11 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     # plot_properties(args)
+
+    ####WARNING####
+    ####DO Manually,
+    #Choose only molecule_name ending with ONLY '_0' in KLIF_test_frag.sdf file
+    #b.c. we redefined the _0/1/2 from num of ligands to num of fragmentation types
     
     root_h = "data_docking/result_hydrogenated" #for hydrogenated dir; both sdf and PDB (for ligprot)
     root_d = "datasets" #for GT dir
@@ -292,7 +297,7 @@ if __name__ == "__main__":
     files_base = [os.path.basename(one_file) for one_file in files]
     files_set = set()
     for f in files_base:
-        header = "_".join(f.split("_")[:4]) if "alt" in f else "_".join(f.split("_")[:3])
+        header = "_".join(f.split("_")[:3]) if "alt" in f else "_".join(f.split("_")[:2])
         files_set.add(header)
     files_set = list(files_set) #list of unique file headers
 
@@ -310,7 +315,6 @@ if __name__ == "__main__":
 
         df = pd.read_csv(os.path.join(root_d, "KLIF_test_table.csv")).molecule_name
         idx = df.index[df.apply(lambda inp: inp.startswith(file_header))][0] #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
-        print(idx)
         qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[idx].GetNumAtoms()
 
         for contribution in ["qed", "atomic"]:
