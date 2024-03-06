@@ -246,8 +246,8 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
             atom_weights = SimilarityMaps.GetAtomicWeightsForFingerprint(qry, mol, SimilarityMaps.GetMorganFingerprint)
         elif contribution == "qed":
             atom_weights = remove_one_atom_qed(mol, qry_numa)
-        elif contribution == "sa":
-            atom_weights = remove_one_atom_sa(mol, qry_numa)
+        # elif contribution == "sa":
+        #     atom_weights = remove_one_atom_sa(mol, qry_numa)
             
         atom_weights = np.array(atom_weights)
         atom_weights = atom_weights / np.sum(atom_weights**2)**(0.5) #normalize
@@ -285,16 +285,34 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     # plot_properties(args)
-    root_h = "data_docking/result_hydrogenated"
-    root_d = "datasets"
-    test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
-    test_ms = [Chem.RemoveHs(m) for m in test_ms]
-    query = Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_GT_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0]
-    query = Chem.RemoveHs(query)
-    qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[900].GetNumAtoms()
+    
+    root_h = "data_docking/result_hydrogenated" #for hydrogenated dir; both sdf and PDB (for ligprot)
+    root_d = "datasets" #for GT dir
+    files = os.listdir(root_h) #Manually saved GT/GenAI hydrogenated ligands!
+    files_base = [os.path.basename(one_file) for one_file in files]
+    files_set = {}
+    for f in files_base:
+        header = "_".join(f.split("_")[:4]) if "alt" in f else "_".join(f.split("_")[:3])
+        files_set.add(header)
+    files_set = list(files_set) #list of unique file headers
 
-    for contribution in ["qed", "atomic", "sa"]:
-        plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
+    for file_header in files_set:
+        #for each unique file_header from the files_set, get the sdf files (ABS dir)
+        files_selected = list(map(lambda inp: os.path.join(root_h, inp), list(filter(lambda inp: inp.startswith(file_header) & inp.endswith(".sdf"), files_base )) )).sort()
+   
+        # test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
+        test_ms = [Chem.SDMolSupplier(one_file, removeHs=True, sanitize=True)[0] for one_file in files_selected if not "GT" in os.path.basename(one_file) ]
+        test_ms = [Chem.RemoveHs(m) for m in test_ms]
+        
+        query = Chem.SDMolSupplier(files_selected[-1], removeHs=True, sanitize=True)[0] #GT is last in sorted order
+        query = Chem.RemoveHs(query)
+
+        df = pd.read_csv(os.path.join(root_d, "KLIF_test_table.csv")).molecule_name
+        idx = df.index[df.apply(lambda inp: inp.startswith(file_header))][0] #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
+        qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[idx].GetNumAtoms()
+
+        for contribution in ["qed", "atomic"]:
+            plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
     # test_ms = [edit_ligand(m) for m in test_ms]
     # print(Chem.MolToSmiles(qry).split("."))
