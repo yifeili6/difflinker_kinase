@@ -325,7 +325,7 @@ def plot_by_group(df: pd.DataFrame):
     metric_name.remove("size")
     metric_name.remove("files")
     
-    df.drop_duplicates(subset='smiles', keep='first', inplace=True)
+    df.drop_duplicates(subset='SMILES', keep='first', inplace=True)
     index=0
     fig, ax = plt.subplots(3, 3, figsize=(10, 10))
     for i, metric in enumerate(metric_name):
