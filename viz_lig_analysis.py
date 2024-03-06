@@ -280,16 +280,8 @@ def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int
         fig.savefig(f'data_docking/result_images/{filename}')    
     else:
         fig.savefig(f'data_docking/result_images/{filename}')    
-        
-if __name__ == "__main__":
-    ###Current as of Mar 1st, 2024
-    # plot_properties(args)
 
-    ####WARNING####
-    ####DO Manually,
-    #Choose only molecule_name ending with ONLY '_0' in KLIF_test_frag.sdf file
-    #b.c. we redefined the _0/1/2 from num of ligands to num of fragmentation types
-    
+def plot_maps():
     root_h = "data_docking/result_hydrogenated" #for hydrogenated dir; both sdf and PDB (for ligprot)
     root_d = "datasets" #for GT dir
     files = os.listdir(root_h) #Manually saved GT/GenAI hydrogenated ligands!
@@ -319,6 +311,18 @@ if __name__ == "__main__":
 
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
+
+if __name__ == "__main__":
+    ###Current as of Mar 1st, 2024
+    # plot_properties(args)
+    plot_maps()
+    
+    ####WARNING####
+    ####DO Manually,
+    #Choose only molecule_name ending with ONLY '_0' in KLIF_test_frag.sdf file
+    #b.c. we redefined the _0/1/2 from num of ligands to num of fragmentation types
+    
+
 
     # test_ms = [edit_ligand(m) for m in test_ms]
     # print(Chem.MolToSmiles(qry).split("."))
