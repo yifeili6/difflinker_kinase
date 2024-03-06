@@ -155,6 +155,7 @@ def remove_one_atom_sa(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
         except:
             qed = 10
         qed_diff = qed - original_qed
+        print(qed)
         contribs.append(qed_diff)
     contribs = [0] * query_num_atoms + contribs
     
