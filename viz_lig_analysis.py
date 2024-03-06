@@ -309,38 +309,42 @@ def plot_maps():
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
 def plot_by_group(df: pd.DataFrame):
-    # https://seaborn.pydata.org/examples/many_facets.html
-    import numpy as np
+    #https://github.com/hyunp2/ghp_mof/blob/main/analyze_linkers.py
+    import os
     import pandas as pd
-    import seaborn as sns
     import matplotlib.pyplot as plt
-
-
-    sns.set_theme(style="darkgrid")
-    g = sns.displot(
-        df, x="QED", col="size", 
-         height=3, facet_kws=dict(margin_titles=False),
-    )
-    g.savefig("test_.png")
-
-    # sns.set_theme(style="ticks")
+    import seaborn as sns
     
-    # # Initialize a grid of plots with an Axes for each walk
-    # grid = sns.FacetGrid(df.loc[:, ["QED", "size"]], col="size", hue="size", palette="tab20c",
-    #                      col_wrap=4, height=1.5)
+    # distribution of SCscore and SAscore
+    sns.set_theme()
+    sns.set_style("white")
+    kwargs = dict(bins=50, stacked=True)
+        
+    metric_name = list(df.columns)
+    metric_name.pop("SMILES")
+    metric_name.pop("size")
+    metric_name.pop("files")
     
-    # # Draw a horizontal line to show the starting point
-    # # grid.refline(y=0, linestyle=":")
+    df.drop_duplicates(subset='smiles', keep='first', inplace=True)
+    index=0
+    fig, ax = plt.subplots(3, 3, figsize=(10, 10))
+    for i, metric in enumerate(metric_name):
+        row_num = int(index / 3)
+        col_num = index % 3
+        for n_atoms in range(8, 14, 1):
+            data = df.loc[df.index[df.size.apply(lambda inp: inp == n_atoms)]]
+            ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
+            ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
+        ax[row_num][col_num].set_xlabel(metric)
+        ax[row_num][col_num].set_ylabel('Count')
+        ax[row_num][col_num].set_title(metric + " distribution")
+        index+=1
+    handles, labels = ax[row_num][col_num].get_legend_handles_labels()
     
-    # # Draw a line plot to show the trajectory of each random walk
-    # grid.map(plt.hist, "size", "QED")
-    
-    # # # Adjust the tick positions and labels
-    # # grid.set(xticks=np.arange(5), yticks=[-3, 3],
-    # #          xlim=(-.5, 4.5), ylim=(-3.5, 3.5))
-
-    # # Adjust the arrangement of the plots
-    # grid.fig.tight_layout(w_pad=1)
+    plt.tight_layout()
+    lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
+    plt.savefig(f'./test_.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
+    print(f'Plotted distribution of SAscore and SCscore')
     
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
