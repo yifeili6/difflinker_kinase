@@ -338,6 +338,7 @@ if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     DF0, DF1 = plot_properties(args)
     print(DF0, DF1)
+    print(DF1.columns)
     DF0.to_csv("latex_table.csv")
     plot_by_group(DF1)
     # plot_maps()
