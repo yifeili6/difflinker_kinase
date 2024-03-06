@@ -290,7 +290,7 @@ if __name__ == "__main__":
     root_d = "datasets" #for GT dir
     files = os.listdir(root_h) #Manually saved GT/GenAI hydrogenated ligands!
     files_base = [os.path.basename(one_file) for one_file in files]
-    files_set = {}
+    files_set = set()
     for f in files_base:
         header = "_".join(f.split("_")[:4]) if "alt" in f else "_".join(f.split("_")[:3])
         files_set.add(header)
