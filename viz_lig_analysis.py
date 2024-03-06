@@ -96,17 +96,17 @@ def findMCS(ms: List[Chem.Mol]):
     else:
         img.save('data_docking/result_images/cdk2_molgrid.png')    
 
-def plot_properties(args: argparse.ArgumentParser):
+def merge_properties(args: argparse.ArgumentParser):
     if not args.turn_off_run_test:
         print(cf.on_blue(f"Concatenating GENERATED data statistics!!!!"))
         DF0, DF_rings_dist = Analyse_generation.collate_fn()
         DF = Analyse_generation.get_non_wass_stats()
-        DF1 = pd.concat([DF_rings_dist, DF], axis=1)
+        DF1 = pd.concat([DF_rings_dist.drop(column="size"), DF], axis=1)
     else:
         print(cf.on_red(f"Concatenating TEST data statistics!!!!"))
         DF0, DF_rings_dist = Analyse_generation.collate_fn_for_test()
         DF = Analyse_generation.get_non_wass_stats()
-        DF1 = pd.concat([DF_rings_dist, DF], axis=1)
+        DF1 = pd.concat([DF_rings_dist.drop(column="size"), DF], axis=1)
     return DF0, DF1
 
 def remove_one_atom_qed(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
