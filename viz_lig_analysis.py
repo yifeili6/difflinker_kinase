@@ -331,8 +331,9 @@ def plot_by_group(df: pd.DataFrame):
     # grid.set(xticks=np.arange(5), yticks=[-3, 3],
     #          xlim=(-.5, 4.5), ylim=(-3.5, 3.5))
 
-# Adjust the arrangement of the plots
-grid.fig.tight_layout(w_pad=1)
+    # Adjust the arrangement of the plots
+    grid.fig.tight_layout(w_pad=1)
+    
 if __name__ == "__main__":
     ###Current as of Mar 1st, 2024
     DF0, DF1 = plot_properties(args)
