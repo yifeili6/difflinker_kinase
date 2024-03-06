@@ -317,10 +317,11 @@ def plot_by_group(df: pd.DataFrame):
 
 
     sns.set_theme(style="darkgrid")
-    sns.displot(
+    g = sns.displot(
         df, x="QED", col="size", 
          height=3, facet_kws=dict(margin_titles=False),
     )
+    g.savefig("test_.png")
 
     # sns.set_theme(style="ticks")
     
