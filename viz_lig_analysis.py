@@ -349,7 +349,7 @@ def plot_by_group(df: pd.DataFrame):
                             data=data, ax=ax[row_num][col_num])
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
-        ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=16)  
+        ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=12)  
         index+=1
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
     
