@@ -343,7 +343,7 @@ def plot_by_group(df: pd.DataFrame):
                 # Draw a nested boxplot to show bills by day and time
                 sns.boxplot(x="size", y=metric,
                             hue="size",
-                            data=data,, label=n_atoms, ax=ax[row_num][col_num])
+                            data=data, label=n_atoms, ax=ax[row_num][col_num])
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
         ax[row_num][col_num].set_title(metric + " distribution")
