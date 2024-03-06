@@ -299,7 +299,7 @@ if __name__ == "__main__":
     for file_header in files_set:
         #for each unique file_header from the files_set, get the sdf files (ABS dir)
         files_selected = list(map(lambda inp: os.path.join(root_h, inp), list(filter(lambda inp: inp.startswith(file_header) & inp.endswith(".sdf"), files_base )) )).sort()
-        print(files_selected) 
+        print(files_set) 
         # test_ms = [Chem.SDMolSupplier(os.path.join(root_h, f"5lqf_altB_chainA_3_{num}_KLIF_ValTest_frag.sdf"), removeHs=True, sanitize=True)[0] for num in [25, 27, 55, 60, 81, 82] ]
         test_ms = [Chem.SDMolSupplier(one_file, removeHs=True, sanitize=True)[0] for one_file in files_selected if not "GT" in os.path.basename(one_file) ]
         test_ms = [Chem.RemoveHs(m) for m in test_ms]
