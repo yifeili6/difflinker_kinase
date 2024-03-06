@@ -352,7 +352,8 @@ def plot_by_group(df: pd.DataFrame):
         ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
         index+=1
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
-    
+
+    plt.suptitle("5LQF AltB ChainA")
     fig.tight_layout()
     lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
     fig.savefig(f'./test_.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
