@@ -321,9 +321,9 @@ def plot_by_group(df: pd.DataFrame):
     kwargs = dict(bins=50, stacked=True)
         
     metric_name = list(df.columns)
-    metric_name.pop("SMILES")
-    metric_name.pop("size")
-    metric_name.pop("files")
+    metric_name.remove("SMILES")
+    metric_name.remove("size")
+    metric_name.remove("files")
     
     df.drop_duplicates(subset='smiles', keep='first', inplace=True)
     index=0
