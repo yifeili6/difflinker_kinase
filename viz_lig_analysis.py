@@ -153,7 +153,7 @@ def remove_one_atom_sa(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
         try:
             qed = SA(eligand.GetMol())
         except:
-            qed = 0
+            qed = 10
         qed_diff = qed - original_qed
         contribs.append(qed_diff)
     contribs = [0] * query_num_atoms + contribs
@@ -261,7 +261,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         drawer.FinishDrawing()
     return img
 
-def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int, contribution: str):
+def plot_similarity_maps(ms: List[Chem.Mol], qry: Chem.Mol, query_num_atoms: int, contribution: str="atomic"):
     """
         ms: list of generated mols
         qry: gt mol
