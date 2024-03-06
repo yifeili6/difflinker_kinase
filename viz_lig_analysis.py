@@ -142,7 +142,7 @@ def remove_one_atom_sa(mol: Chem.Mol, query_num_atoms: int) -> List[Chem.Mol]:
     num_atoms = mol.GetNumAtoms()
     original_qed = SA(mol)
     contribs = []
-    
+    print(original_qed)
     for idx in range(query_num_atoms, num_atoms, 1):
         eligand = Chem.RWMol(copy.deepcopy(mol))
         atom = eligand.GetAtomWithIdx(idx)
