@@ -287,6 +287,7 @@ def plot_maps():
     files = os.listdir(root_h) #Manually saved GT/GenAI hydrogenated ligands!
     files_base = [os.path.basename(one_file) for one_file in files]
     files_set = set()
+    
     for f in files_base:
         header = "_".join(f.split("_")[:3]) if "alt" in f else "_".join(f.split("_")[:2])
         files_set.add(header)
@@ -308,7 +309,7 @@ def plot_maps():
         idx = int(df.index[df.apply(lambda inp: inp.startswith(file_header))][0]) #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
         # print(idx)
         qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[idx].GetNumAtoms()
-
+        print(qry_numa)
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
