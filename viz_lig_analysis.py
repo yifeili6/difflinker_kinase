@@ -319,22 +319,21 @@ def plot_by_group(df: pd.DataFrame):
     sns.set_theme()
     sns.set_style("white")
     kwargs = dict(bins=50, stacked=True)
-        
+    
+    df.drop_duplicates(subset='SMILES', keep='first', inplace=True)
+    df.rename(columns={"rot_bonds": "num_rot_bonds"}, inplace=True)
     metric_name = list(df.columns)
     metric_name.remove("SMILES")
     metric_name.remove("size")
     metric_name.remove("files")
     
-    df.drop_duplicates(subset='SMILES', keep='first', inplace=True)
-    df.rename(columns={"rot_bonds": "num_rot_bonds"}, inplace=True)
-    
-    index=0
+    index = 0
     fig, ax = plt.subplots(3, 3, figsize=(10, 10))
     for i, metric in enumerate(metric_name):
         row_num = int(index / 3)
         col_num = index % 3
         for n_atoms in range(8, 14, 1):
-            if metric.startswith("num_") or metric.startswith("rot_"):
+            if metric.startswith("num_"):
                 data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
                 # ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
