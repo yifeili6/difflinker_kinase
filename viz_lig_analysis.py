@@ -328,7 +328,7 @@ def plot_by_group(df: pd.DataFrame):
     metric_name.remove("files")
     
     index = 0
-    fig, ax = plt.subplots(3, 3, figsize=(10, 11))
+    fig, ax = plt.subplots(3, 3, figsize=(10, 11), sharex=True)
     palette = sns.color_palette('pastel', 6)
     
     for i, metric in enumerate(metric_name):
@@ -348,7 +348,7 @@ def plot_by_group(df: pd.DataFrame):
                 # Draw a nested boxplot to show bills by day and time
                 sns.violinplot(x="size", y=metric,
                             data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
-        # ax[row_num][col_num].set_xlabel(metric)
+        ax[row_num][col_num].set_xlabel("No. of Sampled Atoms")
         ax[row_num][col_num].set_ylabel('Count')
         ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
         index+=1
