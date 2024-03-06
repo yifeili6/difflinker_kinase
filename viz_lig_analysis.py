@@ -341,9 +341,8 @@ def plot_by_group(df: pd.DataFrame):
                 ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
                 # sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), label=n_atoms, ax=ax[row_num][col_num])
                 # Draw a nested boxplot to show bills by day and time
-                with sns.color_palette("pastel"):
+                with sns.color_palette("Set3"):
                     sns.boxplot(x="size", y=metric,
-                                
                                 data=data, ax=ax[row_num][col_num])
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
