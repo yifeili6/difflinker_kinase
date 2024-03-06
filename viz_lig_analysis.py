@@ -330,6 +330,7 @@ def plot_by_group(df: pd.DataFrame):
     index = 0
     fig, ax = plt.subplots(3, 3, figsize=(10, 10))
     palette = sns.color_palette('pastel', 6)
+    
     for i, metric in enumerate(metric_name):
         row_num = int(index / 3)
         col_num = index % 3
@@ -339,22 +340,22 @@ def plot_by_group(df: pd.DataFrame):
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
                 # ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
                 sns.barplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]])
+                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
             else:
                 data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
                 # sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), label=n_atoms, ax=ax[row_num][col_num])
                 # Draw a nested boxplot to show bills by day and time
                 sns.violinplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]])
+                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
         ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
         index+=1
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
-
-    plt.suptitle("5LQF AltB ChainA")
+    
     fig.tight_layout()
+    fig.suptitle("5LQF AltB ChainA")
     lgd = fig.legend(handles, labels, loc='lower center', ncol=9, bbox_to_anchor=(0.5, -0.05), framealpha=0, edgecolor='gray')
     fig.savefig(f'./test_.png', bbox_extra_artists=(lgd,), bbox_inches='tight')
     
