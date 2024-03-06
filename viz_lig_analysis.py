@@ -252,6 +252,7 @@ def img_for_mol(mol: Chem.Mol, qry: Chem.Mol, query_num_atoms: int=None, contrib
         atom_weights = atom_weights / np.sum(atom_weights**2)**(0.5) #normalize
         atom_weights[:query_num_atoms] = 0
         atom_weights = atom_weights.tolist()
+        print(atom_weights)
         img = SimilarityMaps.GetSimilarityMapFromWeights(mol, atom_weights, draw2d=None) #http://rdkit.blogspot.com/2020/01/similarity-maps-with-new-drawing-code.html#:~:text=SimilarityMaps.GetSimilarityMapFromWeights(atorvastatin%2Clist(mean_chgs)%2Cdraw2d%3Dd)
 
         with tempfile.TemporaryDirectory() as fp:
