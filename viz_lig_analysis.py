@@ -332,9 +332,14 @@ def plot_by_group(df: pd.DataFrame):
         row_num = int(index / 3)
         col_num = index % 3
         for n_atoms in range(8, 14, 1):
-            data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
-            ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
-            ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
+            if metric.starswith("num_"):
+                data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
+                ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
+            else:
+                data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                ax[row_num][col_num].spines[['left','right', 'top']].set_visible(False)
+                sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms, ax=ax[row_num][col_num])
         ax[row_num][col_num].set_xlabel(metric)
         ax[row_num][col_num].set_ylabel('Count')
         ax[row_num][col_num].set_title(metric + " distribution")
