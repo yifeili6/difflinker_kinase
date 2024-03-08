@@ -105,7 +105,7 @@ def merge_properties(args: argparse.ArgumentParser):
     else:
         print(cf.on_red(f"Concatenating TEST data statistics!!!!"))
         DF0, DF_rings_dist = Analyse_generation.collate_fn_for_test()
-        DF = Analyse_generation.get_non_wass_stats()
+        DF = Analyse_generation.get_non_wass_stats_for_test()
         DF1 = pd.concat([DF_rings_dist, DF], axis=1)
     return DF0, DF1
 
