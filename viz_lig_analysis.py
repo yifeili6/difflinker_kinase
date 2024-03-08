@@ -359,8 +359,8 @@ def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
             index+=1
     else:
         for i, metric in enumerate(metric_name):
-            row_num = int(index / 3)
-            col_num = index % 3
+            row_num = int(index / 5)
+            col_num = index % 5
             if metric.startswith("num_"):
                 data = df
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
