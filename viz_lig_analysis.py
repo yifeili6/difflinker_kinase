@@ -326,7 +326,7 @@ def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
     metric_name.remove("SMILES")
     if not args.turn_off_run_test:
         metric_name.remove("size")
-    metric_name.remove("files")
+        metric_name.remove("files")
     
     index = 0
     fig, ax = plt.subplots(3, 3, figsize=(10, 11), sharex=True)
