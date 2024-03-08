@@ -308,7 +308,7 @@ def plot_maps():
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
 
-def plot_by_group(df: pd.DataFrame):
+def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
     #https://github.com/hyunp2/ghp_mof/blob/main/analyze_linkers.py
     import os
     import pandas as pd
@@ -324,35 +324,57 @@ def plot_by_group(df: pd.DataFrame):
     df.rename(columns={"rot_bonds": "num_rot_bonds"}, inplace=True)
     metric_name = list(df.columns)
     metric_name.remove("SMILES")
-    metric_name.remove("size")
+    if not args.turn_off_for_test:
+        metric_name.remove("size")
     metric_name.remove("files")
     
     index = 0
     fig, ax = plt.subplots(3, 3, figsize=(10, 11), sharex=True)
-    palette = sns.color_palette('pastel', 6)
-    
-    for i, metric in enumerate(metric_name):
-        row_num = int(index / 3)
-        col_num = index % 3
-        for idx, n_atoms in enumerate(range(8, 14, 1)):
+    palette = sns.color_palette('pastel', 7)
+
+    if not args.turn_off_for_test:
+        for i, metric in enumerate(metric_name):
+            row_num = int(index / 3)
+            col_num = index % 3
+            for idx, n_atoms in enumerate(range(8, 14, 1)):
+                if metric.startswith("num_"):
+                    data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                    ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
+                    # ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
+                    sns.barplot(x="size", y=metric,
+                                data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
+                    ax[row_num][col_num].set_ylabel('Count')
+                else:
+                    data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                    ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
+                    # sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), label=n_atoms, ax=ax[row_num][col_num])
+                    # Draw a nested boxplot to show bills by day and time
+                    sns.violinplot(x="size", y=metric,
+                                data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
+                    ax[row_num][col_num].set_ylabel('Value')
+            ax[row_num][col_num].set_xlabel("No. of Sampled Atoms")
+            ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
+            index+=1
+    else:
+        for i, metric in enumerate(metric_name):
+            row_num = int(index / 3)
+            col_num = index % 3
             if metric.startswith("num_"):
-                data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                data = df
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
-                # ax[row_num][col_num].hist(data.loc[:, metric].values.reshape(-1, ), **kwargs, label=n_atoms)
                 sns.barplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
+                            data=data, ax=ax[row_num][col_num], palette=[palette[-1]], label="Test Distribution")
                 ax[row_num][col_num].set_ylabel('Count')
             else:
-                data = df.loc[df.index[df.loc[:, "size"].apply(lambda inp: inp == n_atoms)]]
+                data = df
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
-                # sns.kdeplot(data=data.loc[:, metric].values.reshape(-1, ), label=n_atoms, ax=ax[row_num][col_num])
-                # Draw a nested boxplot to show bills by day and time
                 sns.violinplot(x="size", y=metric,
-                            data=data, ax=ax[row_num][col_num], palette=[palette[idx]], label=n_atoms)
+                            data=data, ax=ax[row_num][col_num], palette=[palette[-1]], label="Test Distribution")
                 ax[row_num][col_num].set_ylabel('Value')
-        ax[row_num][col_num].set_xlabel("No. of Sampled Atoms")
-        ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
-        index+=1
+            ax[row_num][col_num].set_xlabel("No. of Sampled Atoms")
+            ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=13.5)  
+            index+=1
+        
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
     
     fig.subplots_adjust(top=0.8)
