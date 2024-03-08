@@ -329,7 +329,7 @@ def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
         metric_name.remove("files")
         fig, ax = plt.subplots(3, 3, figsize=(10, 11), sharex=True)
     else:
-        fig, ax = plt.subplots(5, 2, figsize=(10, 6), sharex=True)
+        fig, ax = plt.subplots(2, 5, figsize=(10, 6), sharex=True)
 
     index = 0
     palette = sns.color_palette('pastel', 7)
