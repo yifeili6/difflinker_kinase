@@ -362,7 +362,7 @@ def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
             if metric.startswith("num_"):
                 data = df
                 ax[row_num][col_num].spines[['left','right', 'bottom']].set_visible(False)
-                sns.barplot(x="size", y=metric,
+                sns.barplot(y=metric,
                             data=data, ax=ax[row_num][col_num], palette=[palette[-1]], label="Test Distribution")
                 ax[row_num][col_num].set_ylabel('Count')
             else:
