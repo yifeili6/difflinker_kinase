@@ -374,7 +374,7 @@ def plot_by_group(df: pd.DataFrame, args: argparse.ArgumentParser):
                             data=data, ax=ax[row_num][col_num], palette=[palette[-1]], label="Test Distribution")
                 ax[row_num][col_num].set_ylabel('Value')
             ax[row_num][col_num].set_xlabel("No. of Sampled Atoms")
-            ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=11.5)  
+            ax[row_num][col_num].set_title(f"{metric} distribution", weight='bold', fontsize=9.5)  
             index+=1
         
     handles, labels = ax[row_num][col_num].get_legend_handles_labels()
