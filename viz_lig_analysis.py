@@ -392,7 +392,7 @@ if __name__ == "__main__":
     print(DF1.columns)
     DF0.drop(columns=["unique@10000","Scaf/Test","FCD/TestSF","SNN/TestSF","Frag/TestSF","Scaf/TestSF"], inplace=True)
     DF0.to_csv("latex_table.csv")
-    plot_by_group(DF1)
+    plot_by_group(DF1, args)
     # plot_maps()
     
     ####WARNING####
