@@ -300,10 +300,15 @@ def plot_maps():
         query = Chem.SDMolSupplier(files_selected[-1], removeHs=True, sanitize=True)[0] #GT is last in sorted order
         query = Chem.RemoveHs(query)
 
-        df = pd.read_csv(os.path.join(root_d, "KLIF_test_table.csv")).molecule_name
-        idx = int(df.index[df.apply(lambda inp: inp.startswith(file_header))][0]) #fine a SMILES molecule name with this prefix so that we can choose corresponding fragment
+        df_val =  pd.read_csv(os.path.join(root_d, "KLIF_val_table.csv"))
+        df_test = pd.read_csv(os.path.join(root_d, "KLIF_test_table.csv"))
+        df = pd.concat([df_val, df_test], axis=0).molecule_name
+        idx = int(df.index[df.apply(lambda inp: inp.startswith(file_header))][0]) #find a SMILES molecule name with this prefix so that we can choose corresponding fragment
         # print(idx)
-        qry_numa = Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)[idx].GetNumAtoms()
+        suppl_val = [_ for _ in Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_val_frag.sdf"), removeHs=True, sanitize=True)]
+        suppl_test = [_ for _ in Chem.SDMolSupplier(os.path.join(root_d, f"KLIF_test_frag.sdf"), removeHs=True, sanitize=True)]
+        suppl = suppl_val + suppl_test
+        qry_numa = suppl[idx].GetNumAtoms()
         print(qry_numa)
         for contribution in ["qed", "atomic"]:
             plot_similarity_maps(test_ms, query, query_num_atoms=qry_numa, contribution=contribution)
