@@ -1,0 +1,38 @@
+schema_version: 1
+
+# Every trial starts from the official anchor-conditioned Binding MOAD
+# checkpoint. Selection uses KLIFS validation loss. The nine target PDBs
+# belong to the test split, which is reserved for generation and evaluation.
+base_config: configs/finetune_anchors.yml
+objective:
+  name: loss/val
+  mode: min
+
+seed: 42
+budget:
+  max_epochs: 100
+  early_stopping_patience: 20
+  early_stopping_min_delta: 1.0e-4
+  save_top_k: 1
+
+# Architecture and diffusion parameters are intentionally fixed because strict
+# initialization from the anchor-conditioned pretrained checkpoint requires
+# them to match.  Learning rate and batch size are the meaningful compatible
+# fine-tuning controls exposed by the current model.
+trials:
+  - lr: 5.0e-5
+    batch_size: 16
+  - lr: 1.0e-4
+    batch_size: 16
+  - lr: 2.0e-4
+    batch_size: 16
+  - lr: 4.0e-4
+    batch_size: 16
+  - lr: 5.0e-5
+    batch_size: 32
+  - lr: 1.0e-4
+    batch_size: 32
+  - lr: 2.0e-4
+    batch_size: 32
+  - lr: 4.0e-4
+    batch_size: 32
