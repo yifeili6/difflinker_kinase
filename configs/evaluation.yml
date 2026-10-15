@@ -1,0 +1,30 @@
+schema_version: 1
+
+# Every path is relative to the revision project root.
+generation_run: outputs/generation/anchor-corrected-20261001-v1
+output_root: outputs/evaluation
+run_id: anchor-corrected-20261001-v1
+
+# Reuse the immutable generation boundaries.  One evaluation array task handles
+# one 128-candidate generation shard and publishes its result atomically.
+expected_shards: 372
+samples_per_shard: 128
+expected_candidates: 47616
+
+# Ground-truth baseline: every aligned KLIFS test fragmentation row is kept,
+# including repeated full ligands created by different MMPA cuts.  Forty-one
+# chunks have 128 rows and the final chunk has 44 rows.
+gt_table: data/processed/klifs_v1/KLIFS_test_table.csv
+gt_molecules: data/processed/klifs_v1/KLIFS_test_mol.sdf
+gt_expected_candidates: 5292
+gt_samples_per_shard: 128
+
+# The surviving manuscript code used PoseBusters(config="mol").  Version
+# 0.2.10 is pinned in the separate evaluation environment because its nine
+# molecule checks match the checks named in the manuscript. This configuration
+# evaluates intramolecular geometry and chemical representation.
+posebusters_config: mol
+
+# Preserve the exact WEHI PAINS SMARTS resource vendored with DiffLinker.
+# MOSES separately applies both this list and its MCF list in its final filter.
+pains_smarts: vendor/DiffLinker/resources/wehi_pains.csv
