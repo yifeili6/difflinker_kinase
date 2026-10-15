@@ -1,1 +1,1 @@
-environment/wheels/pdb_tools-2.5.0-py3-none-any.whl --hash=sha256:8513a468597509716a0d1c47f8e956017941c0e1da6a5909cbecba0e0451067d
+pdb-tools==2.5.0

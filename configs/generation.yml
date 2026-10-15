@@ -1,31 +1,38 @@
 schema_version: 1
-
-# All paths are relative to the kinase-gap project root.
 data: data/processed/klifs_v1
 test_data_prefix: KLIFS_test.full
 targets_manifest: data/manifests/klifs_v1/targets.csv
 output_root: outputs/generation
-
-# One A-chain/A-model representative is selected per PDB. The 62 retained
-# two-cut fragment pairs define a panel of 47,616 generation attempts.
 representative_structures:
-  - human__SRC__1yol__alt-__chainA
-  - human__JAK2__2xa4__altA__chainA
-  - human__BRAF__3c4c__alt-__chainA
-  - human__ABL1__3cs9__altA__chainA
-  - mouse__ABL1__3oxz__alt-__chainA
-  - human__KDR__4ag8__alt-__chainA
-  - human__KDR__4ase__alt-__chainA
-  - human__BTK__4rx5__altA__chainA
-  - human__CDC2__5lqf__altA__chainA
-
-target_pdbs: [1yol, 2xa4, 3c4c, 3cs9, 3oxz, 4ag8, 4ase, 4rx5, 5lqf]
+- human__SRC__1yol__alt-__chainA
+- human__JAK2__2xa4__altA__chainA
+- human__BRAF__3c4c__alt-__chainA
+- human__ABL1__3cs9__altA__chainA
+- mouse__ABL1__3oxz__alt-__chainA
+- human__KDR__4ag8__alt-__chainA
+- human__KDR__4ase__alt-__chainA
+- human__BTK__4rx5__altA__chainA
+- human__CDC2__5lqf__altA__chainA
+target_pdbs:
+- 1yol
+- 2xa4
+- 3c4c
+- 3cs9
+- 3oxz
+- 4ag8
+- 4ase
+- 4rx5
+- 5lqf
 expected_contexts: 62
-linker_sizes: [8, 9, 10, 11, 12, 13]
+linker_sizes:
+- 8
+- 9
+- 10
+- 11
+- 12
+- 13
 samples_per_context: 128
 expected_candidates: 47616
-
-# The size sweep uses a fixed seed with deterministic per-shard seed derivation.
 seed: 20260724
 n_steps: 500
 batch_size: 16

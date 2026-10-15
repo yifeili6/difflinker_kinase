@@ -2,30 +2,28 @@ dataset_version: klifs_v1
 snapshot_dir: data/raw/klifs/klifs_2025-10-22_cached_2025-11-12
 output_dir: data/processed/klifs_v1
 manifest_dir: data/manifests/klifs_v1
-
 snapshot:
-  database_export_date: "2025-10-22"
-  local_cache_date: "2025-11-12"
+  database_export_date: '2025-10-22'
+  local_cache_date: '2025-11-12'
   archive_sha256: 13574a5c98a0be449a9c1bd2e5fb06a9135ae6244f46bcd215e279f4e04574dd
   overview_sha256: 4075fd99c24bba510c80998effa6752c2128bd75c95bd3680c50bf0974a04b38
   export_sha256: c17431f6cbca3b345617269a7286776a6f5d2694361523b831c3f86a53b658ae
-
 species:
-  - HUMAN
-  - MOUSE
+- HUMAN
+- MOUSE
 quality_score_min: 6.0
 resolution_max_angstrom: 3.0
 allow_forced_test_metadata_exceptions: true
 allowed_elements:
-  - C
-  - O
-  - N
-  - F
-  - S
-  - Cl
-  - Br
-  - I
-  - P
+- C
+- O
+- N
+- F
+- S
+- Cl
+- Br
+- I
+- P
 heavy_atoms_min: 11
 heavy_atoms_max: 40
 rings_min: 2
@@ -34,25 +32,24 @@ mmpa:
   cuts: 2
   minimum_fragment_atoms: 5
   minimum_linker_atoms: 3
-  smarts: "[#6+0;!$(*=,#[!#6])]!@!=!#[*]"
-
+  smarts: '[#6+0;!$(*=,#[!#6])]!@!=!#[*]'
 split:
   seed: 20260115
-  train_fraction: 0.80
-  validation_fraction: 0.10
-  test_fraction: 0.10
+  train_fraction: 0.8
+  validation_fraction: 0.1
+  test_fraction: 0.1
   group_keys:
-    - pdb
-    - canonical_smiles
-    - inchikey
-    - murcko_scaffold
+  - pdb
+  - canonical_smiles
+  - inchikey
+  - murcko_scaffold
   forced_test_pdbs:
-    - 2XA4
-    - 4RX5
-    - 3C4C
-    - 1YOL
-    - 5LQF
-    - 3CS9
-    - 4AG8
-    - 3OXZ
-    - 4ASE
+  - 2XA4
+  - 4RX5
+  - 3C4C
+  - 1YOL
+  - 5LQF
+  - 3CS9
+  - 4AG8
+  - 3OXZ
+  - 4ASE

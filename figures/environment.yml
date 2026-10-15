@@ -1,0 +1,14 @@
+name: kinase-paper-figures
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10.5
+  - numpy=1.22.4
+  - pandas=1.4.4
+  - scipy=1.8.1
+  - matplotlib=3.5.3
+  - rdkit=2022.03.5
+  - pillow=9.2.0
+  - ipykernel=6
+  - jupyterlab=3
+  - librsvg

@@ -1,5 +1,5 @@
-environment/evaluation-wheels/posebusters-0.2.10-py3-none-any.whl --hash=sha256:1b8391e020ffd8cac4f6451def2dd762a43960f8adc6c8e713cad69c9865bee1
-environment/evaluation-wheels/molsets-0.3.1-py3-none-any.whl --hash=sha256:7f4450e3ebecebe79c3a2a55950c93daddee071120daf64a163d03481e811d34
-environment/evaluation-wheels/fcd_torch-1.0.7-py3-none-any.whl --hash=sha256:63a24aae88c554a7ba6422cffdef3ad7c1befec73f835b70ead04097a1ebed6f
-environment/evaluation-wheels/seaborn-0.11.2-py3-none-any.whl --hash=sha256:85a6baa9b55f81a0623abddc4a26b334653ff4c6b18c418361de19dbba0ef283
-environment/evaluation-wheels/pyarrow-17.0.0-cp310-cp310-manylinux_2_28_x86_64.whl --hash=sha256:f7ae2de664e0b158d1607699a16a488de3d008ba99b3a7aa5de1cbc13574d047
+posebusters==0.2.10
+molsets==0.3.1
+fcd-torch==1.0.7
+seaborn==0.11.2
+pyarrow==17.0.0
